@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/widgets/level_widget.dart';
+import 'package:vedanta_frontend/src/widgets/profile_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Text('Settings Page'),
     Text('Notifications Page'),
     Text('Messages Page'),
-    Text('More Page'),
+    ProfileWidget(),
   ];
 
   void _onItemTapped(int index) {

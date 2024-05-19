@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vedanta_frontend/src/providers/auth_provider.dart';
-import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 
 class LevelWidget extends StatefulWidget {
   const LevelWidget({super.key});
@@ -35,9 +32,6 @@ class _LevelWidgetState extends State<LevelWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
