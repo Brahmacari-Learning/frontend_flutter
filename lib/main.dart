@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/app_theme.dart';
+import 'package:vedanta_frontend/src/providers/theme_provider.dart';
+import 'package:vedanta_frontend/src/screens/register_screen.dart';
+import 'package:vedanta_frontend/src/screens/splash_screen.dart';
+import 'src/screens/login_screen.dart';
+import 'src/screens/home_screen.dart';
+import 'src/providers/auth_provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,11 +17,26 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(
+            create: (context) => ThemeProvider(AppTheme.lightTheme)),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: themeProvider.themeData,
+            home: const SplashScreen(),
+            routes: {
+              '/login': (context) => const LoginScreen(),
+              '/register': (context) => const RegisterScreen(),
+              '/home': (context) => const HomeScreen(),
+            },
+          );
+        },
       ),
     );
   }
