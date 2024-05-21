@@ -74,6 +74,7 @@ class AuthProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     _isLoggedIn = token != null;
+    await prefs.setString('isloggedIn', _isLoggedIn.toString());
     notifyListeners();
   }
 
@@ -95,6 +96,7 @@ class AuthProvider with ChangeNotifier {
     await prefs.remove('email');
     await prefs.remove('password');
     _isLoggedIn = false;
+    await prefs.setString('isloggedIn', _isLoggedIn.toString());
     notifyListeners();
   }
 }
