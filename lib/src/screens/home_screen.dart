@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/widgets/level_widget.dart';
+import 'package:vedanta_frontend/src/widgets/profil_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Text('Settings Page'),
     Text('Notifications Page'),
     Text('Messages Page'),
-    Text('More Page'),
+    ProfilWidget(),
   ];
 
   void _onItemTapped(int index) {
@@ -27,6 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectedIndex = index;
       });
     }
+  }
+
+  bool _shouldShowAppBar(int index) {
+    const pagesWithoutAppBar = {2, 4, 6}; 
+    return !pagesWithoutAppBar.contains(index);
   }
 
   @override
@@ -80,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
       ),
       backgroundColor: Colors.purple[400],
-      appBar: AppBar(
+      appBar:_shouldShowAppBar(_selectedIndex) ? AppBar(
         title: Row(
           children: [
             Image.asset(
@@ -176,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //   },
           // ),
         ],
-      ),
+      ):null,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
