@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:vedanta_frontend/src/services/audio_player_service.dart';
 
 class MusicPlayerWidget extends StatefulWidget {
@@ -31,6 +32,15 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
     _audioPlayerService.playerStateStream.listen((playerState) {
       setState(() {
         _isPlaying = playerState.playing;
+        if (!playerState.playing &&
+            playerState.processingState == ProcessingState.completed) {
+          setState(() {
+            _currentPosition = Duration.zero; // Reset to start when media ends
+            _audioPlayerService.seek(Duration.zero);
+            // change the icon to play when media ends
+            _isPlaying = false;
+          });
+        }
       });
     });
   }
@@ -68,9 +78,14 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.stop),
+              icon: const Icon(Icons.stop),
               onPressed: () {
                 _audioPlayerService.stop();
+                setState(() {
+                  _currentPosition = Duration.zero;
+                  _audioPlayerService.seek(
+                      Duration.zero); // Reset to start when stop is pressed
+                });
               },
             ),
             Expanded(

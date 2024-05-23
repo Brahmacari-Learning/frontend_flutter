@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/gita_provider.dart';
+import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 
 class GitaWidget extends StatefulWidget {
@@ -10,6 +13,46 @@ class GitaWidget extends StatefulWidget {
 
 class _GitaWidgetState extends State<GitaWidget> {
   final TextEditingController _controller = TextEditingController();
+  final List<dynamic> _babList = [];
+  final List<dynamic> _slokaList = [];
+  int? _currentBab = 1;
+  late Future<void> _futureBabList = Future.value();
+  late Future<void> _futureSlokaList = Future.value();
+
+  @override
+  void initState() {
+    super.initState();
+    _futureBabList = _getBabList();
+    _futureSlokaList = _getSlokaList(_currentBab!);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _getBabList() async {
+    final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+    final response = await gitaProvider.getGita();
+    setState(() {
+      _babList.clear();
+      for (var i = 0; i < response['babs'].length; i++) {
+        _babList.add(response['babs'][i]);
+      }
+    });
+  }
+
+  Future<void> _getSlokaList(int bab) async {
+    final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+    final response = await gitaProvider.getGitaSlokas(bab);
+    setState(() {
+      _slokaList.clear();
+      for (var i = 0; i < response['slokas'].length; i++) {
+        _slokaList.add(response['slokas'][i]);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +92,9 @@ class _GitaWidgetState extends State<GitaWidget> {
                             borderSide: BorderSide.none,
                           ),
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
                         ),
                       ),
                     ),
@@ -76,109 +121,177 @@ class _GitaWidgetState extends State<GitaWidget> {
               const SizedBox(height: 20),
               // Tab widget
               Expanded(
-                child: DefaultTabController(
-                  length: 2,
-                  child: Column(
-                    children: [
-                      const TabBar(
-                        tabs: [
-                          Tab(
-                            text: 'Sloka',
-                          ),
-                          Tab(
-                            text: 'Favorit',
-                          ),
-                        ],
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.grey,
-                        indicatorColor: Colors.purple,
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: TabBarView(
+                child: FutureBuilder<void>(
+                  future: _futureBabList,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      return DefaultTabController(
+                        length: 2,
+                        child: Column(
                           children: [
-                            // List view for sloka
-                            ListView.builder(
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  onTap: () {
-                                    // Navigate to sloka detail
-                                    Navigator.pushNamed(
-                                        context, '/sloka-detail');
-                                  },
-                                  leading: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: const DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'lib/assets/images/order_icon.png'),
-                                      ),
-                                      borderRadius: BorderRadius.circular(50),
+                            TabBar(
+                              tabs: [
+                                // Dropdown menu for bab
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: DropdownButton<int>(
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        "${index + 1}",
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
+                                    underline: Container(),
+                                    value: _currentBab,
+                                    items: _babList.map((e) {
+                                      print(e);
+                                      return DropdownMenuItem<int>(
+                                        value: _babList.indexOf(e) + 1,
+                                        child: Text('BAB ${e['number']}'),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _currentBab = value;
+                                        _futureSlokaList =
+                                            _getSlokaList(value!);
+                                      });
+                                    },
                                   ),
-                                  title: Text('Sloka ${index + 1}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  subtitle: const Text(
-                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                                  trailing: Icon(Icons.favorite_border,
-                                      color: Colors.pinkAccent[100]),
-                                );
-                              },
+                                ),
+                                const Tab(
+                                  text: 'Favorit',
+                                ),
+                              ],
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.grey,
+                              indicatorColor: Colors.purple,
                             ),
-                            // List view for favorit
-                            ListView.builder(
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  onTap: () {},
-                                  leading: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: const DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'lib/assets/images/order_icon.png'),
-                                      ),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "${index + 1}",
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: TabBarView(
+                                children: [
+                                  // List view for sloka
+                                  FutureBuilder<void>(
+                                    future: _futureSlokaList,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                            child: Text(
+                                                'Error: ${snapshot.error}'));
+                                      } else {
+                                        return ListView.builder(
+                                          itemCount: _slokaList.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailSlokaScreen(
+                                                                bab:
+                                                                    _currentBab!,
+                                                                sloka: _slokaList[
+                                                                        index][
+                                                                    'number'])));
+                                              },
+                                              leading: Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  image: const DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: AssetImage(
+                                                        'lib/assets/images/order_icon.png'),
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "${index + 1}",
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                'Sloka ${index + 1}',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              subtitle: Text(
+                                                  "Bacaan Sloka ${_slokaList[index]['number']}"),
+                                              trailing: const Icon(
+                                                Icons.favorite_border,
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
                                   ),
-                                  title: Text('Sloka ${index + 1}'),
-                                  subtitle: const Text(
-                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                                  trailing: Icon(Icons.favorite,
-                                      color: Colors.pinkAccent[100]),
-                                );
-                              },
+                                  // List view for favorit
+                                  ListView.builder(
+                                    itemCount: 10,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        onTap: () {},
+                                        leading: Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            image: const DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage(
+                                                  'lib/assets/images/order_icon.png'),
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "${index + 1}",
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        title: Text('Sloka ${index + 1}'),
+                                        subtitle: const Text(
+                                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                                        ),
+                                        trailing: Icon(
+                                          Icons.favorite,
+                                          color: Colors.pinkAccent[100],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
