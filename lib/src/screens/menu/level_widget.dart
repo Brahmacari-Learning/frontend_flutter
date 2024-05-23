@@ -32,99 +32,102 @@ class _LevelWidgetState extends State<LevelWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _userInfo.isNotEmpty
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    fit: BoxFit.fitWidth,
-                    'lib/assets/images/hero1.png',
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: 300,
-                  ),
-                  // Card Stage
-                  Card(
-                    color: Colors.purple,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'STAGE 1',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '3 ',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _userInfo.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      fit: BoxFit.fitWidth,
+                      'lib/assets/images/hero1.png',
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: 300,
+                    ),
+                    // Card Stage
+                    Card(
+                      color: Colors.purple,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'STAGE 1',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
-                              Text(
-                                '/ 8 Level',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 213, 213, 213),
+                            ),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '3 ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
+                                Text(
+                                  '/ 8 Level',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 213, 213, 213),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            // progress bar
+                            const LinearProgressIndicator(
+                              minHeight: 8,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              value: 0.375,
+                              backgroundColor: Colors.deepPurple,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.purpleAccent,
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          // progress bar
-                          const LinearProgressIndicator(
-                            minHeight: 8,
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                            value: 0.375,
-                            backgroundColor: Colors.deepPurple,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.purpleAccent,
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Pada Tahapan ini kamu akan belajar banyak terkait sejarah dan dasar agama hindu',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Pada Tahapan ini kamu akan belajar banyak terkait sejarah dan dasar agama hindu',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                            const SizedBox(height: 30),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {},
+                              child: const Text('START',
+                                  style: TextStyle(
+                                    letterSpacing: 3,
+                                    color: Colors.purple,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )),
                             ),
-                            onPressed: () {},
-                            child: const Text('START',
-                                style: TextStyle(
-                                  letterSpacing: 3,
-                                  color: Colors.purple,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  // Text('User ID: ${_userInfo['id']}'),
-                  // Text('Email: ${_userInfo['email']}'),
-                  // Add more fields as per your JWT payload structure
-                ],
-              )
-            : const Center(child: CircularProgressIndicator()),
+                    // Text('User ID: ${_userInfo['id']}'),
+                    // Text('Email: ${_userInfo['email']}'),
+                    // Add more fields as per your JWT payload structure
+                  ],
+                )
+              : const Center(child: CircularProgressIndicator()),
+        ),
       ),
     );
   }

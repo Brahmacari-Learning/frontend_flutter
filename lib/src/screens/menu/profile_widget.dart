@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
+import 'package:vedanta_frontend/src/screens/detail_profile_screen.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -83,7 +84,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   IconButton(
                     icon: Icon(Icons.edit,),
                     onPressed: () {
-                      
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DetailProfileScreen()),
+                              );
                     },
                   ),
                 ],
