@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vedanta_frontend/src/widgets/level_widget.dart';
-import 'package:vedanta_frontend/src/widgets/profil_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/chat_bot_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/level_widget.dart';
+import 'package:vedanta_frontend/src/widgets/app_bar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/drawer_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/profile_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,16 +14,35 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static const List<Widget> _widgetOptions = <Widget>[
     LevelWidget(),
-    Text('Search Page'),
+    ChatBotWidget(),
     Text('Profile Page'),
     Text('Settings Page'),
     Text('Notifications Page'),
     Text('Messages Page'),
-    ProfilWidget(),
+    ProfileWidget(),
   ];
+
+  bool shouldShowAppBar(int index) {
+    // Define the indexes that should show the AppBar
+    const appBarIndexes = [
+      6,
+    ]; // Add the indexes for which you want to show the AppBar
+
+    return appBarIndexes.contains(index);
+  }
+
+  bool shouldShowDrawer(int index) {
+    // Define the indexes that should show the Drawer
+    const drawerIndexes = [
+      1,
+    ]; // Add the indexes for which you want to show the Drawer
+
+    return drawerIndexes.contains(index);
+  }
 
   void _onItemTapped(int index) {
     if (mounted) {
@@ -30,14 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  bool _shouldShowAppBar(int index) {
-    const pagesWithoutAppBar = {2, 4, 6}; 
-    return !pagesWithoutAppBar.contains(index);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
@@ -86,103 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
       ),
       backgroundColor: Colors.purple[400],
-      appBar:_shouldShowAppBar(_selectedIndex) ? AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              fit: BoxFit.fill,
-              'lib/assets/images/user.png',
-              width: 30,
-              height: 30,
-            ),
-            const SizedBox(width: 10),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'John Doe',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  "Siswa",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.logout),
-          //   onPressed: () async {
-          //     await authProvider.logout();
-          //     Navigator.of(context).pushReplacementNamed('/login');
-          //   },
-          // ),
-
-          // Notification button with image
-          Row(
-            children: [
-              Image.asset(
-                fit: BoxFit.fill,
-                'lib/assets/images/star.png',
-                width: 24,
-                height: 24,
-              ),
-              const Text(
-                '25',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 16),
-          Row(
-            children: [
-              Image.asset(
-                fit: BoxFit.fill,
-                'lib/assets/images/medal.png',
-                width: 24,
-                height: 24,
-              ),
-              const Text(
-                '4',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Image.asset(
-              fit: BoxFit.fill,
-              'lib/assets/images/notification.png',
-              width: 18,
-              height: 18,
-            ),
-          )
-
-          // IconButton(
-          //   icon: Icon(themeProvider.themeData.brightness == Brightness.light
-          //       ? Icons.dark_mode
-          //       : Icons.light_mode),
-          //   onPressed: () {
-          //     themeProvider.toggleTheme();
-          //   },
-          // ),
-        ],
-      ):null,
+      // Check if there is chat bot widget
+      appBar: shouldShowAppBar(_selectedIndex)
+          ? null
+          : AppBarWidget(scaffoldKey: _scaffoldKey, index: _selectedIndex),
+      drawer: shouldShowDrawer(_selectedIndex) ? const DrawerWidget() : null,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

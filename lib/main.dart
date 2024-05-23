@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
+import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
@@ -22,6 +23,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(
             create: (context) => ThemeProvider(AppTheme.lightTheme)),
+        ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
