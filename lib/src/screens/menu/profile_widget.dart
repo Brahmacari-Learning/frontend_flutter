@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/screens/detail_profile_screen.dart';
+import 'package:vedanta_frontend/src/screens/kelas_screen.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -161,26 +162,35 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               ),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 40,
-                        child: Image.asset(
-                          "lib/assets/images/icons/kelas.png",
-                          fit: BoxFit.contain,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => KelasScreen()),
+                        );
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 40,
+                          child: Image.asset(
+                            "lib/assets/images/icons/kelas.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 14),
-                      Text(
-                        'Kelas',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          
+                        SizedBox(width: 14),
+                        Text(
+                          'Kelas',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(height: 15),
                   Row(
