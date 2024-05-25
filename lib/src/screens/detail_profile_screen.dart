@@ -16,7 +16,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
           children: [
             Container(
               height: 250,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('lib/assets/images/detail_profil_background.png'), 
                   fit: BoxFit.cover,
@@ -31,8 +31,8 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     scrolledUnderElevation: 0,
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 60),
-                    child: Center(
+                    margin: const EdgeInsets.only(top: 60),
+                    child: const Center(
                         child: CircleAvatar(
                         radius: 60,
                         backgroundImage: AssetImage('lib/assets/images/user2.png'),
@@ -43,7 +43,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
                   TextFormField(
@@ -112,7 +112,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   ElevatedButtonTheme(
                     data: Theme.of(context).elevatedButtonTheme,
                     child: ElevatedButton(

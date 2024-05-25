@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/widgets/bubble_chat_widget.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ChatBotWidget extends StatefulWidget {
   const ChatBotWidget({super.key});
@@ -14,7 +15,8 @@ class ChatBotWidget extends StatefulWidget {
 class _ChatBotWidgetState extends State<ChatBotWidget> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> _chat = [];
+  final List<Map<String, dynamic>> _chat = [];
+  bool _isLoading = false; // Tambahkan variabel _isLoading
 
   @override
   void dispose() {
@@ -66,6 +68,72 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                               ))
                           .toList(),
                     ),
+                    if (_isLoading)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // Avatar
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.only(left: 20),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomRight: Radius.circular(20))
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.only(left: 10, right: 20),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 50,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomRight: Radius.circular(20))
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Gap
+                          ],
+                        ),
+                      ),
+
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 10),
+                      //   child: Shimmer.fromColors(
+                      //     baseColor: Colors.grey[300]!,
+                      //     highlightColor: Colors.grey[100]!,
+                      //     child: Container(
+                      //       width: double.infinity,
+                      //       height: 50.0,
+                      //       decoration: BoxDecoration(
+                      //         color: Colors.white,
+                      //         borderRadius: BorderRadius.circular(8.0),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                   ],
                 ),
               ),
@@ -126,13 +194,14 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                             // Clear the input field
                             _controller.clear();
 
-                            // Add messages to chat list and update state
+                            // Add user's message to chat list and update state
                             setState(() {
                               _chat.add({
                                 'message': message,
                                 'isUser': true,
-                                'error': false
+                                'error': false,
                               });
+                              _isLoading = true; // Set _isLoading ke true
                             });
 
                             _scrollToBottom();
@@ -141,26 +210,23 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                             Map<String, dynamic> response =
                                 await chatProvider.quickChat(message);
 
-                            print(response);
-
-                            // Add messages to chat list and update state
-                            if (!response['error']) {
-                              setState(() {
+                            // Add response to chat list and update state
+                            setState(() {
+                              _isLoading = false; // Set _isLoading ke false
+                              if (!response['error']) {
                                 _chat.add({
                                   'message': response['text'],
                                   'isUser': false,
-                                  'error': false
+                                  'error': false,
                                 });
-                              });
-                            } else {
-                              setState(() {
+                              } else {
                                 _chat.add({
                                   'message': response['text'],
                                   'isUser': false,
                                   'error': true,
                                 });
-                              });
-                            }
+                              }
+                            });
 
                             // Scroll to bottom
                             _scrollToBottom();
