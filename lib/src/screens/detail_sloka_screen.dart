@@ -15,6 +15,7 @@ class DetailSlokaScreen extends StatefulWidget {
 
 class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
   Map _sloka = {};
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -37,6 +38,9 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
         _sloka = response;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -45,49 +49,51 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
       appBar: AppBar(
         title: const Text('Detail Sloka'),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            GitaCardWidget(
-              headerText: 'Sedang Membaca:',
-              subHeaderText:
-                  'BAB ${_sloka['numberBab']}: SLOKA ${_sloka['number']}',
-              text: 'Arjuna Vishaada Yoga',
-              withButton: false,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GitaCardWidget(
+                    headerText: 'Sedang Membaca:',
+                    subHeaderText:
+                        'BAB ${_sloka['numberBab']}: SLOKA ${_sloka['number']}',
+                    text: 'Arjuna Vishaada Yoga',
+                    withButton: false,
+                  ),
+                  const SizedBox(height: 20),
+                  // Media Player Widget
+                  const MusicPlayerWidget(
+                      url:
+                          "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Sloka:',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _sloka['content'] ?? '',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Terjemahan:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _sloka['translationIndo'] ?? '',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            // Media Player Widget
-            MusicPlayerWidget(
-                url:
-                    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
-            const SizedBox(height: 20),
-            Text(
-              'Sloka:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _sloka['content'] ?? '',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Terjemahan:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _sloka['translationIndo'] ?? '',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
