@@ -14,7 +14,7 @@ class ChatBotWidget extends StatefulWidget {
 class _ChatBotWidgetState extends State<ChatBotWidget> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> _chat = [];
+  final List<Map<String, dynamic>> _chat = [];
 
   @override
   void dispose() {
@@ -140,8 +140,6 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                             // Send message and get response
                             Map<String, dynamic> response =
                                 await chatProvider.quickChat(message);
-
-                            print(response);
 
                             // Add messages to chat list and update state
                             if (!response['error']) {
