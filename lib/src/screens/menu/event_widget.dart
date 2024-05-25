@@ -28,6 +28,7 @@ class _EventWidgetState extends State<EventWidget> {
         ),
         body: TabBarView(
           children: [
+            // Rahian
             Column(
               children: [
                 Container(
@@ -78,24 +79,24 @@ class _EventWidgetState extends State<EventWidget> {
                         ],
                       ),
                     ],
-                  ),
+                  ),  
                 ),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // SizedBox(height: 20),
-                        Text(
-                          "Misi Harian",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // SizedBox(height: 20),
+                          Text(
+                            "Misi Harian",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800
+                            ),
                           ),
-                        ),
-                        SingleChildScrollView(
-                          child: Column(
+                          Column(
                             children: [
                               for (int i = 0; i < 5 ; i++)
                               Container(
@@ -156,15 +157,17 @@ class _EventWidgetState extends State<EventWidget> {
                                 ),
                               )
                             ],
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ) 
                 ),
               ],
             ),
+            // Lencana
             Center(child: Text("Lencana")),
+            //Tukar
             Center(child: Text("Tukar")),
           ],
         ),
