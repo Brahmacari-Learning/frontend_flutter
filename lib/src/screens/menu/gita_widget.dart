@@ -235,9 +235,12 @@ class _GitaWidgetState extends State<GitaWidget> {
                                               ),
                                               subtitle: Text(
                                                   "Bacaan Sloka ${_slokaList[index]['number']}"),
-                                              trailing: const Icon(
+                                              trailing:  _slokaList[index]['isLiked'] == false ? Icon(
                                                 Icons.favorite_border,
                                                 color: Colors.grey,
+                                              ) : Icon(
+                                                Icons.favorite,
+                                                color: Colors.pinkAccent[100],
                                               ),
                                             );
                                           },
