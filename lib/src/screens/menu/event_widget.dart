@@ -103,7 +103,7 @@ class _EventWidgetState extends State<EventWidget> {
                               Row(
                                 children: [
                                   Container(
-                                    width: 240,
+                                    width: MediaQuery.of(context).size.width * 0.62,
                                     padding: EdgeInsets.symmetric(vertical: 5),
                                     decoration: BoxDecoration(
                                       color: Color(0xFF9095A0),
@@ -185,7 +185,7 @@ class _EventWidgetState extends State<EventWidget> {
                                         SizedBox(height: 5),
                                         Container(
                                           height: 32,
-                                          width: 220,
+                                          width: MediaQuery.of(context).size.width * 0.6,
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: AssetImage('lib/assets/images/indikator_misi.png'), 
