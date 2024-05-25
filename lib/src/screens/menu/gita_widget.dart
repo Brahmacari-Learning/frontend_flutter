@@ -18,12 +18,14 @@ class _GitaWidgetState extends State<GitaWidget> {
   int? _currentBab = 1;
   late Future<void> _futureBabList = Future.value();
   late Future<void> _futureSlokaList = Future.value();
+  // late Future<Map<String, dynamic>> _futureBacaanTerakhir = Future.value({});
 
   @override
   void initState() {
     super.initState();
     _futureBabList = _getBabList();
     _futureSlokaList = _getSlokaList(_currentBab!);
+    // _futureBacaanTerakhir = _getBacaanTerakhir();
   }
 
   @override
@@ -53,6 +55,15 @@ class _GitaWidgetState extends State<GitaWidget> {
       }
     });
   }
+
+  // Future<Map<String, dynamic>> _getBacaanTerakhir() async {
+  //   final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+  //   final response = await gitaProvider.getBacaanTerakhir();
+  //   setState(() {
+  //     _futureBacaanTerakhir = response['bacaan'];
+  //   });
+  //   return response;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +123,27 @@ class _GitaWidgetState extends State<GitaWidget> {
                 ),
               ),
               const SizedBox(height: 40),
-              const GitaCardWidget(
+              // FutureBuilder(
+              //   future: _futureBacaanTerakhir,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return const Center(child: CircularProgressIndicator());
+              //     } else if (snapshot.hasError) {
+              //       return Center(child: Text('Error: ${snapshot.error}'));
+              //     } else {
+              //       return GitaCardWidget(
+              //         headerText: 'Bacaan Terakhir',
+              //         subHeaderText:
+              //             "BAB ${snapshot.data!['bubNumber']} : SLOKA ${snapshot.data!['slokaNumber']}",
+              //         text: '',
+              //         buttonText: 'Lanjutkan Membaca',
+              //       );
+              //     }
+              //   },
+              // ),
+              GitaCardWidget(
                 headerText: 'Bacaan Terakhir',
-                subHeaderText: 'BAB 1 : SLOKA 1',
+                subHeaderText: "BAB 1 : SLOKA 1",
                 text: 'Arjuna Visada Yoga',
                 buttonText: 'Lanjutkan Membaca',
               ),

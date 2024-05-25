@@ -48,4 +48,27 @@ class GitaProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  // pelafalan sloka
+  Future<Map<String, dynamic>> getGitaSlokaPelafalan(int bab, int sloka) async {
+    try {
+      final response =
+          await _apiService.fetchData('gita/bab/$bab/slokas/$sloka/pelafalan');
+      return response;
+    } catch (e) {
+      print(e);
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  // Bacaab terakhir
+  Future<Map<String, dynamic>> getBacaanTerakhir() async {
+    try {
+      final response = await _apiService.fetchData('gita/bacaan-terakhir');
+      return response;
+    } catch (e) {
+      print(e);
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }
