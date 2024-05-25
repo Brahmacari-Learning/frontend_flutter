@@ -15,10 +15,13 @@ class _EventWidgetState extends State<EventWidget> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color(0xFFDA94FA),
           elevation: 0,
           toolbarHeight: 0,
           bottom: const TabBar(
+            labelColor: Colors.white, 
+            unselectedLabelColor: Colors.grey, 
+            indicatorColor: Colors.white, 
             tabs: [
               Tab(text: "Misi"),
               Tab(text: "Lencana"),
@@ -34,7 +37,7 @@ class _EventWidgetState extends State<EventWidget> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   width: double.infinity,
-                  height: 100, 
+                  
                   color: Color(0xFFDA94FA), 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +81,57 @@ class _EventWidgetState extends State<EventWidget> {
                           ),
                         ],
                       ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFFFFFF),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Presensi Harian",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600
+                                ),
+                                textAlign: TextAlign.start
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 240,
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF9095A0),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "1/20",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700
+                                        )
+                                      ),
+                                    ),
+                                  ),
+                                  Image.asset(
+                                    fit: BoxFit.fill,
+                                    'lib/assets/images/icons/time.png',
+                                    width: 60,
+                                    height: 60,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),  
                 ),
@@ -105,7 +159,7 @@ class _EventWidgetState extends State<EventWidget> {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Color(0xFFDADADA),
-                                    width: 1,
+                                    width: 2,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -166,9 +220,203 @@ class _EventWidgetState extends State<EventWidget> {
               ],
             ),
             // Lencana
-            Center(child: Text("Lencana")),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (int i = 0; i < 20 ; i++)
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          width: 345,
+                          padding: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF1C40F),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: Offset(0, -2),
+                                blurRadius: 7,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(3), // Border width
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFFF8504), // Border color
+                                  shape: BoxShape.circle,
+                                ),
+                                child: CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: AssetImage('lib/assets/images/icons/misi.png'),
+                                ),
+                              ),
+                              SizedBox(width: 15),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    constraints: BoxConstraints(maxWidth: 170),
+                                    child: Text(
+                                      "Si Pintar",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                    ),
+                                  ),
+                                  Container(
+                                    constraints: BoxConstraints(maxWidth: 200),
+                                    child: Text(
+                                      "Menyelesaikan Semua Kuis Pada Map 1 asd ads asd ASZ das aSD",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                    ),
+                                  ),
+                                  
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 50, left: 10),
+                                child: Image.asset(
+                                  fit: BoxFit.fill,
+                                  'lib/assets/images/icons/star.png',
+                                  width: 22,
+                                  height: 22,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
             //Tukar
-            Center(child: Text("Tukar")),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (int i = 0; i < 20 ; i++)
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          width: 345,
+                          padding: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF9BD2FC),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: Offset(0, -2),
+                                blurRadius: 7,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(3), // Border width
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFFF8504), // Border color
+                                  shape: BoxShape.circle,
+                                ),
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage: AssetImage('lib/assets/images/user2.png'),
+                                ),
+                              ),
+                              SizedBox(width: 15),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    constraints: BoxConstraints(maxWidth: 140),
+                                    child: Text(
+                                      "Kalender Bali asdas asdasdas",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        fit: BoxFit.fill,
+                                        'lib/assets/images/star.png',
+                                        width: 30,
+                                        height: 30,
+                                      ),
+                                      const Text(
+                                        '25',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 15),
+                              ElevatedButton(
+                                onPressed: ()  {
+                                
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                  backgroundColor: Color(0xFFF1C40F),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Atur radius sudut di sini
+                                  ),
+                                ),
+                                child: Text(
+                                  "Tukar",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color(0xFFFFFFFFF),
+                                    fontWeight: FontWeight.w900
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
