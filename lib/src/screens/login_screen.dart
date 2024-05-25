@@ -62,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       TextFormField(
                         controller: _passwordController,
