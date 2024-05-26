@@ -17,6 +17,7 @@ dependencies:
   jwt_decode: ^0.3.1
   provider: ^6.1.2
   shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +36,7 @@ flutter:
     - family: NotoSansDevanagari
       fonts:
         - asset: lib/assets/fonts/NotoSansDevanagari.ttf
+    - family: GauraTimesRegular
+      fonts:
+        - asset: lib/assets/fonts/Gaura-Times-Regular.ttf
+          weight: 600
