@@ -33,6 +33,9 @@ flutter:
     - lib/assets/images/icons/
 
   fonts:
+    - family: NotoSansDevanagari
+      fonts:
+        - asset: lib/assets/fonts/NotoSansDevanagari.ttf
     - family: GauraTimesRegular
       fonts:
         - asset: lib/assets/fonts/Gaura-Times-Regular.ttf

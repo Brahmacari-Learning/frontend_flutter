@@ -4,7 +4,6 @@ import 'package:vedanta_frontend/app_theme.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
-// import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
 import 'src/screens/login_screen.dart';
