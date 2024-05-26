@@ -78,7 +78,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                     if (response['error']) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(response['message']),
-                        backgroundColor: Colors.red,
+                        backgroundColor: Color(0xFFB95A92),
                       ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -291,7 +291,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(response['message']),
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: Color(0xFFB95A92),
                                         ),
                                       );
                                     } else {
@@ -410,12 +410,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                         Row(
                                           children: [
                                             IconButton(
-                                              icon: (reply['isLiked'])
-                                                  ? const Icon(Icons.favorite,
-                                                      color: Colors.red)
-                                                  : const Icon(
-                                                      Icons.favorite_border,
-                                                      color: Colors.red),
+                                              icon: LikeIcon(reply),
                                               onPressed: () async {
                                                 final response =
                                                     await discussionProvider
@@ -428,7 +423,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                       content: Text(
                                                           response['message']),
                                                       backgroundColor:
-                                                          Colors.red,
+                                                          Color(0xFFB95A92),
                                                     ),
                                                   );
                                                 } else {
@@ -449,7 +444,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                             Text('${reply['likesCount']}',
                                                 style: const TextStyle(
                                                     fontSize: 16,
-                                                    color: Colors.red,
+                                                    color: Color(0xFFB95A92),
                                                     fontWeight:
                                                         FontWeight.w500))
                                           ],
@@ -496,9 +491,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   //             IconButton(
                                   //               icon: (reply['isLiked'])
                                   //                   ? Icon(Icons.favorite,
-                                  //                       color: Colors.red)
+                                  //                       color: Color(0xFFB95A92))
                                   //                   : Icon(Icons.favorite_border,
-                                  //                       color: Colors.red),
+                                  //                       color: Color(0xFFB95A92)),
                                   //               onPressed: () async {
                                   //                 final response =
                                   //                     await discussionProvider
@@ -511,7 +506,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   //                     SnackBar(
                                   //                       content: Text(
                                   //                           response['message']),
-                                  //                       backgroundColor: Colors.red,
+                                  //                       backgroundColor: Color(0xFFB95A92),
                                   //                     ),
                                   //                   );
                                   //                 } else {
@@ -544,7 +539,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   //                     SnackBar(
                                   //                       content: Text(
                                   //                           response['message']),
-                                  //                       backgroundColor: Colors.red,
+                                  //                       backgroundColor: Color(0xFFB95A92),
                                   //                     ),
                                   //                   );
                                   //                 } else {
@@ -618,7 +613,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.5,
+                                                    0.55,
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -678,18 +673,21 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                             'isLiked'])
                                                         ? const Icon(
                                                             Icons.favorite,
-                                                            color: Colors.red)
+                                                            color: Color(
+                                                                0xFFB95A92))
                                                         : const Icon(
                                                             Icons
                                                                 .favorite_border,
-                                                            color: Colors.red),
+                                                            color: Color(
+                                                                0xFFB95A92)),
                                                     onPressed: () async {},
                                                   ),
                                                   Text(
                                                       '${nestedReply['likesCount']}',
                                                       style: const TextStyle(
                                                           fontSize: 16,
-                                                          color: Colors.red,
+                                                          color:
+                                                              Color(0xFFB95A92),
                                                           fontWeight:
                                                               FontWeight.w500))
                                                 ],
@@ -746,5 +744,11 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
         ),
       ),
     );
+  }
+
+  Icon LikeIcon(reply) {
+    return (reply['isLiked'])
+        ? const Icon(Icons.favorite, color: Color(0xFFB95A92))
+        : const Icon(Icons.favorite_border, color: Color(0xFFB95A92));
   }
 }
