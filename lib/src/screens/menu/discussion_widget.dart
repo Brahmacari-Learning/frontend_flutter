@@ -22,7 +22,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
     // Search form and list of discussions
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       child: Column(
         children: [
           // Search form
@@ -71,7 +71,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         backgroundColor: Colors.red,
                       ));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Search success!'),
                         backgroundColor: Colors.green,
                       ));
@@ -119,7 +119,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                           ListTile(
                             title: Text(
                               discussions[index]['title'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500
                               ),
@@ -137,14 +137,14 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                               );
                             },
                             // like button
-                            trailing: Container(
+                            trailing: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.13,
                               child: Row(
                                 children: [
                                   IconButton(
                                     icon: (discussions[index]['isLiked'])
-                                        ? Icon(Icons.favorite, color: Colors.red)
-                                        : Icon(Icons.favorite_border,
+                                        ? const Icon(Icons.favorite, color: Colors.red)
+                                        : const Icon(Icons.favorite_border,
                                             color: Colors.red),
                                     onPressed: () async {
                                       final response =
@@ -162,7 +162,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          SnackBar(
+                                          const SnackBar(
                                             content: Text('Like success!'),
                                             backgroundColor: Colors.green,
                                           ),
@@ -206,7 +206,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                               ),
                             )
                           ),
-                          Divider(              
+                          const Divider(              
                             thickness: 1,
                             indent: 0,
                             endIndent: 0, 
@@ -230,7 +230,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                   backgroundColor: Colors.red,
                 ));
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Create discussion success!'),
                   backgroundColor: Colors.green,
                 ));
@@ -240,18 +240,18 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
               }
             },
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              backgroundColor: Color(0xFFB95A92),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              backgroundColor: const Color(0xFFB95A92),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Ingin berdiskusi tentang suatu hal?',
                       style: TextStyle(
                         color: Colors.white,
@@ -259,7 +259,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Ayo Tanyakan Sesuatu!?',
                       style: TextStyle(
                         color: Colors.white,
