@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,13 +23,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     // provider
     final discussionProvider =
         Provider.of<DiscussionProvider>(context, listen: false);
+
     // Detail discussion
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Discussion'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SingleChildScrollView(
           child: Expanded(
             child: Column(
@@ -43,7 +43,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                       return Center(
                         child: Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.4),
-                          child: CircularProgressIndicator()
+                          child: const CircularProgressIndicator()
                         ),
                       );
                     } else {
@@ -71,7 +71,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                           data['creator']['name'][0].toUpperCase(),
                                         ),
                                       ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -79,7 +79,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.43),
                                           child: Text(
                                             data['creator']['name'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Color(0xFFB95A92),
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -88,7 +88,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                             maxLines: 1,
                                           ),
                                         ),
-                                        Text(
+                                        const Text(
                                           "Online",
                                           style: TextStyle(
                                             color: Color(0xFF3ABF38),
@@ -103,7 +103,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               ),
                               Text(
                                 formatDate(data['createdAt']),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   // color: Color(0xFF666666),
                                   fontWeight: FontWeight.w400
@@ -111,10 +111,10 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Text(
                             data['title'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 19,
                               // color: Color(0xFF030303),
                               fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           ),
                           Text(
                             data['body'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               // color: Color(0xFF666666),
                               fontWeight: FontWeight.w400
@@ -134,7 +134,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             children: [
                               Text(
                                 '${data['repliesCount']} Jawaban',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFFB95A92),
                                   fontWeight: FontWeight.w500
@@ -143,14 +143,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               Container(
                                 child: Row(
                                   children: [ 
-                                    Icon(
+                                    const Icon(
                                       Icons.favorite,
                                       color: Color(0xFFB95A92)
                                     ),
-                                    SizedBox(width: 5,),
+                                    const SizedBox(width: 5,),
                                     Text(
                                       '${data['likesCount']}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Color(0xFFB95A92),
                                         fontWeight: FontWeight.w500
@@ -162,7 +162,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.only(top: 20),
                             width: double.infinity,
                             height: 1,
                             color: Colors.grey.withOpacity(0.5),
@@ -217,8 +217,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                       );
                                     } else {
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: const Text('Reply created'),
+                                        const SnackBar(
+                                          content: Text('Reply created'),
                                           backgroundColor: Colors.green,
                                         ),
                                         
@@ -245,7 +245,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           const SizedBox(height: 20),
                           // Replies with nested replies
                           ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: data['replies'].length,
                             itemBuilder: (context, index) {
@@ -253,7 +253,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               return Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.symmetric(vertical: 7),
+                                    margin: const EdgeInsets.symmetric(vertical: 7),
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -270,22 +270,22 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                   .toUpperCase(),
                                             ),
                                           ),
-                                        SizedBox(width: 10,),
-                                        Container(
+                                        const SizedBox(width: 10,),
+                                        SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.6,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 reply['creator']['name'],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               Text(
                                                 reply['reply'],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -295,7 +295,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                     onTap: () {
                                                       
                                                     },
-                                                    child: Text(
+                                                    child: const Text(
                                                       "Balas",
                                                       style: TextStyle(
                                                         color: Color(0xFF666666),
@@ -303,10 +303,10 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Text(
                                                     formatDate(reply['createdAt']),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.grey,
                                                       fontWeight: FontWeight.w400
@@ -321,9 +321,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                           children: [
                                             IconButton(
                                               icon: (reply['isLiked'])
-                                                  ? Icon(Icons.favorite,
+                                                  ? const Icon(Icons.favorite,
                                                       color: Colors.red)
-                                                  : Icon(Icons.favorite_border,
+                                                  : const Icon(Icons.favorite_border,
                                                       color: Colors.red),
                                               onPressed: () async {
                                                 final response =
@@ -343,8 +343,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                 } else {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
-                                                    SnackBar(
-                                                      content: const Text(
+                                                    const SnackBar(
+                                                      content: Text(
                                                           'Reply liked'),
                                                       backgroundColor:
                                                           Colors.green,
@@ -357,7 +357,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                             ),
                                             Text(
                                               '${reply['likesCount']}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.w500
@@ -489,18 +489,20 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   // ),
                                   // Nested replies (make it different by adding padding)
                                   Padding(
-                                    padding: EdgeInsets.only(left: 20),
+                                    padding: const EdgeInsets.only(left: 20),
                                     child: ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: reply['replies'].length,
                                       itemBuilder: (context, index) {
                                         final nestedReply =
                                             reply['replies'][index];
-                                        return ListTile(
-                                          leading: (nestedReply['creator']
-                                                      ['profilePicture'] !=
-                                                  null)
+                                        return Container(
+                                          margin: const EdgeInsets.symmetric(vertical: 7),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              (nestedReply['creator']['profilePicture'] != null)
                                               ? CircleAvatar(
                                                   backgroundImage: NetworkImage(
                                                     nestedReply['creator']
@@ -509,25 +511,113 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                 )
                                               : CircleAvatar(
                                                   child: Text(
-                                                    nestedReply['creator']
-                                                            ['name'][0]
+                                                    nestedReply['creator']['name'][0]
                                                         .toUpperCase(),
                                                   ),
                                                 ),
-                                          title: Text(
-                                            nestedReply['reply'],
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            'Likes: ${nestedReply['likesCount']} | Created At: ${nestedReply['createdAt']} | Creator: ${nestedReply['creator']['name']}',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                            ),
+                                              const SizedBox(width: 10,),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width * 0.5,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      nestedReply['creator']['name'],
+                                                      style: const TextStyle(
+                                                        fontSize: 17,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      nestedReply['reply'],
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            
+                                                          },
+                                                          child: const Text(
+                                                            "Balas",
+                                                            style: TextStyle(
+                                                              color: Color(0xFF666666),
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 10,),
+                                                        Text(
+                                                          formatDate(nestedReply['createdAt']),
+                                                          style: const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                            fontWeight: FontWeight.w400
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    icon: (nestedReply['isLiked'])
+                                                        ? const Icon(Icons.favorite,
+                                                            color: Colors.red)
+                                                        : const Icon(Icons.favorite_border,
+                                                            color: Colors.red),
+                                                    onPressed: () async {
+                                                      
+                                                    },
+                                                  ),
+                                                  Text(
+                                                    '${nestedReply['likesCount']}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.red,
+                                                      fontWeight: FontWeight.w500
+                                                    )
+                                                  )
+                                                ],
+                                              )
+                                            ],
                                           ),
                                         );
+                                        // return ListTile(
+                                        //   leading: (nestedReply['creator']
+                                        //               ['profilePicture'] !=
+                                        //           null)
+                                        //       ? CircleAvatar(
+                                        //           backgroundImage: NetworkImage(
+                                        //             nestedReply['creator']
+                                        //                 ['profilePicture'],
+                                        //           ),
+                                        //         )
+                                        //       : CircleAvatar(
+                                        //           child: Text(
+                                        //             nestedReply['creator']
+                                        //                     ['name'][0]
+                                        //                 .toUpperCase(),
+                                        //           ),
+                                        //         ),
+                                        //   title: Text(
+                                        //     nestedReply['reply'],
+                                        //     style: TextStyle(
+                                        //       fontSize: 16,
+                                        //       fontWeight: FontWeight.bold,
+                                        //     ),
+                                        //   ),
+                                        //   subtitle: Text(
+                                        //     'Likes: ${nestedReply['likesCount']} | Created At: ${nestedReply['createdAt']} | Creator: ${nestedReply['creator']['name']}',
+                                        //     style: TextStyle(
+                                        //       fontSize: 14,
+                                        //     ),
+                                        //   ),
+                                        // );
                                       },
                                     ),
                                   ),
