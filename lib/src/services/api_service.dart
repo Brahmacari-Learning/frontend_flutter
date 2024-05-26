@@ -20,7 +20,9 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final decodedResponse = utf8.decode(response.bodyBytes);
+      final jsonResponse = jsonDecode(decodedResponse);
+      return jsonResponse;
     } else {
       throw Exception('Failed to load data');
     }

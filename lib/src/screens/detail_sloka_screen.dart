@@ -34,6 +34,7 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
         ),
       );
     } else {
+      print(response);
       setState(() {
         _sloka = response;
       });
@@ -57,14 +58,15 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
                   headerText: 'Sedang Membaca:',
                   subHeaderText:
                       'BAB ${_sloka['numberBab']}: SLOKA ${_sloka['number']}',
-                  text: 'Arjuna Vishaada Yoga',
+                  text: _sloka['babTitle'] ?? '',
                   withButton: false,
                 ),
                 SizedBox(height: 20),
                 // Media Player Widget
-                // MusicPlayerWidget(
-                //     url:
-                //         "https://vedanta-pro.vercel.app/api/gita/bab/${_sloka['numberBab']}/slokas/${_sloka['number']}/pelafalan"),
+                if (_sloka['urlPelafalan'] != null)
+                  MusicPlayerWidget(url: _sloka['urlPelafalan'])
+                else
+                  CircularProgressIndicator(),
                 const SizedBox(height: 20),
                 Text(
                   'Sloka:',
@@ -76,7 +78,10 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
                 const SizedBox(height: 10),
                 Text(
                   _sloka['content'] ?? '',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    // fontFamily: 'NotoSansDevanagari',
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(

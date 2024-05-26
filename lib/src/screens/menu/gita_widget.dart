@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
+import 'package:vedanta_frontend/src/screens/search_sloka_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 
 class GitaWidget extends StatefulWidget {
@@ -67,6 +68,8 @@ class _GitaWidgetState extends State<GitaWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+
     return Container(
       color: Colors.white,
       child: Center(
@@ -111,7 +114,30 @@ class _GitaWidgetState extends State<GitaWidget> {
                     ),
                     const SizedBox(width: 10),
                     TextButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        final response = await gitaProvider
+                            .searchSlokas(_controller.text.trim());
+                        if (response['error']) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(response['message']),
+                            backgroundColor: Colors.red,
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Sloka found'),
+                            backgroundColor: Colors.green,
+                          ));
+                          // navigate to detail sloka screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchSlokaScreen(
+                                slokas: response['gitas'],
+                              ),
+                            ),
+                          );
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
@@ -123,30 +149,30 @@ class _GitaWidgetState extends State<GitaWidget> {
                 ),
               ),
               const SizedBox(height: 40),
-              // FutureBuilder(
-              //   future: _futureBacaanTerakhir,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Center(child: CircularProgressIndicator());
-              //     } else if (snapshot.hasError) {
-              //       return Center(child: Text('Error: ${snapshot.error}'));
-              //     } else {
-              //       return GitaCardWidget(
-              //         headerText: 'Bacaan Terakhir',
-              //         subHeaderText:
-              //             "BAB ${snapshot.data!['bubNumber']} : SLOKA ${snapshot.data!['slokaNumber']}",
-              //         text: '',
-              //         buttonText: 'Lanjutkan Membaca',
-              //       );
-              //     }
-              //   },
-              // ),
-              GitaCardWidget(
-                headerText: 'Bacaan Terakhir',
-                subHeaderText: "BAB 1 : SLOKA 1",
-                text: 'Arjuna Visada Yoga',
-                buttonText: 'Lanjutkan Membaca',
+              FutureBuilder(
+                future: gitaProvider.getBacaanTerakhir(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return GitaCardWidget(
+                      headerText: 'Bacaan Terakhir',
+                      subHeaderText:
+                          "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
+                      text: snapshot.data!['bacaan']['babTitle'],
+                      buttonText: 'Lanjutkan Membaca',
+                    );
+                  }
+                },
               ),
+              // GitaCardWidget(
+              //   headerText: 'Bacaan Terakhir',
+              //   subHeaderText: "BAB 1 : SLOKA 1",
+              //   text: 'Arjuna Visada Yoga',
+              //   buttonText: 'Lanjutkan Membaca',
+              // ),
               const SizedBox(height: 20),
               // Tab widget
               Expanded(
@@ -264,9 +290,54 @@ class _GitaWidgetState extends State<GitaWidget> {
                                               ),
                                               subtitle: Text(
                                                   "Bacaan Sloka ${_slokaList[index]['number']}"),
-                                              trailing: const Icon(
-                                                Icons.favorite_border,
-                                                color: Colors.grey,
+                                              trailing: InkWell(
+                                                onTap: () async {
+                                                  // Add to favorite
+                                                  final gitaProvider =
+                                                      Provider.of<GitaProvider>(
+                                                          context,
+                                                          listen: false);
+                                                  final response =
+                                                      await gitaProvider
+                                                          .likeSloka(
+                                                              _currentBab!,
+                                                              _slokaList[index]
+                                                                  ['number']);
+                                                  if (response['error']) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          response['message']),
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                    ));
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Sloka added to favorite'),
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ));
+                                                    setState(() {
+                                                      _slokaList[index]
+                                                          ['isLiked'] = true;
+                                                    });
+                                                  }
+                                                },
+                                                child: _slokaList[index]
+                                                        ['isLiked']
+                                                    ? const Icon(
+                                                        Icons.favorite,
+                                                        color:
+                                                            Colors.pinkAccent,
+                                                      )
+                                                    : const Icon(
+                                                        Icons.favorite_border,
+                                                        color: Colors.grey,
+                                                      ),
                                               ),
                                             );
                                           },
@@ -275,42 +346,122 @@ class _GitaWidgetState extends State<GitaWidget> {
                                     },
                                   ),
                                   // List view for favorit
-                                  ListView.builder(
-                                    itemCount: 10,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        onTap: () {},
-                                        leading: Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            image: const DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                  'lib/assets/images/order_icon.png'),
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                          ),
-                                          child: Center(
+                                  FutureBuilder<void>(
+                                    future: _futureSlokaList,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
                                             child: Text(
-                                              "${index + 1}",
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
+                                                'Error: ${snapshot.error}'));
+                                      } else {
+                                        // only show liked sloka
+                                        final likedSlokaList = _slokaList
+                                            .where((e) => e['isLiked'] == true)
+                                            .toList();
+                                        return ListView.builder(
+                                          itemCount: likedSlokaList.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailSlokaScreen(
+                                                                bab:
+                                                                    _currentBab!,
+                                                                sloka: _slokaList[
+                                                                        index][
+                                                                    'number'])));
+                                              },
+                                              leading: Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  image: const DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: AssetImage(
+                                                        'lib/assets/images/order_icon.png'),
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "${index + 1}",
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                        title: Text('Sloka ${index + 1}'),
-                                        subtitle: const Text(
-                                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                                        ),
-                                        trailing: Icon(
-                                          Icons.favorite,
-                                          color: Colors.pinkAccent[100],
-                                        ),
-                                      );
+                                              title: Text(
+                                                'Sloka ${index + 1}',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              subtitle: Text(
+                                                  "Bacaan Sloka ${_slokaList[index]['number']}"),
+                                              trailing: InkWell(
+                                                onTap: () async {
+                                                  // Add to favorite
+                                                  final gitaProvider =
+                                                      Provider.of<GitaProvider>(
+                                                          context,
+                                                          listen: false);
+                                                  final response =
+                                                      await gitaProvider
+                                                          .likeSloka(
+                                                              _currentBab!,
+                                                              _slokaList[index]
+                                                                  ['number']);
+                                                  if (response['error']) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          response['message']),
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                    ));
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Sloka added to favorite'),
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ));
+                                                    setState(() {
+                                                      _slokaList[index]
+                                                          ['isLiked'] = true;
+                                                    });
+                                                  }
+                                                },
+                                                child: _slokaList[index]
+                                                        ['isLiked']
+                                                    ? const Icon(
+                                                        Icons.favorite,
+                                                        color:
+                                                            Colors.pinkAccent,
+                                                      )
+                                                    : const Icon(
+                                                        Icons.favorite_border,
+                                                        color: Colors.grey,
+                                                      ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
                                     },
                                   ),
                                 ],

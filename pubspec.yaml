@@ -30,3 +30,8 @@ flutter:
     - lib/assets/
     - lib/assets/images/
     - lib/assets/images/icons/
+
+  fonts:
+    - family: NotoSansDevanagari
+      fonts:
+        - asset: lib/assets/fonts/NotoSansDevanagari.ttf
