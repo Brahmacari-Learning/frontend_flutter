@@ -55,51 +55,49 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               // Image Avatar
-                              Container(
-                                child: Row(
-                                  children: [
-                                    if (data['creator']['profilePicture'] != null)
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          data['creator']['profilePicture'],
-                                        ),
-                                        radius: 23,
-                                      )
-                                    else
-                                      CircleAvatar(
-                                        child: Text(
-                                          data['creator']['name'][0].toUpperCase(),
-                                        ),
+                              Row(
+                                children: [
+                                  if (data['creator']['profilePicture'] != null)
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        data['creator']['profilePicture'],
                                       ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.43),
-                                          child: Text(
-                                            data['creator']['name'],
-                                            style: const TextStyle(
-                                              color: Color(0xFFB95A92),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                        const Text(
-                                          "Online",
-                                          style: TextStyle(
-                                            color: Color(0xFF3ABF38),
-                                            fontSize: 12,
+                                      radius: 23,
+                                    )
+                                  else
+                                    CircleAvatar(
+                                      child: Text(
+                                        data['creator']['name'][0].toUpperCase(),
+                                      ),
+                                    ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.43),
+                                        child: Text(
+                                          data['creator']['name'],
+                                          style: const TextStyle(
+                                            color: Color(0xFFB95A92),
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      const Text(
+                                        "Online",
+                                        style: TextStyle(
+                                          color: Color(0xFF3ABF38),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                               Text(
                                 formatDate(data['createdAt']),
@@ -140,24 +138,22 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   fontWeight: FontWeight.w500
                                 )
                               ),
-                              Container(
-                                child: Row(
-                                  children: [ 
-                                    const Icon(
-                                      Icons.favorite,
-                                      color: Color(0xFFB95A92)
-                                    ),
-                                    const SizedBox(width: 5,),
-                                    Text(
-                                      '${data['likesCount']}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Color(0xFFB95A92),
-                                        fontWeight: FontWeight.w500
-                                      )
-                                    ),
-                                  ],
-                                )
+                              Row(
+                                children: [ 
+                                  const Icon(
+                                    Icons.favorite,
+                                    color: Color(0xFFB95A92)
+                                  ),
+                                  const SizedBox(width: 5,),
+                                  Text(
+                                    '${data['likesCount']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFFB95A92),
+                                      fontWeight: FontWeight.w500
+                                    )
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -330,7 +326,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                     await discussionProvider
                                                         .likeReply(widget.id,
                                                             reply['id']);
-                                                print(response);
                                                 if (response['error']) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
@@ -516,7 +511,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                   ),
                                                 ),
                                               const SizedBox(width: 10,),
-                                              Container(
+                                              SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.5,
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
