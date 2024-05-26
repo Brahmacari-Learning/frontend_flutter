@@ -30,9 +30,10 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     // Detail discussion
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         toolbarHeight: 70,
+        shadowColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Color(0xFFB95A92), // Warna pink untuk back button
         ),
