@@ -47,9 +47,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     decoration: const InputDecoration(
                       hintText: 'Cari diskusi...',
                       hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w400
-                      ),
+                          color: Colors.grey, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
@@ -114,103 +112,203 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                   return ListView.builder(
                     itemCount: discussions.length,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          ListTile(
-                            title: Text(
-                              discussions[index]['title'],
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailDiscussionScreen(
+                                  id: discussions[index]['id']),
                             ),
-                            subtitle: Text(discussions[index]['creator']['name']),
-                            onTap: () {
-                              // Navigate to the detail discussion screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailDiscussionScreen(
-                                        id: discussions[index]['id'])),
-                              );
-                            },
-                            // like button
-                            trailing: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.13,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: (discussions[index]['isLiked'])
-                                        ? const Icon(Icons.favorite, color: Colors.red)
-                                        : const Icon(Icons.favorite_border,
-                                            color: Colors.red),
-                                    onPressed: () async {
-                                      final response =
-                                          await discussionProvider.likeDiscussion(
-                                              discussions[index]['id'], !discussions[index]['isLiked']);
-                                      if (response['error']) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(response['message']),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Success!'),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-                                        setState(() {
-                                          discussions[index]['isLiked'] =
-                                              !discussions[index]['isLiked'];
-                                        });
-                                      }
-                                    },
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.73,
+                                      ),
+                                      child: Text(
+                                        discussions[index]['title'],
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                    Text(discussions[index]['creator']['name']),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${discussions[index]['repliesCount']} Jawaban",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFFB95A92),
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  // Delete button
-                                  // IconButton(
-                                  //   icon: Icon(Icons.delete),
-                                  //   onPressed: () async {
-                                  //     final response = await discussionProvider
-                                  //         .deleteDiscussion(
-                                  //             discussions[index]['id']);
-                                  //     if (response['error']) {
-                                  //       ScaffoldMessenger.of(context)
-                                  //           .showSnackBar(
-                                  //         SnackBar(
-                                  //           content: Text(response['message']),
-                                  //           backgroundColor: Colors.red,
-                                  //         ),
-                                  //       );
-                                  //     } else {
-                                  //       ScaffoldMessenger.of(context)
-                                  //           .showSnackBar(
-                                  //         SnackBar(
-                                  //           content: Text('Delete success!'),
-                                  //           backgroundColor: Colors.green,
-                                  //         ),
-                                  //       );
-                                  //       // Refresh the list of discussions
-                                  //       setState(() {});
-                                  //     }
-                                  //   },
-                                  // ),
-                                ],
-                              ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: (discussions[index]['isLiked'])
+                                          ? const Icon(Icons.favorite,
+                                              color: Color(0xFFB95A92))
+                                          : const Icon(Icons.favorite_border,
+                                              color: Color(0xFFB95A92)),
+                                      onPressed: () async {
+                                        final response =
+                                            await discussionProvider
+                                                .likeDiscussion(
+                                                    discussions[index]['id'],
+                                                    !discussions[index]
+                                                        ['isLiked']);
+                                        if (response['error']) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text(response['message']),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Success!'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                          setState(() {
+                                            discussions[index]['isLiked'] =
+                                                !discussions[index]['isLiked'];
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    Text(
+                                      "${discussions[index]['likesCount']}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFFB95A92),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
                             )
-                          ),
-                          const Divider(              
-                            thickness: 1,
-                            indent: 0,
-                            endIndent: 0, 
-                          ),
-                        ],
+                            // ListTile(
+                            //   title: Text(
+                            //     discussions[index]['title'],
+                            //     style: const TextStyle(
+                            //       fontSize: 16,
+                            //       fontWeight: FontWeight.w500
+                            //     ),
+                            //     overflow: TextOverflow.ellipsis,
+                            //     maxLines: 2,
+                            //   ),
+                            //   subtitle: Text(discussions[index]['creator']['name']),
+                            //   onTap: () {
+                            //     // Navigate to the detail discussion screen
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (context) => DetailDiscussionScreen(
+                            //               id: discussions[index]['id'])),
+                            //     );
+                            //   },
+                            //   // like button
+                            //   trailing: SizedBox(
+                            //     width: MediaQuery.of(context).size.width * 0.13,
+                            //     child: Row(
+                            //       children: [
+                            //         IconButton(
+                            //           icon: (discussions[index]['isLiked'])
+                            //               ? const Icon(Icons.favorite, color: Colors.red)
+                            //               : const Icon(Icons.favorite_border,
+                            //                   color: Colors.red),
+                            //           onPressed: () async {
+                            //             final response =
+                            //                 await discussionProvider.likeDiscussion(
+                            //                     discussions[index]['id'], !discussions[index]['isLiked']);
+                            //             if (response['error']) {
+                            //               ScaffoldMessenger.of(context)
+                            //                   .showSnackBar(
+                            //                 SnackBar(
+                            //                   content: Text(response['message']),
+                            //                   backgroundColor: Colors.red,
+                            //                 ),
+                            //               );
+                            //             } else {
+                            //               ScaffoldMessenger.of(context)
+                            //                   .showSnackBar(
+                            //                 const SnackBar(
+                            //                   content: Text('Success!'),
+                            //                   backgroundColor: Colors.green,
+                            //                 ),
+                            //               );
+                            //               setState(() {
+                            //                 discussions[index]['isLiked'] =
+                            //                     !discussions[index]['isLiked'];
+                            //               });
+                            //             }
+                            //           },
+                            //         ),
+                            //         // Delete button
+                            //         // IconButton(
+                            //         //   icon: Icon(Icons.delete),
+                            //         //   onPressed: () async {
+                            //         //     final response = await discussionProvider
+                            //         //         .deleteDiscussion(
+                            //         //             discussions[index]['id']);
+                            //         //     if (response['error']) {
+                            //         //       ScaffoldMessenger.of(context)
+                            //         //           .showSnackBar(
+                            //         //         SnackBar(
+                            //         //           content: Text(response['message']),
+                            //         //           backgroundColor: Colors.red,
+                            //         //         ),
+                            //         //       );
+                            //         //     } else {
+                            //         //       ScaffoldMessenger.of(context)
+                            //         //           .showSnackBar(
+                            //         //         SnackBar(
+                            //         //           content: Text('Delete success!'),
+                            //         //           backgroundColor: Colors.green,
+                            //         //         ),
+                            //         //       );
+                            //         //       // Refresh the list of discussions
+                            //         //       setState(() {});
+                            //         //     }
+                            //         //   },
+                            //         // ),
+                            //       ],
+                            //     ),
+                            //   )
+                            // ),
+                            ,
+                            const Divider(
+                              thickness: 1,
+                              indent: 0,
+                              endIndent: 0,
+                            ),
+                          ],
+                        ),
                       );
                     },
                   );
@@ -248,7 +346,8 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Ingin berdiskusi tentang suatu hal?',
@@ -268,7 +367,9 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     ),
                   ],
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Icon(
                   Icons.add_circle_outlined,
                   color: Color(0xFFFFFFFF),
