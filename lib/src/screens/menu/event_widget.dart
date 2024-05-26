@@ -175,11 +175,16 @@ class _EventWidgetState extends State<EventWidget> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Selesaikan 15 Kuis",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w400
+                                        Container(
+                                          constraints: BoxConstraints(maxWidth: 170),
+                                          child: Text(
+                                            "Selesaikan 15 Kuis",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                         ),
                                         SizedBox(height: 5),
