@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
@@ -39,6 +41,19 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                       final data = snapshot.data!['discussion'];
                       return Column(
                         children: [
+                          // Image Avatar
+                          if (data['creator']['profilePicture'] != null)
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                data['creator']['profilePicture'],
+                              ),
+                            )
+                          else
+                            CircleAvatar(
+                              child: Text(
+                                data['creator']['name'][0].toUpperCase(),
+                              ),
+                            ),
                           Text(
                             data['title'],
                             style: TextStyle(
@@ -113,6 +128,21 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               return Column(
                                 children: [
                                   ListTile(
+                                    leading: (reply['creator']
+                                                ['profilePicture'] !=
+                                            null)
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              reply['creator']
+                                                  ['profilePicture'],
+                                            ),
+                                          )
+                                        : CircleAvatar(
+                                            child: Text(
+                                              reply['creator']['name'][0]
+                                                  .toUpperCase(),
+                                            ),
+                                          ),
                                     title: Text(
                                       reply['reply'],
                                       style: TextStyle(
@@ -214,6 +244,22 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                         final nestedReply =
                                             reply['replies'][index];
                                         return ListTile(
+                                          leading: (nestedReply['creator']
+                                                      ['profilePicture'] !=
+                                                  null)
+                                              ? CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                    nestedReply['creator']
+                                                        ['profilePicture'],
+                                                  ),
+                                                )
+                                              : CircleAvatar(
+                                                  child: Text(
+                                                    nestedReply['creator']
+                                                            ['name'][0]
+                                                        .toUpperCase(),
+                                                  ),
+                                                ),
                                           title: Text(
                                             nestedReply['reply'],
                                             style: TextStyle(
