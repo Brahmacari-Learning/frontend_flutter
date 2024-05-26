@@ -16,6 +16,7 @@ class DetailSlokaScreen extends StatefulWidget {
 
 class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
   Map _sloka = {};
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -39,6 +40,9 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
         _sloka = response;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
