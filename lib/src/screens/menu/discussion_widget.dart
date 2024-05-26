@@ -149,8 +149,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                     onPressed: () async {
                                       final response =
                                           await discussionProvider.likeDiscussion(
-                                              discussions[index]['id']);
-                                      print(response);
+                                              discussions[index]['id'], !discussions[index]['isLiked']);
                                       if (response['error']) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -163,7 +162,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
-                                            content: Text('Like success!'),
+                                            content: Text('Success!'),
                                             backgroundColor: Colors.green,
                                           ),
                                         );
