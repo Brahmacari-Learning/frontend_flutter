@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/screens/menu/chat_bot_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/discussion_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/gita_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/level_widget.dart';
 import 'package:vedanta_frontend/src/widgets/app_bar_widget.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     LevelWidget(),
     ChatBotWidget(),
-    Text('Profile Page'),
+    DiscussionWidget(),
     GitaWidget(),
     Text('Notifications Page'),
     Text('Messages Page'),
