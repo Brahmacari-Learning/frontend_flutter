@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/screens/menu/chat_bot_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/event_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/discussion_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/gita_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/level_widget.dart';
 import 'package:vedanta_frontend/src/widgets/app_bar_widget.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     LevelWidget(),
     ChatBotWidget(),
-    Text('Profile Page'),
+    DiscussionWidget(),
     GitaWidget(),
     Text('Notifications Page'),
     EventWidget(),
@@ -31,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool shouldShowAppBar(int index) {
     // Define the indexes that should show the AppBar
     const appBarIndexes = [
-      3, 5, 6
+      3,
+      5,
+      6
     ]; // Add the indexes for which you want to show the AppBar
 
     return appBarIndexes.contains(index);
