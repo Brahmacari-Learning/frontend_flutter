@@ -31,7 +31,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
       appBar: _detailDiscussionAppBar(discussionProvider, context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SingleChildScrollView(
           child: Expanded(
             child: Column(
