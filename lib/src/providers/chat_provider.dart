@@ -10,7 +10,6 @@ class ChatProvider with ChangeNotifier {
       final response = await _apiService.postData('chat', {'message': message});
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }

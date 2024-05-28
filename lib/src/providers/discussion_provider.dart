@@ -10,7 +10,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.fetchData('discussion?page=$page');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -21,7 +20,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.fetchData('discussion/$id');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -36,7 +34,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -48,7 +45,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.postData('discussion/$id/edit', data);
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -62,7 +58,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -77,7 +72,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -88,7 +82,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.deleteData('discussion/$id/delete');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -100,7 +93,6 @@ class DiscussionProvider with ChangeNotifier {
           await _apiService.fetchData('discussion/search?q=$query');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -113,7 +105,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -127,7 +118,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
