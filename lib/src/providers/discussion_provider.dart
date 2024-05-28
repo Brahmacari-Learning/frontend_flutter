@@ -10,7 +10,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.fetchData('discussion?page=$page');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -21,7 +20,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.fetchData('discussion/$id');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -36,7 +34,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -48,7 +45,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.postData('discussion/$id/edit', data);
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -62,7 +58,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -77,7 +72,6 @@ class DiscussionProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -88,7 +82,6 @@ class DiscussionProvider with ChangeNotifier {
       final response = await _apiService.deleteData('discussion/$id/delete');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -100,34 +93,32 @@ class DiscussionProvider with ChangeNotifier {
           await _apiService.fetchData('discussion/search?q=$query');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
 
   // Like discussion
-  Future<Map<String, dynamic>> likeDiscussion(int id) async {
+  Future<Map<String, dynamic>> likeDiscussion(int id, bool like) async {
     try {
       final response = await _apiService.postData('discussion/$id/like', {
-        'like': true,
+        'like': like,
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
 
   // like reply
-  Future<Map<String, dynamic>> likeReply(int disscusionId, int replayId) async {
+  Future<Map<String, dynamic>> likeReply(
+      int disscusionId, int replayId, bool like) async {
     try {
       final response = await _apiService
           .postData('discussion/$disscusionId/reply/$replayId/like', {
-        'like': true,
+        'like': like,
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }

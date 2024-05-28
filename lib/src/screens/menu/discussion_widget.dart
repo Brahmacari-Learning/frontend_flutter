@@ -22,18 +22,19 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
     // Search form and list of discussions
     return Container(
       color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       child: Column(
         children: [
           // Search form
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 5,
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 0.3,
+                  blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
               ],
@@ -44,10 +45,9 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                   child: TextField(
                     controller: _controller,
                     decoration: const InputDecoration(
-                      hintText: 'Search...',
+                      hintText: 'Cari diskusi...',
                       hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
+                          color: Colors.grey, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
@@ -69,7 +69,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         backgroundColor: Colors.red,
                       ));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Search success!'),
                         backgroundColor: Colors.green,
                       ));
@@ -89,7 +89,10 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  child: const Icon(Icons.search),
+                  child: const Icon(
+                    Icons.search,
+                    color: Color(0xFFB95A92),
+                  ),
                 ),
               ],
             ),
@@ -109,87 +112,204 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                   return ListView.builder(
                     itemCount: discussions.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text(discussions[index]['title']),
-                          subtitle: Text(discussions[index]['creator']['name']),
-                          onTap: () {
-                            // Navigate to the detail discussion screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailDiscussionScreen(
-                                      id: discussions[index]['id'])),
-                            );
-                          },
-                          // like button
-                          trailing: Container(
-                            width: 100,
-                            child: Row(
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailDiscussionScreen(
+                                  id: discussions[index]['id']),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
-                                IconButton(
-                                  icon: (discussions[index]['isLiked'])
-                                      ? Icon(Icons.favorite, color: Colors.red)
-                                      : Icon(Icons.favorite_border,
-                                          color: Colors.red),
-                                  onPressed: () async {
-                                    final response =
-                                        await discussionProvider.likeDiscussion(
-                                            discussions[index]['id']);
-                                    print(response);
-                                    if (response['error']) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(response['message']),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text('Like success!'),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                      setState(() {
-                                        discussions[index]['isLiked'] =
-                                            !discussions[index]['isLiked'];
-                                      });
-                                    }
-                                  },
-                                ),
-                                // Delete button
-                                IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () async {
-                                    final response = await discussionProvider
-                                        .deleteDiscussion(
-                                            discussions[index]['id']);
-                                    if (response['error']) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(response['message']),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text('Delete success!'),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                      // Refresh the list of discussions
-                                      setState(() {});
-                                    }
-                                  },
-                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.73,
+                                      ),
+                                      child: Text(
+                                        discussions[index]['title'],
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                    Text(discussions[index]['creator']['name']),
+                                  ],
+                                )
                               ],
                             ),
-                          ));
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${discussions[index]['repliesCount']} Jawaban",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFFB95A92),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: (discussions[index]['isLiked'])
+                                          ? const Icon(Icons.favorite,
+                                              color: Color(0xFFB95A92))
+                                          : const Icon(Icons.favorite_border,
+                                              color: Color(0xFFB95A92)),
+                                      onPressed: () async {
+                                        final response =
+                                            await discussionProvider
+                                                .likeDiscussion(
+                                                    discussions[index]['id'],
+                                                    !discussions[index]
+                                                        ['isLiked']);
+                                        if (response['error']) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text(response['message']),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Success!'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                          setState(() {
+                                            discussions[index]['isLiked'] =
+                                                !discussions[index]['isLiked'];
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    Text(
+                                      "${discussions[index]['likesCount']}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFFB95A92),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                            // ListTile(
+                            //   title: Text(
+                            //     discussions[index]['title'],
+                            //     style: const TextStyle(
+                            //       fontSize: 16,
+                            //       fontWeight: FontWeight.w500
+                            //     ),
+                            //     overflow: TextOverflow.ellipsis,
+                            //     maxLines: 2,
+                            //   ),
+                            //   subtitle: Text(discussions[index]['creator']['name']),
+                            //   onTap: () {
+                            //     // Navigate to the detail discussion screen
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (context) => DetailDiscussionScreen(
+                            //               id: discussions[index]['id'])),
+                            //     );
+                            //   },
+                            //   // like button
+                            //   trailing: SizedBox(
+                            //     width: MediaQuery.of(context).size.width * 0.13,
+                            //     child: Row(
+                            //       children: [
+                            //         IconButton(
+                            //           icon: (discussions[index]['isLiked'])
+                            //               ? const Icon(Icons.favorite, color: Colors.red)
+                            //               : const Icon(Icons.favorite_border,
+                            //                   color: Colors.red),
+                            //           onPressed: () async {
+                            //             final response =
+                            //                 await discussionProvider.likeDiscussion(
+                            //                     discussions[index]['id'], !discussions[index]['isLiked']);
+                            //             if (response['error']) {
+                            //               ScaffoldMessenger.of(context)
+                            //                   .showSnackBar(
+                            //                 SnackBar(
+                            //                   content: Text(response['message']),
+                            //                   backgroundColor: Colors.red,
+                            //                 ),
+                            //               );
+                            //             } else {
+                            //               ScaffoldMessenger.of(context)
+                            //                   .showSnackBar(
+                            //                 const SnackBar(
+                            //                   content: Text('Success!'),
+                            //                   backgroundColor: Colors.green,
+                            //                 ),
+                            //               );
+                            //               setState(() {
+                            //                 discussions[index]['isLiked'] =
+                            //                     !discussions[index]['isLiked'];
+                            //               });
+                            //             }
+                            //           },
+                            //         ),
+                            //         // Delete button
+                            //         // IconButton(
+                            //         //   icon: Icon(Icons.delete),
+                            //         //   onPressed: () async {
+                            //         //     final response = await discussionProvider
+                            //         //         .deleteDiscussion(
+                            //         //             discussions[index]['id']);
+                            //         //     if (response['error']) {
+                            //         //       ScaffoldMessenger.of(context)
+                            //         //           .showSnackBar(
+                            //         //         SnackBar(
+                            //         //           content: Text(response['message']),
+                            //         //           backgroundColor: Colors.red,
+                            //         //         ),
+                            //         //       );
+                            //         //     } else {
+                            //         //       ScaffoldMessenger.of(context)
+                            //         //           .showSnackBar(
+                            //         //         SnackBar(
+                            //         //           content: Text('Delete success!'),
+                            //         //           backgroundColor: Colors.green,
+                            //         //         ),
+                            //         //       );
+                            //         //       // Refresh the list of discussions
+                            //         //       setState(() {});
+                            //         //     }
+                            //         //   },
+                            //         // ),
+                            //       ],
+                            //     ),
+                            //   )
+                            // ),
+                            ,
+                            const Divider(
+                              thickness: 1,
+                              indent: 0,
+                              endIndent: 0,
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   );
                 }
@@ -207,7 +327,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                   backgroundColor: Colors.red,
                 ));
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Create discussion success!'),
                   backgroundColor: Colors.green,
                 ));
@@ -216,7 +336,47 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                 setState(() {});
               }
             },
-            child: const Text('Create Discussion'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              backgroundColor: const Color(0xFFB95A92),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ingin berdiskusi tentang suatu hal?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Text(
+                      'Ayo Tanyakan Sesuatu!?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Icon(
+                  Icons.add_circle_outlined,
+                  color: Color(0xFFFFFFFF),
+                  size: 50,
+                )
+              ],
+            ),
           ),
         ],
       ),
