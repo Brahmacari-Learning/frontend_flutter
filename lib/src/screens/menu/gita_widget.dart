@@ -145,6 +145,19 @@ class _GitaWidgetState extends State<GitaWidget> {
                                 "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
                             text: snapshot.data!['bacaan']['babTitle'],
                             buttonText: 'Lanjutkan Membaca',
+                            onPress: () {
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailSlokaScreen(
+                                    bab: snapshot.data!['bacaan']['babNumber'],
+                                    sloka: snapshot.data!['bacaan']
+                                        ['slokaNumber'],
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         }
                       },

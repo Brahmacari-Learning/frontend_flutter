@@ -44,6 +44,7 @@ class DetailSlokaScreen extends StatelessWidget {
                           'BAB ${sloka['numberBab']}: SLOKA ${sloka['number']}',
                       text: sloka['babTitle'] ?? '',
                       withButton: false,
+                      onPress: () {},
                     ),
                     const SizedBox(height: 20),
                     if (sloka['urlPelafalan'] != null)
