@@ -1,8 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
+import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -26,87 +25,88 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     final discussionProvider =
         Provider.of<DiscussionProvider>(context, listen: false);
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     // Detail discussion
     return Scaffold(
-      appBar: _detailDiscussionAppBar(discussionProvider, context),
+      appBar: _detailDiscussionAppBar(
+          discussionProvider, context, scaffoldMessenger),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                FutureBuilder(
-                  future: discussionProvider.getDiscussion(widget.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.4,
-                          ),
-                          child: const CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              FutureBuilder(
+                future: discussionProvider.getDiscussion(widget.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.4,
                         ),
-                      );
-                    } else {
-                      final data = snapshot.data!['discussion'];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Profil, nama, waktu diskusi
-                          _headerUserInfo(data, context),
-                          const SizedBox(height: 10),
-                          // Judul dan deskripsi
-                          _questionDiscussion(data),
-                          const SizedBox(height: 20),
-                          // Statistik diskusi (jawaban & like)
-                          _questionStats(data, discussionProvider),
-                          const Divider(
-                            thickness: 1,
-                            indent: 0,
-                            endIndent: 0,
-                          ),
-                          const SizedBox(height: 20),
-                          InputRoundedWithIcon(
-                            controller: _komentarController,
-                            icon: Icons.send,
-                            label: 'Tulis komentar',
-                            onEnter: (value) async {
-                              final response =
-                                  await discussionProvider.createReply(
-                                widget.id,
-                                _komentarController.text.trim(),
+                        child: const CircularProgressIndicator(),
+                      ),
+                    );
+                  } else {
+                    final data = snapshot.data!['discussion'];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Profil, nama, waktu diskusi
+                        _headerUserInfo(data, context),
+                        const SizedBox(height: 10),
+                        // Judul dan deskripsi
+                        _questionDiscussion(data),
+                        const SizedBox(height: 20),
+                        // Statistik diskusi (jawaban & like)
+                        _questionStats(data, discussionProvider),
+                        const Divider(
+                          thickness: 1,
+                          indent: 0,
+                          endIndent: 0,
+                        ),
+                        const SizedBox(height: 20),
+                        InputRoundedWithIcon(
+                          controller: _komentarController,
+                          icon: Icons.send,
+                          label: 'Tulis komentar',
+                          onEnter: (value) async {
+                            final response =
+                                await discussionProvider.createReply(
+                              widget.id,
+                              _komentarController.text.trim(),
+                            );
+                            if (response['error'] == true) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message']),
+                                  backgroundColor: Colors.purple,
+                                ),
                               );
-                              if (response['error'] == true) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(response['message']),
-                                    backgroundColor: Colors.purple,
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Reply created'),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                                _komentarController.clear();
-                                // Refresh the list of discussions
-                                setState(() {});
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          // Replies with nested replies
-                          _listReply(data, discussionProvider),
-                        ],
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Reply created'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              _komentarController.clear();
+                              // Refresh the list of discussions
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        // Replies with nested replies
+                        _listReply(data, discussionProvider),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -414,8 +414,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     );
   }
 
-  AppBar _detailDiscussionAppBar(
-      DiscussionProvider discussionProvider, BuildContext context) {
+  AppBar _detailDiscussionAppBar(DiscussionProvider discussionProvider,
+      BuildContext context, ScaffoldMessengerState scaffoldMessenger) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -424,13 +424,34 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
       iconTheme: const IconThemeData(
         color: Colors.purple, // Warna pink untuk back button
       ),
-      title: Expanded(
-        child: InputRoundedWithIcon(
-          controller: _controllerSearch,
-          icon: Icons.search,
-          label: 'Cari diskusi...',
-          onEnter: (String value) {},
-        ),
+      title: InputRoundedWithIcon(
+        controller: _controllerSearch,
+        icon: Icons.search,
+        label: 'Cari diskusi...',
+        onEnter: (value) async {
+          final response = await discussionProvider
+              .searchDiscussion(_controllerSearch.text.trim());
+          if (response['error']) {
+            scaffoldMessenger.showSnackBar(SnackBar(
+              content: Text(response['message']),
+              backgroundColor: Colors.red,
+            ));
+          } else {
+            scaffoldMessenger.showSnackBar(const SnackBar(
+              content: Text('Search success!'),
+              backgroundColor: Colors.green,
+            ));
+            // navigate to detail sloka screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchDiscussionScreen(
+                  discussions: response['discussions'],
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }
