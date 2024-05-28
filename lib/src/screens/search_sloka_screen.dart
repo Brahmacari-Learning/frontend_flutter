@@ -17,29 +17,47 @@ class _SearchSlokaScreenState extends State<SearchSlokaScreen> {
         title: const Text('Search Sloka'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.slokas.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.slokas.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: ListTile(
                       title: Text(
                         'BAB ${widget.slokas[index]['numberBab']}: SLOKA ${widget.slokas[index]['number']}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(
-                        widget.slokas[index]['babTitle'] ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5),
+                          Text(
+                            widget.slokas[index]['content'] ?? '',
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            widget.slokas[index]['translationIndo'] ?? '',
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                       onTap: () {
                         Navigator.push(
@@ -52,11 +70,11 @@ class _SearchSlokaScreenState extends State<SearchSlokaScreen> {
                           ),
                         );
                       },
-                    );
-                  },
-                ),
-              ],
-            ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),
