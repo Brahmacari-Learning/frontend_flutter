@@ -6,6 +6,7 @@ import 'package:vedanta_frontend/src/screens/search_sloka_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/shimmer_widget.dart';
 
 class GitaWidget extends StatefulWidget {
   const GitaWidget({super.key});
@@ -130,8 +131,10 @@ class _GitaWidgetState extends State<GitaWidget> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return const CustomShimmerWidget(
+                              width: double.infinity,
+                              height: 180,
+                              roundedRadius: 10);
                         } else if (snapshot.hasError) {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
@@ -258,8 +261,8 @@ class _GitaWidgetState extends State<GitaWidget> {
             itemCount: slokaList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => DetailSlokaScreen(
@@ -268,6 +271,9 @@ class _GitaWidgetState extends State<GitaWidget> {
                       ),
                     ),
                   );
+                  setState(() {
+                    _futureBacaanTerakhir = _getBacaanTerakhir();
+                  });
                 },
                 leading: Container(
                   width: 40,
@@ -305,7 +311,6 @@ class _GitaWidgetState extends State<GitaWidget> {
                     final gitaProvider =
                         Provider.of<GitaProvider>(context, listen: false);
 
-                    print('$index');
                     if (slokaList[index]['numberBab'] == null) {
                       final response = await gitaProvider.likeSloka(
                         _currentBab!,
@@ -337,7 +342,6 @@ class _GitaWidgetState extends State<GitaWidget> {
                           backgroundColor: const Color(0xFFB95A92),
                         ));
                       } else {
-                        await Future.delayed(Durations.medium4);
                         setState(() {
                           _futureFavoriteSlokaList = _getFavoriteSlokaList();
                           _futureSlokaList = _getSlokaList(_currentBab!);
