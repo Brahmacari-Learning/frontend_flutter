@@ -77,7 +77,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
         setState(() {
           _discussions.addAll(response['discussions']);
           _hasMoreData = response['discussions'].length ==
-              10; // Assume 10 is the page limit
+              10;
         });
       }
     } else {
