@@ -7,14 +7,17 @@ class GitaCardWidget extends StatefulWidget {
   final String buttonText;
   final bool withImage;
   final bool withButton;
-  const GitaCardWidget(
-      {super.key,
-      this.headerText = '',
-      required this.subHeaderText,
-      required this.text,
-      this.buttonText = 'Lanjutkan Membaca',
-      this.withImage = true,
-      this.withButton = true});
+  final Function() onPress;
+  const GitaCardWidget({
+    super.key,
+    this.headerText = '',
+    required this.subHeaderText,
+    required this.text,
+    this.buttonText = 'Lanjutkan Membaca',
+    this.withImage = true,
+    this.withButton = true,
+    required this.onPress,
+  });
 
   @override
   State<GitaCardWidget> createState() => _GitaCardWidgetState();
@@ -89,7 +92,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                     // button lanjutkan membaca
                     if (widget.withButton)
                       TextButton(
-                        onPressed: () {},
+                        onPressed: widget.onPress,
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(

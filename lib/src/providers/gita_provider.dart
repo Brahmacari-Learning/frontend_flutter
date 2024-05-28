@@ -10,7 +10,6 @@ class GitaProvider with ChangeNotifier {
       final response = await _apiService.fetchData('gita');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -21,7 +20,6 @@ class GitaProvider with ChangeNotifier {
       final response = await _apiService.fetchData('gita/bab/$bab');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -32,7 +30,6 @@ class GitaProvider with ChangeNotifier {
       final response = await _apiService.fetchData('gita/bab/$bab/slokas');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -44,7 +41,6 @@ class GitaProvider with ChangeNotifier {
           await _apiService.fetchData('gita/bab/$bab/slokas/$sloka');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -56,7 +52,6 @@ class GitaProvider with ChangeNotifier {
           await _apiService.fetchData('gita/bab/$bab/slokas/$sloka/pelafalan');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -67,21 +62,19 @@ class GitaProvider with ChangeNotifier {
       final response = await _apiService.fetchData('gita/bacaan-terakhir');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
 
   // Like sloka
-  Future<Map<String, dynamic>> likeSloka(int bab, int sloka) async {
+  Future<Map<String, dynamic>> likeSloka(int bab, int sloka, bool like) async {
     try {
       final response =
           await _apiService.postData('gita/bab/$bab/slokas/$sloka/like', {
-        'like': true,
+        'like': like,
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -92,7 +85,16 @@ class GitaProvider with ChangeNotifier {
       final response = await _apiService.fetchData('gita/search?q=$query');
       return response;
     } catch (e) {
-      print(e);
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  // Favorite Sloka List
+  Future<Map<String, dynamic>> getFavoriteSlokas() async {
+    try {
+      final response = await _apiService.fetchData('gita/favorites');
+      return response;
+    } catch (e) {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
