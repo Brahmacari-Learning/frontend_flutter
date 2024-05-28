@@ -44,16 +44,20 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
     final response = await discussionProvider.getDiscussions(_currentPage);
 
     if (!response['error']) {
-      setState(() {
-        _discussions = response['discussions'];
-        _hasMoreData =
-            response['discussions'].length == 10; // Assume 10 is the page limit
-      });
+      if (mounted) {
+        setState(() {
+          _discussions = response['discussions'];
+          _hasMoreData = response['discussions'].length ==
+              10; // Assume 10 is the page limit
+        });
+      }
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadMoreDiscussions() async {
@@ -69,18 +73,22 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
     final response = await discussionProvider.getDiscussions(_currentPage);
 
     if (!response['error']) {
-      setState(() {
-        _discussions.addAll(response['discussions']);
-        _hasMoreData =
-            response['discussions'].length == 10; // Assume 10 is the page limit
-      });
+      if (mounted) {
+        setState(() {
+          _discussions.addAll(response['discussions']);
+          _hasMoreData = response['discussions'].length ==
+              10; // Assume 10 is the page limit
+        });
+      }
     } else {
       _currentPage--; // Revert the page increment if there was an error
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
