@@ -107,7 +107,6 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     child: CircularProgressIndicator(),
                   );
                 } else {
-                  print(snapshot.data);
                   final discussions = snapshot.data!['discussions'];
                   return ListView.builder(
                     itemCount: discussions.length,
@@ -211,97 +210,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                   ],
                                 )
                               ],
-                            )
-                            // ListTile(
-                            //   title: Text(
-                            //     discussions[index]['title'],
-                            //     style: const TextStyle(
-                            //       fontSize: 16,
-                            //       fontWeight: FontWeight.w500
-                            //     ),
-                            //     overflow: TextOverflow.ellipsis,
-                            //     maxLines: 2,
-                            //   ),
-                            //   subtitle: Text(discussions[index]['creator']['name']),
-                            //   onTap: () {
-                            //     // Navigate to the detail discussion screen
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //           builder: (context) => DetailDiscussionScreen(
-                            //               id: discussions[index]['id'])),
-                            //     );
-                            //   },
-                            //   // like button
-                            //   trailing: SizedBox(
-                            //     width: MediaQuery.of(context).size.width * 0.13,
-                            //     child: Row(
-                            //       children: [
-                            //         IconButton(
-                            //           icon: (discussions[index]['isLiked'])
-                            //               ? const Icon(Icons.favorite, color: Colors.red)
-                            //               : const Icon(Icons.favorite_border,
-                            //                   color: Colors.red),
-                            //           onPressed: () async {
-                            //             final response =
-                            //                 await discussionProvider.likeDiscussion(
-                            //                     discussions[index]['id'], !discussions[index]['isLiked']);
-                            //             if (response['error']) {
-                            //               ScaffoldMessenger.of(context)
-                            //                   .showSnackBar(
-                            //                 SnackBar(
-                            //                   content: Text(response['message']),
-                            //                   backgroundColor: Colors.red,
-                            //                 ),
-                            //               );
-                            //             } else {
-                            //               ScaffoldMessenger.of(context)
-                            //                   .showSnackBar(
-                            //                 const SnackBar(
-                            //                   content: Text('Success!'),
-                            //                   backgroundColor: Colors.green,
-                            //                 ),
-                            //               );
-                            //               setState(() {
-                            //                 discussions[index]['isLiked'] =
-                            //                     !discussions[index]['isLiked'];
-                            //               });
-                            //             }
-                            //           },
-                            //         ),
-                            //         // Delete button
-                            //         // IconButton(
-                            //         //   icon: Icon(Icons.delete),
-                            //         //   onPressed: () async {
-                            //         //     final response = await discussionProvider
-                            //         //         .deleteDiscussion(
-                            //         //             discussions[index]['id']);
-                            //         //     if (response['error']) {
-                            //         //       ScaffoldMessenger.of(context)
-                            //         //           .showSnackBar(
-                            //         //         SnackBar(
-                            //         //           content: Text(response['message']),
-                            //         //           backgroundColor: Colors.red,
-                            //         //         ),
-                            //         //       );
-                            //         //     } else {
-                            //         //       ScaffoldMessenger.of(context)
-                            //         //           .showSnackBar(
-                            //         //         SnackBar(
-                            //         //           content: Text('Delete success!'),
-                            //         //           backgroundColor: Colors.green,
-                            //         //         ),
-                            //         //       );
-                            //         //       // Refresh the list of discussions
-                            //         //       setState(() {});
-                            //         //     }
-                            //         //   },
-                            //         // ),
-                            //       ],
-                            //     ),
-                            //   )
-                            // ),
-                            ,
+                            ),
                             const Divider(
                               thickness: 1,
                               indent: 0,

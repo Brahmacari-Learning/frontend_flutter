@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_sloka_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
+import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 
 class GitaWidget extends StatefulWidget {
   const GitaWidget({super.key});
@@ -69,6 +70,7 @@ class _GitaWidgetState extends State<GitaWidget> {
   @override
   Widget build(BuildContext context) {
     final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     return Container(
       color: Colors.white,
@@ -78,75 +80,35 @@ class _GitaWidgetState extends State<GitaWidget> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              // Search Bar
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _controller,
-                        decoration: const InputDecoration(
-                          hintText: 'Search...',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
+              InputRoundedWithIcon(
+                controller: _controller,
+                icon: Icons.search,
+                label: 'Search...',
+                onEnter: (value) async {
+                  final response =
+                      await gitaProvider.searchSlokas(_controller.text.trim());
+                  if (response['error']) {
+                    scaffoldMessenger.showSnackBar(SnackBar(
+                      content: Text(response['message']),
+                      backgroundColor: const Color(0xFFB95A92),
+                    ));
+                  } else {
+                    scaffoldMessenger.showSnackBar(const SnackBar(
+                      content: Text('Sloka found'),
+                      backgroundColor: Colors.green,
+                    ));
+                    // navigate to detail sloka screen
+                    if (!context.mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchSlokaScreen(
+                          slokas: response['gitas'],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () async {
-                        final response = await gitaProvider
-                            .searchSlokas(_controller.text.trim());
-                        if (response['error']) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(response['message']),
-                            backgroundColor: Colors.red,
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Sloka found'),
-                            backgroundColor: Colors.green,
-                          ));
-                          // navigate to detail sloka screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchSlokaScreen(
-                                slokas: response['gitas'],
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      child: const Icon(Icons.search),
-                    ),
-                  ],
-                ),
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 40),
               FutureBuilder(
@@ -315,7 +277,8 @@ class _GitaWidgetState extends State<GitaWidget> {
                                                   } else {
                                                     ScaffoldMessenger.of(
                                                             context)
-                                                        .showSnackBar(SnackBar(
+                                                        .showSnackBar(
+                                                            const SnackBar(
                                                       content: Text(
                                                           'Sloka added to favorite'),
                                                       backgroundColor:
@@ -434,7 +397,8 @@ class _GitaWidgetState extends State<GitaWidget> {
                                                   } else {
                                                     ScaffoldMessenger.of(
                                                             context)
-                                                        .showSnackBar(SnackBar(
+                                                        .showSnackBar(
+                                                            const SnackBar(
                                                       content: Text(
                                                           'Sloka added to favorite'),
                                                       backgroundColor:
