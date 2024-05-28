@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
+import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
 
 class DetailDiscussionScreen extends StatefulWidget {
   final int id;
@@ -59,7 +63,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Cari diskusi...',
                       hintStyle: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w400),
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w400,
+                      ),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
@@ -73,18 +79,23 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
-                    final response = await discussionProvider
-                        .searchDiscussion(_controller.text.trim());
+                    final response = await discussionProvider.searchDiscussion(
+                      _controller.text.trim(),
+                    );
                     if (response['error']) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(response['message']),
-                        backgroundColor: Color(0xFFB95A92),
-                      ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(response['message']),
+                          backgroundColor: const Color(0xFFB95A92),
+                        ),
+                      );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Search success!'),
-                        backgroundColor: Colors.green,
-                      ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Search success!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -123,9 +134,10 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.4),
-                            child: const CircularProgressIndicator()),
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.4),
+                          child: const CircularProgressIndicator(),
+                        ),
                       );
                     } else {
                       final data = snapshot.data!['discussion'];
@@ -217,24 +229,16 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('${data['repliesCount']} Jawaban',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFFB95A92),
-                                      fontWeight: FontWeight.w500)),
-                              Row(
-                                children: [
-                                  const Icon(Icons.favorite,
-                                      color: Color(0xFFB95A92)),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text('${data['likesCount']}',
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xFFB95A92),
-                                          fontWeight: FontWeight.w500)),
-                                ],
+                              Text(
+                                '${data['repliesCount']} Jawaban',
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFFB95A92),
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              LikeIconWithCount(
+                                isLiked: data['isLiked'],
+                                likesCount: data['likesCount'],
                               )
                             ],
                           ),
@@ -283,15 +287,16 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   onPressed: () async {
                                     final response =
                                         await discussionProvider.createReply(
-                                            widget.id,
-                                            _komentarController.text.trim());
-
+                                      widget.id,
+                                      _komentarController.text.trim(),
+                                    );
                                     if (response['error'] == true) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(response['message']),
-                                          backgroundColor: Color(0xFFB95A92),
+                                          backgroundColor:
+                                              const Color(0xFFB95A92),
                                         ),
                                       );
                                     } else {
@@ -320,7 +325,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               ],
                             ),
                           ),
-
                           const SizedBox(height: 20),
                           // Replies with nested replies
                           ListView.builder(
@@ -338,20 +342,11 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        (reply['creator']['profilePicture'] !=
-                                                null)
-                                            ? CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                  reply['creator']
-                                                      ['profilePicture'],
-                                                ),
-                                              )
-                                            : CircleAvatar(
-                                                child: Text(
-                                                  reply['creator']['name'][0]
-                                                      .toUpperCase(),
-                                                ),
-                                              ),
+                                        AvatarWidget(
+                                          avatarUrl: reply['creator']
+                                              ['profilePicture'],
+                                          name: reply['creator']['name'],
+                                        ),
                                         const SizedBox(
                                           width: 10,
                                         ),
@@ -395,7 +390,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                   ),
                                                   Text(
                                                     formatDate(
-                                                        reply['createdAt']),
+                                                      reply['createdAt'],
+                                                    ),
                                                     style: const TextStyle(
                                                         fontSize: 16,
                                                         color: Colors.grey,
@@ -407,170 +403,45 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: LikeIcon(reply),
-                                              onPressed: () async {
-                                                final response =
-                                                    await discussionProvider
-                                                        .likeReply(widget.id,
-                                                            reply['id']);
-                                                if (response['error']) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                          response['message']),
-                                                      backgroundColor:
-                                                          Color(0xFFB95A92),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      content:
-                                                          Text('Reply liked'),
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                    ),
-                                                  );
-                                                  // Refresh the list of discussions
-                                                  setState(() {});
-                                                }
-                                              },
+                                        IconButton(
+                                            icon: LikeIconWithCount(
+                                              isLiked: reply['isLiked'],
+                                              likesCount: reply['likesCount'],
                                             ),
-                                            Text('${reply['likesCount']}',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Color(0xFFB95A92),
-                                                    fontWeight:
-                                                        FontWeight.w500))
-                                          ],
-                                        )
+                                            onPressed: () async {
+                                              final response =
+                                                  await discussionProvider
+                                                      .likeReply(
+                                                widget.id,
+                                                reply['id'],
+                                              );
+                                              if (response['error']) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        response['message']),
+                                                    backgroundColor:
+                                                        const Color(0xFFB95A92),
+                                                  ),
+                                                );
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content:
+                                                        Text('Reply liked'),
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ),
+                                                );
+                                                // Refresh the list of discussions
+                                                setState(() {});
+                                              }
+                                            })
                                       ],
                                     ),
                                   ),
-                                  // ListTile(
-                                  //   leading: (reply['creator']
-                                  //               ['profilePicture'] !=
-                                  //           null)
-                                  //       ? CircleAvatar(
-                                  //           backgroundImage: NetworkImage(
-                                  //             reply['creator']
-                                  //                 ['profilePicture'],
-                                  //           ),
-                                  //         )
-                                  //       : CircleAvatar(
-                                  //           child: Text(
-                                  //             reply['creator']['name'][0]
-                                  //                 .toUpperCase(),
-                                  //           ),
-                                  //         ),
-                                  //   title: Text(
-                                  //     reply['creator']['name'],
-                                  //     style: TextStyle(
-                                  //       fontSize: 17,
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),
-                                  //   ),
-                                  //   subtitle: Text(
-                                  //     reply['reply'],
-                                  //     style: TextStyle(
-                                  //       fontSize: 16,
-                                  //     ),
-                                  //   ),
-                                  //   // reply button and like button
-                                  //   trailing: Container(
-                                  //     width: MediaQuery.of(context).size.width * 0.245,
-                                  //     child: Column(
-                                  //       children: [
-                                  //         Row(
-                                  //           children: [
-                                  //             IconButton(
-                                  //               icon: (reply['isLiked'])
-                                  //                   ? Icon(Icons.favorite,
-                                  //                       color: Color(0xFFB95A92))
-                                  //                   : Icon(Icons.favorite_border,
-                                  //                       color: Color(0xFFB95A92)),
-                                  //               onPressed: () async {
-                                  //                 final response =
-                                  //                     await discussionProvider
-                                  //                         .likeReply(widget.id,
-                                  //                             reply['id']);
-                                  //                 print(response);
-                                  //                 if (response['error']) {
-                                  //                   ScaffoldMessenger.of(context)
-                                  //                       .showSnackBar(
-                                  //                     SnackBar(
-                                  //                       content: Text(
-                                  //                           response['message']),
-                                  //                       backgroundColor: Color(0xFFB95A92),
-                                  //                     ),
-                                  //                   );
-                                  //                 } else {
-                                  //                   ScaffoldMessenger.of(context)
-                                  //                       .showSnackBar(
-                                  //                     SnackBar(
-                                  //                       content: const Text(
-                                  //                           'Reply liked'),
-                                  //                       backgroundColor:
-                                  //                           Colors.green,
-                                  //                     ),
-                                  //                   );
-                                  //                   // Refresh the list of discussions
-                                  //                   setState(() {});
-                                  //                 }
-                                  //               },
-                                  //             ),
-                                  //             IconButton(
-                                  //               icon: const Icon(Icons.reply),
-                                  //               onPressed: () async {
-                                  //                 final response =
-                                  //                     await discussionProvider
-                                  //                         .createReplyToReply(
-                                  //                             widget.id,
-                                  //                             reply['id'],
-                                  //                             'Reply to reply');
-                                  //                 if (response['error']) {
-                                  //                   ScaffoldMessenger.of(context)
-                                  //                       .showSnackBar(
-                                  //                     SnackBar(
-                                  //                       content: Text(
-                                  //                           response['message']),
-                                  //                       backgroundColor: Color(0xFFB95A92),
-                                  //                     ),
-                                  //                   );
-                                  //                 } else {
-                                  //                   ScaffoldMessenger.of(context)
-                                  //                       .showSnackBar(
-                                  //                     SnackBar(
-                                  //                       content: const Text(
-                                  //                           'Reply created'),
-                                  //                       backgroundColor:
-                                  //                           Colors.green,
-                                  //                     ),
-                                  //                   );
-                                  //                   // Refresh the list of discussions
-                                  //                   setState(() {});
-                                  //                 }
-                                  //               },
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //         Text(
-                                  //           formatDate(reply['createdAt']),
-                                  //           style: TextStyle(
-                                  //             fontSize: 5,
-                                  //             // color: Color(0xFF666666),
-                                  //             fontWeight: FontWeight.w400
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   // Nested replies (make it different by adding padding)
                                   Padding(
                                     padding: const EdgeInsets.only(left: 20),
@@ -666,66 +537,18 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              Row(
-                                                children: [
-                                                  IconButton(
-                                                    icon: (nestedReply[
-                                                            'isLiked'])
-                                                        ? const Icon(
-                                                            Icons.favorite,
-                                                            color: Color(
-                                                                0xFFB95A92))
-                                                        : const Icon(
-                                                            Icons
-                                                                .favorite_border,
-                                                            color: Color(
-                                                                0xFFB95A92)),
-                                                    onPressed: () async {},
-                                                  ),
-                                                  Text(
-                                                      '${nestedReply['likesCount']}',
-                                                      style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xFFB95A92),
-                                                          fontWeight:
-                                                              FontWeight.w500))
-                                                ],
+                                              IconButton(
+                                                onPressed: () {},
+                                                icon: LikeIconWithCount(
+                                                  isLiked:
+                                                      nestedReply['isLiked'],
+                                                  likesCount:
+                                                      nestedReply['likesCount'],
+                                                ),
                                               )
                                             ],
                                           ),
                                         );
-                                        // return ListTile(
-                                        //   leading: (nestedReply['creator']
-                                        //               ['profilePicture'] !=
-                                        //           null)
-                                        //       ? CircleAvatar(
-                                        //           backgroundImage: NetworkImage(
-                                        //             nestedReply['creator']
-                                        //                 ['profilePicture'],
-                                        //           ),
-                                        //         )
-                                        //       : CircleAvatar(
-                                        //           child: Text(
-                                        //             nestedReply['creator']
-                                        //                     ['name'][0]
-                                        //                 .toUpperCase(),
-                                        //           ),
-                                        //         ),
-                                        //   title: Text(
-                                        //     nestedReply['reply'],
-                                        //     style: TextStyle(
-                                        //       fontSize: 16,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //   ),
-                                        //   subtitle: Text(
-                                        //     'Likes: ${nestedReply['likesCount']} | Created At: ${nestedReply['createdAt']} | Creator: ${nestedReply['creator']['name']}',
-                                        //     style: TextStyle(
-                                        //       fontSize: 14,
-                                        //     ),
-                                        //   ),
-                                        // );
                                       },
                                     ),
                                   ),
@@ -744,11 +567,5 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
         ),
       ),
     );
-  }
-
-  Icon LikeIcon(reply) {
-    return (reply['isLiked'])
-        ? const Icon(Icons.favorite, color: Color(0xFFB95A92))
-        : const Icon(Icons.favorite_border, color: Color(0xFFB95A92));
   }
 }
