@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/user_provider.dart';
 
 class DetailProfileScreen extends StatefulWidget {
   const DetailProfileScreen({super.key});
@@ -10,6 +12,8 @@ class DetailProfileScreen extends StatefulWidget {
 class _DetailProfileScreenState extends State<DetailProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    // provider user
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -18,7 +22,8 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
               height: 250,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/images/detail_profil_background.png'), 
+                  image: AssetImage(
+                      'lib/assets/images/detail_profil_background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -33,9 +38,10 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   Container(
                     margin: const EdgeInsets.only(top: 60),
                     child: const Center(
-                        child: CircleAvatar(
+                      child: CircleAvatar(
                         radius: 60,
-                        backgroundImage: AssetImage('lib/assets/images/user2.png'),
+                        backgroundImage:
+                            AssetImage('lib/assets/images/user2.png'),
                       ),
                     ),
                   ),
@@ -49,7 +55,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   TextFormField(
                     // controller: _usernameController,
                     decoration: const InputDecoration(
-                        labelText: 'Name',
+                      labelText: 'Name',
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -61,7 +67,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   TextFormField(
                     // controller: _emailController,
                     decoration: const InputDecoration(
-                        labelText: 'Email',
+                      labelText: 'Email',
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -114,19 +120,14 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   ),
                   const SizedBox(height: 40),
                   ElevatedButtonTheme(
-                    data: Theme.of(context).elevatedButtonTheme,
-                    child: ElevatedButton(
-                      style: ElevatedButtonTheme.of(context).style,
-                      child: const Text(
-                        'Simpan',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20
-                        ),
-                      ),
-                      onPressed: () {}
-                    )
-                  )
+                      data: Theme.of(context).elevatedButtonTheme,
+                      child: ElevatedButton(
+                          style: ElevatedButtonTheme.of(context).style,
+                          child: const Text(
+                            'Simpan',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          onPressed: () {}))
                 ],
               ),
             )
