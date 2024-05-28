@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vedanta_frontend/src/providers/user_provider.dart';
 
 class DetailProfileScreen extends StatefulWidget {
   const DetailProfileScreen({super.key});
