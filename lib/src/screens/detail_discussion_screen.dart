@@ -81,7 +81,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(response['message']),
-                                    backgroundColor: const Color(0xFFB95A92),
+                                    backgroundColor: Colors.purple,
                                   ),
                                 );
                               } else {
@@ -196,7 +196,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(response['message']),
-                              backgroundColor: const Color(0xFFB95A92),
+                              backgroundColor: Colors.purple,
                             ),
                           );
                         } else {
@@ -309,9 +309,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
         Text(
           '${data['repliesCount']} Jawaban',
           style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFFB95A92),
-              fontWeight: FontWeight.w500),
+              fontSize: 16, color: Colors.purple, fontWeight: FontWeight.w500),
         ),
         IconButton(
           icon: LikeIconWithCount(
@@ -327,7 +325,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(response['message']),
-                  backgroundColor: const Color(0xFFB95A92),
+                  backgroundColor: Colors.purple,
                 ),
               );
             } else {
@@ -385,7 +383,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                   child: Text(
                     data['creator']['name'],
                     style: const TextStyle(
-                      color: Color(0xFFB95A92),
+                      color: Colors.purple,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -424,7 +422,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
       toolbarHeight: 70,
       shadowColor: Colors.white,
       iconTheme: const IconThemeData(
-        color: Color(0xFFB95A92), // Warna pink untuk back button
+        color: Colors.purple, // Warna pink untuk back button
       ),
       title: Expanded(
         child: InputRoundedWithIcon(

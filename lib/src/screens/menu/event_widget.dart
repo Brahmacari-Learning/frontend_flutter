@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class EventWidget extends StatefulWidget {
   const EventWidget({super.key});
@@ -15,13 +14,13 @@ class _EventWidgetState extends State<EventWidget> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFFDA94FA),
+          backgroundColor: Colors.purple,
           elevation: 0,
           toolbarHeight: 0,
           bottom: const TabBar(
-            labelColor: Colors.white, 
-            unselectedLabelColor: Colors.grey, 
-            indicatorColor: Colors.white, 
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: "Misi"),
               Tab(text: "Lencana"),
@@ -35,21 +34,20 @@ class _EventWidgetState extends State<EventWidget> {
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   width: double.infinity,
-                  
-                  color: Color(0xFFDA94FA), 
+                  color: Colors.purple,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Rahianmu",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
                         ),
-                        
                       ),
                       Row(
                         children: [
@@ -82,42 +80,39 @@ class _EventWidgetState extends State<EventWidget> {
                         ],
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 20),
                         decoration: BoxDecoration(
-                          color: Color(0xFFFFFFFF),
+                          color: const Color(0xFFFFFFFF),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Presensi Harian",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600
-                                ),
-                                textAlign: TextAlign.start
-                              ),
+                              const Text("Presensi Harian",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.start),
                               Row(
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width * 0.62,
-                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.62,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF9095A0),
+                                      color: Colors.purple,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        "1/20",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700
-                                        )
-                                      ),
+                                    child: const Center(
+                                      child: Text("1/20",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700)),
                                     ),
                                   ),
                                   Image.asset(
@@ -133,32 +128,30 @@ class _EventWidgetState extends State<EventWidget> {
                         ),
                       )
                     ],
-                  ),  
+                  ),
                 ),
                 Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // SizedBox(height: 20),
-                          Text(
-                            "Misi Harian",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              for (int i = 0; i < 5 ; i++)
+                    child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // SizedBox(height: 20),
+                        const Text(
+                          "Misi Harian",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w800),
+                        ),
+                        Column(
+                          children: [
+                            for (int i = 0; i < 5; i++)
                               Container(
-                                margin: EdgeInsets.only(top: 20),
-                                padding: EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(top: 20),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Color(0xFFDADADA),
+                                    color: const Color(0xFFDADADA),
                                     width: 2,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
@@ -173,40 +166,44 @@ class _EventWidgetState extends State<EventWidget> {
                                       height: 80,
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          constraints: BoxConstraints(maxWidth: 170),
-                                          child: Text(
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 170),
+                                          child: const Text(
                                             "Selesaikan 15 Kuis",
                                             style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400
-                                            ),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w400),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Container(
                                           height: 32,
-                                          width: MediaQuery.of(context).size.width * 0.6,
-                                          decoration: BoxDecoration(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
-                                              image: AssetImage('lib/assets/images/indikator_misi.png'), 
+                                              image: AssetImage(
+                                                  'lib/assets/images/indikator_misi.png'),
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                           child: Center(
                                             child: Container(
-                                              margin: EdgeInsets.only(right: 20),
-                                              child: Text(
-                                                "1/ 20",
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400
-                                                )
-                                              ),
+                                              margin: const EdgeInsets.only(
+                                                  right: 20),
+                                              child: const Text("1/ 20",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w400)),
                                             ),
                                           ),
                                         ),
@@ -215,13 +212,12 @@ class _EventWidgetState extends State<EventWidget> {
                                   ],
                                 ),
                               )
-                            ],
-                          )
-                        ],
-                      ),
+                          ],
+                        )
+                      ],
                     ),
-                  ) 
-                ),
+                  ),
+                )),
               ],
             ),
             // Lencana
@@ -229,85 +225,90 @@ class _EventWidgetState extends State<EventWidget> {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (int i = 0; i < 20 ; i++)
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          width: 345,
-                          padding: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF1C40F),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, -2),
-                                blurRadius: 7,
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(3), // Border width
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFFF8504), // Border color
-                                  shape: BoxShape.circle,
+                        for (int i = 0; i < 20; i++)
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            width: 345,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF1C40F),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(0, -2),
+                                  blurRadius: 7,
+                                  spreadRadius: 0,
                                 ),
-                                child: CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: AssetImage('lib/assets/images/icons/misi.png'),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.all(3), // Border width
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFFF8504), // Border color
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage: AssetImage(
+                                        'lib/assets/images/icons/misi.png'),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: 170),
-                                    child: Text(
-                                      "Si Pintar",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
+                                const SizedBox(width: 15),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 170),
+                                      child: const Text(
+                                        "Si Pintar",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
-                                    ),
-                                  ),
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: 200),
-                                    child: Text(
-                                      "Menyelesaikan Semua Kuis Pada Map 1 asd ads asd ASZ das aSD",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
                                     ),
-                                  ),
-                                  
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 50, left: 10),
-                                child: Image.asset(
-                                  fit: BoxFit.fill,
-                                  'lib/assets/images/icons/star.png',
-                                  width: 22,
-                                  height: 22,
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 200),
+                                      child: const Text(
+                                        "Menyelesaikan Semua Kuis Pada Map 1 asd ads asd ASZ das aSD",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      bottom: 50, left: 10),
+                                  child: Image.asset(
+                                    fit: BoxFit.fill,
+                                    'lib/assets/images/icons/star.png',
+                                    width: 22,
+                                    height: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   )
@@ -319,103 +320,104 @@ class _EventWidgetState extends State<EventWidget> {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (int i = 0; i < 20 ; i++)
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          width: 345,
-                          padding: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF9BD2FC),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, -2),
-                                blurRadius: 7,
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(3), // Border width
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFFF8504), // Border color
-                                  shape: BoxShape.circle,
+                        for (int i = 0; i < 20; i++)
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            width: 345,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF9BD2FC),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(0, -2),
+                                  blurRadius: 7,
+                                  spreadRadius: 0,
                                 ),
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: AssetImage('lib/assets/images/user2.png'),
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: 140),
-                                    child: Text(
-                                      "Kalender Bali asdas asdasdas",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                    ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.all(3), // Border width
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFFF8504), // Border color
+                                    shape: BoxShape.circle,
                                   ),
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        fit: BoxFit.fill,
-                                        'lib/assets/images/star.png',
-                                        width: 30,
-                                        height: 30,
-                                      ),
-                                      const Text(
-                                        '25',
+                                  child: const CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: AssetImage(
+                                        'lib/assets/images/user2.png'),
+                                  ),
+                                ),
+                                const SizedBox(width: 15),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 140),
+                                      child: const Text(
+                                        "Kalender Bali asdas asdasdas",
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 15,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
-                                    ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          fit: BoxFit.fill,
+                                          'lib/assets/images/star.png',
+                                          width: 30,
+                                          height: 30,
+                                        ),
+                                        const Text(
+                                          '25',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 15),
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 20),
+                                    backgroundColor: const Color(0xFFF1C40F),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10), // Atur radius sudut di sini
+                                    ),
                                   ),
-                                ],
-                              ),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                onPressed: ()  {
-                                
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                  backgroundColor: Color(0xFFF1C40F),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Atur radius sudut di sini
+                                  child: const Text(
+                                    "Tukar",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Color(0xFFFFFFFF),
+                                        fontWeight: FontWeight.w900),
                                   ),
                                 ),
-                                child: Text(
-                                  "Tukar",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFFFFFFFFF),
-                                    fontWeight: FontWeight.w900
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   )

@@ -7,8 +7,8 @@ class LikeIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isLiked
-        ? const Icon(Icons.favorite, color: Color(0xFFB95A92))
-        : const Icon(Icons.favorite_border, color: Color(0xFFB95A92));
+        ? const Icon(Icons.favorite, color: Colors.purple)
+        : const Icon(Icons.favorite_border, color: Colors.purple);
   }
 }
 
@@ -37,7 +37,7 @@ class LikeIconWithCount extends StatelessWidget {
             '$likesCount',
             style: const TextStyle(
               fontSize: 16,
-              color: Color(0xFFB95A92),
+              color: Colors.purple,
               fontWeight: FontWeight.w500,
             ),
           ),

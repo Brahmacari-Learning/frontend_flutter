@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/screens/detail_discussion_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
+import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
 
 class DiscussionWidget extends StatefulWidget {
   const DiscussionWidget({super.key});
@@ -16,6 +18,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     // provider
     final discussionProvider =
         Provider.of<DiscussionProvider>(context, listen: false);
@@ -25,77 +28,34 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       child: Column(
         children: [
-          // Search form
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 0.3,
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Cari diskusi...',
-                      hintStyle: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w400),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
+          InputRoundedWithIcon(
+            controller: _controller,
+            icon: Icons.search,
+            label: 'Cari diskusi...',
+            onEnter: (value) async {
+              final response = await discussionProvider
+                  .searchDiscussion(_controller.text.trim());
+              if (response['error']) {
+                scaffoldMessenger.showSnackBar(SnackBar(
+                  content: Text(response['message']),
+                  backgroundColor: Colors.red,
+                ));
+              } else {
+                scaffoldMessenger.showSnackBar(const SnackBar(
+                  content: Text('Search success!'),
+                  backgroundColor: Colors.green,
+                ));
+                // navigate to detail sloka screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchDiscussionScreen(
+                      discussions: response['discussions'],
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                TextButton(
-                  onPressed: () async {
-                    final response = await discussionProvider
-                        .searchDiscussion(_controller.text.trim());
-                    if (response['error']) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(response['message']),
-                        backgroundColor: Colors.red,
-                      ));
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Search success!'),
-                        backgroundColor: Colors.green,
-                      ));
-                      // navigate to detail sloka screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchDiscussionScreen(
-                            discussions: response['discussions'],
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.search,
-                    color: Color(0xFFB95A92),
-                  ),
-                ),
-              ],
-            ),
+                );
+              }
+            },
           ),
           // List of discussions
           Expanded(
@@ -159,56 +119,38 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: (discussions[index]['isLiked'])
-                                          ? const Icon(Icons.favorite,
-                                              color: Color(0xFFB95A92))
-                                          : const Icon(Icons.favorite_border,
-                                              color: Color(0xFFB95A92)),
-                                      onPressed: () async {
-                                        final response =
-                                            await discussionProvider
-                                                .likeDiscussion(
-                                                    discussions[index]['id'],
-                                                    !discussions[index]
-                                                        ['isLiked']);
-                                        if (response['error']) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text(response['message']),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text('Success!'),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
-                                          setState(() {
-                                            discussions[index]['isLiked'] =
-                                                !discussions[index]['isLiked'];
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    Text(
-                                      "${discussions[index]['likesCount']}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFFB95A92),
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    )
-                                  ],
-                                )
+                                IconButton(
+                                  icon: LikeIconWithCount(
+                                    isLiked: discussions[index]['isLiked'],
+                                    likesCount: discussions[index]
+                                        ['likesCount'],
+                                  ),
+                                  onPressed: () async {
+                                    final response =
+                                        await discussionProvider.likeDiscussion(
+                                            discussions[index]['id'],
+                                            !discussions[index]['isLiked']);
+                                    if (response['error']) {
+                                      scaffoldMessenger.showSnackBar(
+                                        SnackBar(
+                                          content: Text(response['message']),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    } else {
+                                      scaffoldMessenger.showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Success!'),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                      setState(() {
+                                        discussions[index]['isLiked'] =
+                                            !discussions[index]['isLiked'];
+                                      });
+                                    }
+                                  },
+                                ),
                               ],
                             ),
                             const Divider(
@@ -231,12 +173,12 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
               final response = await discussionProvider.createDiscussion(
                   'New Discussion', 'Content of new discussion');
               if (response['error']) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                scaffoldMessenger.showSnackBar(SnackBar(
                   content: Text(response['message']),
                   backgroundColor: Colors.red,
                 ));
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                scaffoldMessenger.showSnackBar(const SnackBar(
                   content: Text('Create discussion success!'),
                   backgroundColor: Colors.green,
                 ));
@@ -247,7 +189,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              backgroundColor: const Color(0xFFB95A92),
+              backgroundColor: const Color.fromARGB(238, 142, 56, 142),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

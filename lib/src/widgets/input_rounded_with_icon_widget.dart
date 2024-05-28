@@ -58,7 +58,7 @@ class InputRoundedWithIcon extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: const Color(0xFFB95A92),
+              color: Colors.purple,
             ),
           ),
         ],

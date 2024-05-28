@@ -48,7 +48,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
                         margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xFFDA94FA),
+                          color: Colors.purple,
                           boxShadow: [
                             BoxShadow(
                               color: const Color.fromARGB(255, 0, 0, 0)

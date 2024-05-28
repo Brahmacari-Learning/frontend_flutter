@@ -333,7 +333,7 @@ class _GitaWidgetState extends State<GitaWidget> {
                       if (response['error']) {
                         scaffoldMessenger.showSnackBar(SnackBar(
                           content: Text(response['message']),
-                          backgroundColor: const Color(0xFFB95A92),
+                          backgroundColor: Colors.purple,
                         ));
                       } else {
                         setState(() {
