@@ -60,7 +60,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           _questionDiscussion(data),
                           const SizedBox(height: 20),
                           // Statistik diskusi (jawaban & like)
-                          _questionStats(data),
+                          _questionStats(data, discussionProvider),
                           const Divider(
                             thickness: 1,
                             indent: 0,
@@ -302,7 +302,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     );
   }
 
-  Row _questionStats(data) {
+  Row _questionStats(data, DiscussionProvider discussionProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -313,9 +313,33 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
               color: Color(0xFFB95A92),
               fontWeight: FontWeight.w500),
         ),
-        LikeIconWithCount(
-          isLiked: data['isLiked'],
-          likesCount: data['likesCount'],
+        IconButton(
+          icon: LikeIconWithCount(
+            isLiked: data['isLiked'],
+            likesCount: data['likesCount'],
+          ),
+          onPressed: () async {
+            final response = await discussionProvider.likeDiscussion(
+              widget.id,
+              !data['isLiked'],
+            );
+            if (response['error']) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(response['message']),
+                  backgroundColor: const Color(0xFFB95A92),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Discussion liked'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              setState(() {});
+            }
+          },
         )
       ],
     );
