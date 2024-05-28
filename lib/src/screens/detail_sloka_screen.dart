@@ -55,14 +55,17 @@ class DetailSlokaScreen extends StatelessWidget {
                     const Text(
                       'Sloka:',
                       style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       sloka['content'] ?? '',
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     const Text(
@@ -78,17 +81,22 @@ class DetailSlokaScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'Makna:',
+                      'Penjelasan Ganesh Bot:',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
-                    MarkdownBody(
-                      data: sloka['makna'] ?? '',
-                      styleSheet: MarkdownStyleSheet(
-                        p: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: MarkdownBody(
+                          data: sloka['makna'] ?? '',
+                          styleSheet: MarkdownStyleSheet(
+                            p: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
                     ),
