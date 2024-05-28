@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
@@ -61,11 +63,13 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                     const SizedBox(height: 50),
                     Column(
                       children: _chat
-                          .map((e) => BubbleChatWidget(
-                                message: e['message'],
-                                isUser: e['isUser'],
-                                error: e['error'],
-                              ))
+                          .map(
+                            (e) => BubbleChatWidget(
+                              message: e['message'],
+                              isUser: e['isUser'],
+                              error: e['error'],
+                            ),
+                          )
                           .toList(),
                     ),
                     if (_isLoading)
@@ -82,14 +86,11 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                                 baseColor: Colors.grey[300]!,
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(
-                                  width: 15,
-                                  height: 15,
+                                  width: 30,
+                                  height: 30,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                      bottomRight: Radius.circular(20))
+                                    borderRadius: BorderRadius.circular(1000),
                                   ),
                                 ),
                               ),
@@ -97,19 +98,21 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                             Container(
                               width: MediaQuery.of(context).size.width * 0.6,
                               padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.only(left: 10, right: 20),
+                              margin:
+                                  const EdgeInsets.only(left: 10, right: 20),
                               child: Shimmer.fromColors(
                                 baseColor: Colors.grey[300]!,
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(
                                   width: 50,
                                   height: 50.0,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: const BorderRadius.only(
+                                    borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(20),
                                       topRight: Radius.circular(20),
-                                      bottomRight: Radius.circular(20))
+                                      bottomRight: Radius.circular(20),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -118,22 +121,6 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                           ],
                         ),
                       ),
-
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 10),
-                      //   child: Shimmer.fromColors(
-                      //     baseColor: Colors.grey[300]!,
-                      //     highlightColor: Colors.grey[100]!,
-                      //     child: Container(
-                      //       width: double.infinity,
-                      //       height: 50.0,
-                      //       decoration: BoxDecoration(
-                      //         color: Colors.white,
-                      //         borderRadius: BorderRadius.circular(8.0),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                   ],
                 ),
               ),
