@@ -24,7 +24,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
         title: const Text('Detail Discussion'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SingleChildScrollView(
           child: Expanded(
             child: Column(
@@ -56,32 +56,32 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             ),
                           Text(
                             data['title'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             data['body'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             'Likes: ${data['likesCount']} | Replies: ${data['repliesCount']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             'Created At: ${data['createdAt']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             'Creator: ${data['creator']['name']}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
@@ -101,8 +101,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text('Reply created'),
+                                  const SnackBar(
+                                    content: Text('Reply created'),
                                     backgroundColor: Colors.green,
                                   ),
                                 );
@@ -145,14 +145,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                           ),
                                     title: Text(
                                       reply['reply'],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     subtitle: Text(
                                       'Likes: ${reply['likesCount']} | Created At: ${reply['createdAt']} | Creator: ${reply['creator']['name']}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                       ),
                                     ),
@@ -163,9 +163,10 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                         children: [
                                           IconButton(
                                             icon: (reply['isLiked'])
-                                                ? Icon(Icons.favorite,
+                                                ? const Icon(Icons.favorite,
                                                     color: Colors.red)
-                                                : Icon(Icons.favorite_border,
+                                                : const Icon(
+                                                    Icons.favorite_border,
                                                     color: Colors.red),
                                             onPressed: () async {
                                               final response =
@@ -185,9 +186,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
-                                                  SnackBar(
-                                                    content: const Text(
-                                                        'Reply liked'),
+                                                  const SnackBar(
+                                                    content:
+                                                        Text('Reply liked'),
                                                     backgroundColor:
                                                         Colors.green,
                                                   ),
@@ -218,9 +219,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
-                                                  SnackBar(
-                                                    content: const Text(
-                                                        'Reply created'),
+                                                  const SnackBar(
+                                                    content:
+                                                        Text('Reply created'),
                                                     backgroundColor:
                                                         Colors.green,
                                                   ),
@@ -236,7 +237,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                   ),
                                   // Nested replies (make it different by adding padding)
                                   Padding(
-                                    padding: EdgeInsets.only(left: 20),
+                                    padding: const EdgeInsets.only(left: 20),
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       itemCount: reply['replies'].length,
@@ -262,14 +263,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                                                 ),
                                           title: Text(
                                             nestedReply['reply'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           subtitle: Text(
                                             'Likes: ${nestedReply['likesCount']} | Created At: ${nestedReply['createdAt']} | Creator: ${nestedReply['creator']['name']}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                             ),
                                           ),
