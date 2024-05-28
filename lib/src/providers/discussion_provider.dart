@@ -110,11 +110,12 @@ class DiscussionProvider with ChangeNotifier {
   }
 
   // like reply
-  Future<Map<String, dynamic>> likeReply(int disscusionId, int replayId) async {
+  Future<Map<String, dynamic>> likeReply(
+      int disscusionId, int replayId, bool like) async {
     try {
       final response = await _apiService
           .postData('discussion/$disscusionId/reply/$replayId/like', {
-        'like': true,
+        'like': like,
       });
       return response;
     } catch (e) {

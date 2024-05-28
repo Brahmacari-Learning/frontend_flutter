@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
-import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -19,7 +18,7 @@ class DetailDiscussionScreen extends StatefulWidget {
 
 class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
   final TextEditingController _komentarController = TextEditingController();
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controllerSearch = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +55,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         children: [
                           // Profil, nama, waktu diskusi
                           _headerUserInfo(data, context),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           // Judul dan deskripsi
                           _questionDiscussion(data),
                           const SizedBox(height: 20),
@@ -193,6 +190,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         final response = await discussionProvider.likeReply(
                           widget.id,
                           reply['id'],
+                          !reply['isLiked'],
                         );
                         if (response['error']) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -406,7 +404,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
       ),
       title: Expanded(
         child: InputRoundedWithIcon(
-          controller: _controller,
+          controller: _controllerSearch,
           icon: Icons.search,
           label: 'Cari diskusi...',
           onEnter: (String value) {},
