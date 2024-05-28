@@ -5,6 +5,7 @@ import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_sloka_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
 
 class GitaWidget extends StatefulWidget {
   const GitaWidget({super.key});
@@ -17,23 +18,44 @@ class _GitaWidgetState extends State<GitaWidget> {
   final TextEditingController _controller = TextEditingController();
   final List<dynamic> _babList = [];
   final List<dynamic> _slokaList = [];
+  final List<dynamic> _favoriteSlokaList = [];
   int? _currentBab = 1;
   late Future<void> _futureBabList = Future.value();
   late Future<void> _futureSlokaList = Future.value();
-  // late Future<Map<String, dynamic>> _futureBacaanTerakhir = Future.value({});
+  late Future<void> _futureFavoriteSlokaList = Future.value();
+  Future<Map<String, dynamic>>? _futureBacaanTerakhir;
 
   @override
   void initState() {
     super.initState();
-    _futureBabList = _getBabList();
-    _futureSlokaList = _getSlokaList(_currentBab!);
-    // _futureBacaanTerakhir = _getBacaanTerakhir();
+    setState(() {
+      _futureBabList = _getBabList();
+      _futureSlokaList = _getSlokaList(_currentBab!);
+      _futureBacaanTerakhir = _getBacaanTerakhir();
+      _futureFavoriteSlokaList = _getFavoriteSlokaList();
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _getFavoriteSlokaList() async {
+    final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+    final response = await gitaProvider.getFavoriteSlokas();
+    setState(() {
+      _favoriteSlokaList.clear();
+      for (var i = 0; i < response['slokas'].length; i++) {
+        _favoriteSlokaList.add(response['slokas'][i]);
+      }
+    });
+  }
+
+  Future<Map<String, dynamic>> _getBacaanTerakhir() async {
+    final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
+    return gitaProvider.getBacaanTerakhir();
   }
 
   Future<void> _getBabList() async {
@@ -102,24 +124,29 @@ class _GitaWidgetState extends State<GitaWidget> {
                 },
               ),
               const SizedBox(height: 40),
-              FutureBuilder(
-                future: gitaProvider.getBacaanTerakhir(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    return GitaCardWidget(
-                      headerText: 'Bacaan Terakhir',
-                      subHeaderText:
-                          "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
-                      text: snapshot.data!['bacaan']['babTitle'],
-                      buttonText: 'Lanjutkan Membaca',
-                    );
-                  }
-                },
-              ),
+              _futureBacaanTerakhir != null
+                  ? FutureBuilder(
+                      future: _futureBacaanTerakhir,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return GitaCardWidget(
+                            headerText: 'Bacaan Terakhir',
+                            subHeaderText:
+                                "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
+                            text: snapshot.data!['bacaan']['babTitle'],
+                            buttonText: 'Lanjutkan Membaca',
+                          );
+                        }
+                      },
+                    )
+                  : const SizedBox(),
               const SizedBox(height: 20),
               // Tab widget
               Expanded(
@@ -140,7 +167,8 @@ class _GitaWidgetState extends State<GitaWidget> {
                                 // Dropdown menu for bab
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
+                                    horizontal: 10,
+                                  ),
                                   child: DropdownButton<int>(
                                     style: const TextStyle(
                                       color: Colors.black,
@@ -158,8 +186,13 @@ class _GitaWidgetState extends State<GitaWidget> {
                                     onChanged: (value) {
                                       setState(() {
                                         _currentBab = value;
-                                        _futureSlokaList =
-                                            _getSlokaList(value!);
+                                        setState(() {
+                                          _futureBabList = _getBabList();
+                                          _futureSlokaList =
+                                              _getSlokaList(_currentBab!);
+                                          _futureFavoriteSlokaList =
+                                              _getFavoriteSlokaList();
+                                        });
                                       });
                                     },
                                   ),
@@ -177,12 +210,16 @@ class _GitaWidgetState extends State<GitaWidget> {
                               child: TabBarView(
                                 children: [
                                   // List view for sloka
-                                  _slokaListWidget(_slokaList, (e) => true,
-                                      scaffoldMessenger),
                                   _slokaListWidget(
-                                      _slokaList,
-                                      (e) => e['isLiked'] == true,
-                                      scaffoldMessenger),
+                                    _futureSlokaList,
+                                    _slokaList,
+                                    scaffoldMessenger,
+                                  ),
+                                  _slokaListWidget(
+                                    _futureFavoriteSlokaList,
+                                    _favoriteSlokaList,
+                                    scaffoldMessenger,
+                                  ),
                                 ],
                               ),
                             ),
@@ -201,12 +238,12 @@ class _GitaWidgetState extends State<GitaWidget> {
   }
 
   FutureBuilder<void> _slokaListWidget(
+    Future<void> futureSlokaList,
     List<dynamic> slokaList,
-    bool Function(dynamic value) filter,
     ScaffoldMessengerState scaffoldMessenger,
   ) {
     return FutureBuilder<void>(
-      future: _futureSlokaList,
+      future: futureSlokaList,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -217,9 +254,8 @@ class _GitaWidgetState extends State<GitaWidget> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else {
-          final filtered = _slokaList.where(filter).toList();
           return ListView.builder(
-            itemCount: filtered.length,
+            itemCount: slokaList.length,
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
@@ -228,7 +264,7 @@ class _GitaWidgetState extends State<GitaWidget> {
                     MaterialPageRoute(
                       builder: (context) => DetailSlokaScreen(
                         bab: _currentBab!,
-                        sloka: filtered[index]['number'],
+                        sloka: slokaList[index]['number'],
                       ),
                     ),
                   );
@@ -254,43 +290,64 @@ class _GitaWidgetState extends State<GitaWidget> {
                   ),
                 ),
                 title: Text(
-                  'Sloka ${index + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  'Sloka ${slokaList[index]['number']}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                subtitle: Text("Bacaan Sloka ${filtered[index]['number']}"),
+                subtitle: slokaList[index]['numberBab'] != null
+                    ? Text("Bacaan Bab ${slokaList[index]['numberBab']}")
+                    : Text("Bacaan Sloka ${slokaList[index]['number']}"),
                 trailing: InkWell(
                   onTap: () async {
                     if (!mounted) return;
                     // Add to favorite
                     final gitaProvider =
                         Provider.of<GitaProvider>(context, listen: false);
-                    final response = await gitaProvider.likeSloka(
-                        _currentBab!, filtered[index]['number']);
 
-                    if (response['error']) {
-                      scaffoldMessenger.showSnackBar(SnackBar(
-                        content: Text(response['message']),
-                        backgroundColor: const Color(0xFFB95A92),
-                      ));
+                    print('$index');
+                    if (slokaList[index]['numberBab'] == null) {
+                      final response = await gitaProvider.likeSloka(
+                        _currentBab!,
+                        slokaList[index]['number'],
+                        !slokaList[index]['isLiked'],
+                      );
+                      if (response['error']) {
+                        scaffoldMessenger.showSnackBar(SnackBar(
+                          content: Text(response['message']),
+                          backgroundColor: const Color(0xFFB95A92),
+                        ));
+                      } else {
+                        setState(() {
+                          // _futureSlokaList = _getSlokaList(_currentBab!);
+                          slokaList[index]['isLiked'] =
+                              !slokaList[index]['isLiked'];
+                          _futureFavoriteSlokaList = _getFavoriteSlokaList();
+                        });
+                      }
                     } else {
-                      scaffoldMessenger.showSnackBar(const SnackBar(
-                        content: Text('Sloka added to favorite'),
-                        backgroundColor: Colors.green,
-                      ));
-                      setState(() {
-                        filtered[index]['isLiked'] = true;
-                      });
+                      final response = await gitaProvider.likeSloka(
+                        slokaList[index]['numberBab'],
+                        slokaList[index]['number'],
+                        false,
+                      );
+                      if (response['error']) {
+                        scaffoldMessenger.showSnackBar(SnackBar(
+                          content: Text(response['message']),
+                          backgroundColor: const Color(0xFFB95A92),
+                        ));
+                      } else {
+                        await Future.delayed(Durations.medium4);
+                        setState(() {
+                          _futureFavoriteSlokaList = _getFavoriteSlokaList();
+                          _futureSlokaList = _getSlokaList(_currentBab!);
+                        });
+                      }
                     }
                   },
-                  child: filtered[index]['isLiked']
-                      ? const Icon(
-                          Icons.favorite,
-                          color: Colors.pinkAccent,
-                        )
-                      : const Icon(
-                          Icons.favorite_border,
-                          color: Colors.grey,
-                        ),
+                  child: LikeIcon(
+                    isLiked: slokaList[index]['isLiked'],
+                  ),
                 ),
               );
             },

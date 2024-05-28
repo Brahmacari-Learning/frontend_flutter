@@ -52,7 +52,7 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
         title: const Text('Detail Sloka'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -65,14 +65,14 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
                   text: _sloka['babTitle'] ?? '',
                   withButton: false,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Media Player Widget
                 if (_sloka['urlPelafalan'] != null)
                   MusicPlayerWidget(url: _sloka['urlPelafalan'])
                 else
-                  CircularProgressIndicator(),
+                  const CircularProgressIndicator(),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Sloka:',
                   style: TextStyle(
                       fontSize: 16,
@@ -82,24 +82,24 @@ class _DetailSlokaScreenState extends State<DetailSlokaScreen> {
                 const SizedBox(height: 10),
                 Text(
                   _sloka['content'] ?? '',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     // fontFamily: 'NotoSansDevanagari',
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Terjemahan:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   _sloka['translationIndo'] ?? '',
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
 
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Makna:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
