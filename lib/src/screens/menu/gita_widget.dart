@@ -177,9 +177,12 @@ class _GitaWidgetState extends State<GitaWidget> {
                               child: TabBarView(
                                 children: [
                                   // List view for sloka
-                                  _slokaListWidget(_slokaList, (e) => true),
+                                  _slokaListWidget(_slokaList, (e) => true,
+                                      scaffoldMessenger),
                                   _slokaListWidget(
-                                      _slokaList, (e) => e['isLiked'] == true),
+                                      _slokaList,
+                                      (e) => e['isLiked'] == true,
+                                      scaffoldMessenger),
                                 ],
                               ),
                             ),
@@ -198,7 +201,10 @@ class _GitaWidgetState extends State<GitaWidget> {
   }
 
   FutureBuilder<void> _slokaListWidget(
-      List<dynamic> slokaList, bool Function(dynamic value) filter) {
+    List<dynamic> slokaList,
+    bool Function(dynamic value) filter,
+    ScaffoldMessengerState scaffoldMessenger,
+  ) {
     return FutureBuilder<void>(
       future: _futureSlokaList,
       builder: (context, snapshot) {
@@ -254,18 +260,20 @@ class _GitaWidgetState extends State<GitaWidget> {
                 subtitle: Text("Bacaan Sloka ${filtered[index]['number']}"),
                 trailing: InkWell(
                   onTap: () async {
+                    if (!mounted) return;
                     // Add to favorite
                     final gitaProvider =
                         Provider.of<GitaProvider>(context, listen: false);
                     final response = await gitaProvider.likeSloka(
                         _currentBab!, filtered[index]['number']);
+
                     if (response['error']) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      scaffoldMessenger.showSnackBar(SnackBar(
                         content: Text(response['message']),
-                        backgroundColor: Colors.red,
+                        backgroundColor: const Color(0xFFB95A92),
                       ));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      scaffoldMessenger.showSnackBar(const SnackBar(
                         content: Text('Sloka added to favorite'),
                         backgroundColor: Colors.green,
                       ));
