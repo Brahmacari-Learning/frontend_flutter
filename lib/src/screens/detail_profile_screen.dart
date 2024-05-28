@@ -13,7 +13,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
   @override
   Widget build(BuildContext context) {
     // provider user
-    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
