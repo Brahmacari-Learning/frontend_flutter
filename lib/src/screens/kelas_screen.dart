@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/kelas_detail_screen.dart';
 
 class KelasScreen extends StatefulWidget {
   const KelasScreen({super.key});
@@ -8,60 +11,160 @@ class KelasScreen extends StatefulWidget {
 }
 
 class _KelasScreenState extends State<KelasScreen> {
+  final TextEditingController _codeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // Provider class
+    final classProvider = Provider.of<ClassProvider>(context);
+    final response = classProvider.getClasses();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kelas'),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              for (int i = 0; i < 10 ; i++)
-              Container(
-                width: 330,
-                padding: EdgeInsets.symmetric(vertical: 13, horizontal: 20),
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xFFDA94FA),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
-                      offset: Offset(0, -2),
-                      blurRadius: 7,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Kelas A",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800
+        child: FutureBuilder(
+          future: response,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height * 1,
+                  child: const CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return const Text('An error occurred');
+            }
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!['classes'].length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => KelasDetailScreen(
+                                id: snapshot.data!['classes'][index]['id'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 330,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 13, horizontal: 20),
+                          margin: const EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xFFDA94FA),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 0, 0, 0)
+                                    .withOpacity(0.1),
+                                offset: const Offset(0, -2),
+                                blurRadius: 7,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data!['classes'][index]['className'],
+                                  style: const TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                                Text(
+                                  snapshot.data!['classes'][index]
+                                      ['teacherName'],
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  // Code Button
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // pop up dialog to input code
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Masukkan Kode Kelas'),
+                              content: TextField(
+                                controller: _codeController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Kode Kelas',
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Batal'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // join class
+                                    classProvider
+                                        .joinClass(_codeController.text);
+
+                                    // refresh page
+                                    setState(() {});
+
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFDA94FA),
+                                  ),
+                                  child: const Text('Masuk'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDA94FA),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      Text(
-                        "Ida Bagus Pascima",
+                      child: const Text(
+                        'Masuk Kelas',
                         style: TextStyle(
-                          fontSize: 20,
                           color: Colors.white,
-                          fontWeight: FontWeight.w300
+                          fontSize: 20,
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
