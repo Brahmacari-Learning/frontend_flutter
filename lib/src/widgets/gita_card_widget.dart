@@ -100,7 +100,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                         child: Text(
                           widget.buttonText,
                           style: const TextStyle(
-                            color: Color(0xFF863ED5),
+                            color: Colors.purple,
                             fontSize: 12,
                           ),
                         ),

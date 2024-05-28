@@ -51,7 +51,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           children: [
             Container(
               height: 110,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('lib/assets/images/profil_background.png'),
                   fit: BoxFit.cover,
@@ -65,67 +65,66 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     return Container(
                       alignment: Alignment.center,
                       height: MediaQuery.of(context).size.height * 1,
-                      child: CircularProgressIndicator(),
+                      child: const CircularProgressIndicator(),
                     );
                   }
                   if (snapshot.hasError) {
-                    return Text('An error occurred');
+                    return const Text('An error occurred');
                   }
-                  return Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                              'https://vedanta-pro.vercel.app/api/user/update-profile-picture'),
-                        ),
-                        SizedBox(width: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.data!['user']['name'],
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                            'https://vedanta-pro.vercel.app/api/user/update-profile-picture'),
+                      ),
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            snapshot.data!['user']['name'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              snapshot.data!['user']['email'],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        // SizedBox(width: 50),
-                        IconButton(
-                          icon: Icon(
-                            Icons.edit,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailProfileScreen()),
-                            );
-                          },
+                          Text(
+                            snapshot.data!['user']['email'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      // SizedBox(width: 50),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.edit,
                         ),
-                      ],
-                    ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const DetailProfileScreen()),
+                          );
+                        },
+                      ),
+                    ],
                   );
                 }),
-            SizedBox(height: 20),
-            Divider(
+            const SizedBox(height: 20),
+            const Divider(
               thickness: 1,
               indent: 30,
               endIndent: 30,
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
@@ -148,7 +147,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   ],
                 ),
                 SizedBox(width: 30),
-                Container(
+                SizedBox(
                   width: 1,
                   height: 40,
                 ),
@@ -175,11 +174,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 20, left: 25, right: 25),
-              padding: EdgeInsets.all(20),
+              margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(0xFFDADADA),
+                  color: const Color(0xFFDADADA),
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(10), // Radius border
@@ -190,12 +189,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => KelasScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const KelasScreen()),
                       );
                     },
                     child: Row(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 40,
                           width: 40,
                           child: Image.asset(
@@ -203,8 +203,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        SizedBox(width: 14),
-                        Text(
+                        const SizedBox(width: 14),
+                        const Text(
                           'Kelas',
                           style: TextStyle(
                             fontSize: 20,
@@ -214,10 +214,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Row(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 40,
                         width: 40,
                         child: Image.asset(
@@ -225,8 +225,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           fit: BoxFit.contain,
                         ),
                       ),
-                      SizedBox(width: 14),
-                      Text(
+                      const SizedBox(width: 14),
+                      const Text(
                         'Privasi',
                         style: TextStyle(
                           fontSize: 20,
@@ -239,12 +239,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 20, left: 25, right: 25),
-              padding: EdgeInsets.all(20),
+              margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
+              padding: const EdgeInsets.all(20),
               width: 800,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(0xFFDADADA),
+                  color: const Color(0xFFDADADA),
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(10), // Radius border
@@ -252,7 +252,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Setting',
                     style: TextStyle(
                       fontSize: 20,
@@ -260,12 +260,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       // color: Color(0xFF898A8D),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   InkWell(
                     onTap: () {
                       themeProvider.toggleTheme();
                     },
-                    child: Text(
+                    child: const Text(
                       'Switch to themes',
                       style: TextStyle(
                         fontSize: 20,
@@ -274,16 +274,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   InkWell(
                     onTap: () {
                       showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text("Keluar"),
-                            content:
-                                Text("Apakah Anda Ingin Keluar dari Akun ini"),
+                            title: const Text("Keluar"),
+                            content: const Text(
+                                "Apakah Anda Ingin Keluar dari Akun ini"),
                             actions: [
                               TextButton(
                                   onPressed: () async {
@@ -291,30 +291,33 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                     Navigator.of(context)
                                         .pushReplacementNamed('/login');
                                   },
-                                  child: Text("Iya",
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFFEB4105),
+                                  ),
+                                  child: const Text("Iya",
                                       style: TextStyle(
                                         color: Colors.white,
-                                      )),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Color(0xFFEB4105),
-                                  )),
+                                      ))),
                               TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("Tidak",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      )),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Color(0xFF01B0B7),
-                                  )),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: const Color(0xFF01B0B7),
+                                ),
+                                child: const Text(
+                                  "Tidak",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                         },
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Logout Account',
                       style: TextStyle(
                         fontSize: 20,

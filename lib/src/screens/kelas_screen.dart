@@ -135,7 +135,7 @@ class _KelasScreenState extends State<KelasScreen> {
                                     Navigator.pop(context);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFDA94FA),
+                                    backgroundColor: Colors.purple,
                                   ),
                                   child: const Text('Masuk'),
                                 ),
@@ -145,7 +145,7 @@ class _KelasScreenState extends State<KelasScreen> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDA94FA),
+                        backgroundColor: Colors.purple,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 15),
                         shape: RoundedRectangleBorder(
