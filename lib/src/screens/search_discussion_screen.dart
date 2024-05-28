@@ -17,7 +17,7 @@ class _SearchDiscussionScreenState extends State<SearchDiscussionScreen> {
         title: const Text('Search Discussion'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -27,30 +27,33 @@ class _SearchDiscussionScreenState extends State<SearchDiscussionScreen> {
                   shrinkWrap: true,
                   itemCount: widget.discussions.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        widget.discussions[index]['title'] ?? '',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        widget.discussions[index]['content'] ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailDiscussionScreen(
-                              id: widget.discussions[index]['id'],
-                            ),
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: ListTile(
+                        title: Text(
+                          widget.discussions[index]['title'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
+                        ),
+                        subtitle: Text(
+                          widget.discussions[index]['content'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailDiscussionScreen(
+                                id: widget.discussions[index]['id'],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

@@ -86,14 +86,13 @@ class _GitaWidgetState extends State<GitaWidget> {
     final gitaProvider = Provider.of<GitaProvider>(context, listen: false);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 50),
               InputRoundedWithIcon(
                 controller: _controller,
                 icon: Icons.search,
