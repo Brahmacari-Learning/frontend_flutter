@@ -36,6 +36,7 @@ class DetailSlokaScreen extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GitaCardWidget(
                       headerText: 'Sedang Membaca:',
@@ -71,6 +72,7 @@ class DetailSlokaScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text(
                       sloka['translationIndo'] ?? '',
+                      textAlign: TextAlign.left,
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 20),
