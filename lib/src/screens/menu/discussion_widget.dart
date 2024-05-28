@@ -15,6 +15,73 @@ class DiscussionWidget extends StatefulWidget {
 
 class _DiscussionWidgetState extends State<DiscussionWidget> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  List<dynamic> _discussions = [];
+  bool _isLoading = false;
+  int _currentPage = 1;
+  bool _hasMoreData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDiscussions();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _loadMoreDiscussions();
+      }
+    });
+  }
+
+  Future<void> _loadDiscussions() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final discussionProvider =
+        Provider.of<DiscussionProvider>(context, listen: false);
+    final response = await discussionProvider.getDiscussions(_currentPage);
+
+    if (!response['error']) {
+      setState(() {
+        _discussions = response['discussions'];
+        _hasMoreData =
+            response['discussions'].length == 10; // Assume 10 is the page limit
+      });
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _loadMoreDiscussions() async {
+    if (!_hasMoreData || _isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    _currentPage++;
+    final discussionProvider =
+        Provider.of<DiscussionProvider>(context, listen: false);
+    final response = await discussionProvider.getDiscussions(_currentPage);
+
+    if (!response['error']) {
+      setState(() {
+        _discussions.addAll(response['discussions']);
+        _hasMoreData =
+            response['discussions'].length == 10; // Assume 10 is the page limit
+      });
+    } else {
+      _currentPage--; // Revert the page increment if there was an error
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,25 +126,27 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
           ),
           // List of discussions
           Expanded(
-            child: FutureBuilder(
-              future: discussionProvider.getDiscussions(1),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
+            child: _isLoading && _discussions.isEmpty
+                ? const Center(
                     child: CircularProgressIndicator(),
-                  );
-                } else {
-                  final discussions = snapshot.data!['discussions'];
-                  return ListView.builder(
-                    itemCount: discussions.length,
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _discussions.length + (_hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
+                      if (index == _discussions.length) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      final discussion = _discussions[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailDiscussionScreen(
-                                  id: discussions[index]['id']),
+                              builder: (context) =>
+                                  DetailDiscussionScreen(id: discussion['id']),
                             ),
                           );
                         },
@@ -95,7 +164,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                                 0.73,
                                       ),
                                       child: Text(
-                                        discussions[index]['title'],
+                                        discussion['title'],
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),
@@ -103,7 +172,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                         maxLines: 2,
                                       ),
                                     ),
-                                    Text(discussions[index]['creator']['name']),
+                                    Text(discussion['creator']['name']),
                                   ],
                                 )
                               ],
@@ -112,7 +181,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${discussions[index]['repliesCount']} Jawaban",
+                                  "${discussion['repliesCount']} Jawaban",
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Color(0xFFB95A92),
@@ -121,15 +190,14 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                 ),
                                 IconButton(
                                   icon: LikeIconWithCount(
-                                    isLiked: discussions[index]['isLiked'],
-                                    likesCount: discussions[index]
-                                        ['likesCount'],
+                                    isLiked: discussion['isLiked'],
+                                    likesCount: discussion['likesCount'],
                                   ),
                                   onPressed: () async {
                                     final response =
                                         await discussionProvider.likeDiscussion(
-                                            discussions[index]['id'],
-                                            !discussions[index]['isLiked']);
+                                            discussion['id'],
+                                            !discussion['isLiked']);
                                     if (response['error']) {
                                       scaffoldMessenger.showSnackBar(
                                         SnackBar(
@@ -145,8 +213,8 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                         ),
                                       );
                                       setState(() {
-                                        discussions[index]['isLiked'] =
-                                            !discussions[index]['isLiked'];
+                                        discussion['isLiked'] =
+                                            !discussion['isLiked'];
                                       });
                                     }
                                   },
@@ -162,10 +230,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         ),
                       );
                     },
-                  );
-                }
-              },
-            ),
+                  ),
           ),
           // Create new discussion
           ElevatedButton(
@@ -184,7 +249,11 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                 ));
 
                 // Refresh the list of discussions
-                setState(() {});
+                setState(() {
+                  _discussions.clear();
+                  _currentPage = 1;
+                  _loadDiscussions();
+                });
               }
             },
             style: ElevatedButton.styleFrom(
@@ -232,5 +301,11 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
