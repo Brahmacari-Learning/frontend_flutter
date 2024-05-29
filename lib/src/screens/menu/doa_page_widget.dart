@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
+import 'package:vedanta_frontend/src/screens/detail_doa_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -206,18 +207,14 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () async {
-                  // await Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => DetailSlokaScreen(
-                  //       bab: _currentBab!,
-                  //       sloka: doaList[index]['number'],
-                  //     ),
-                  //   ),
-                  // );
-                  // setState(() {
-                  //   _futureBacaanTerakhir = _getBacaanTerakhir();
-                  // });
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailDoaScreen(
+                        idDoa: doaList[index]['id'],
+                      ),
+                    ),
+                  );
                 },
                 leading: Container(
                   width: 40,
@@ -245,9 +242,6 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // subtitle: doaList[index]['numberBab'] != null
-                //     ? Text("Bacaan Bab ${doaList[index]['numberBab']}")
-                //     : Text("Bacaan Sloka ${doaList[index]['number']}"),
                 trailing: InkWell(
                   onTap: () async {
                     if (!mounted) return;
