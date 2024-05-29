@@ -25,12 +25,10 @@ class DiscussionProvider with ChangeNotifier {
   }
 
   // Create discussion
-  Future<Map<String, dynamic>> createDiscussion(
-      String title, String body) async {
+  Future<Map<String, dynamic>> createDiscussion(String title) async {
     try {
       final response = await _apiService.postData('discussion/create', {
         'title': title,
-        'body': body,
       });
       return response;
     } catch (e) {

@@ -250,12 +250,19 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             ElevatedButton(
               onPressed: () async {
                 // navigate to create discussion screen
-                Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const CreateDiscussionScreen(),
                   ),
                 );
+                // refresh list of discussions
+                setState(() {
+                  _isLoading = true;
+                  _currentPage = 1;
+                  _discussions.clear();
+                  _loadDiscussions();
+                });
               },
               style: ElevatedButton.styleFrom(
                 padding:

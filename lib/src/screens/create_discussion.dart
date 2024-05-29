@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class CreateDiscussionScreen extends StatefulWidget {
@@ -9,6 +11,8 @@ class CreateDiscussionScreen extends StatefulWidget {
 }
 
 class _CreateDiscussionScreenState extends State<CreateDiscussionScreen> {
+  // Controller
+  TextEditingController titleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,8 +69,9 @@ class _CreateDiscussionScreenState extends State<CreateDiscussionScreen> {
                     children: [
                       TextField(
                         maxLines: 5,
+                        controller: titleController,
                         decoration: InputDecoration(
-                          labelText: 'Title',
+                          labelText: 'Pertanyaan',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -82,7 +87,12 @@ class _CreateDiscussionScreenState extends State<CreateDiscussionScreen> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            Provider.of<DiscussionProvider>(context,
+                                    listen: false)
+                                .createDiscussion(titleController.text);
+                            Navigator.pop(context);
+                          },
                           icon: const Icon(Icons.send),
                         ),
                       ),
