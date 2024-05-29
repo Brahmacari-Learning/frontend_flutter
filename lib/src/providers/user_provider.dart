@@ -10,7 +10,6 @@ class UserProvider with ChangeNotifier {
       final response = await _apiService.fetchData('user');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -21,7 +20,6 @@ class UserProvider with ChangeNotifier {
       final response = await _apiService.fetchData('user/profile-picture');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -34,7 +32,6 @@ class UserProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }

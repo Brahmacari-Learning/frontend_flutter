@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
+import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
 
@@ -36,15 +37,7 @@ class DetailDoaScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GitaCardWidget(
-                      headerText: 'Sedang Membaca:',
-                      subHeaderText: '${doa['title']}',
-                      text: doa['makna'] != ''
-                          ? 'Berisikan makna'
-                          : 'Makna tidak tersedia',
-                      withButton: false,
-                      onPress: () {},
-                    ),
+                    DoaCardWidget(headerText: doa['title']),
                     const SizedBox(height: 20),
                     if (doa['pelafalanFile'] != null)
                       MusicPlayerWidget(url: doa['pelafalanFile'])

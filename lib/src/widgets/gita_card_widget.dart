@@ -29,9 +29,8 @@ class GitaCardWidget extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              // 863ED5 to 994FF8
-              Color.fromARGB(255, 176, 116, 255),
-              Color(0xFF863ED5),
+              Color(0xFFDF98FA),
+              Color(0xFF9055FF),
             ],
           ),
           borderRadius: BorderRadius.circular(10),
@@ -39,7 +38,7 @@ class GitaCardWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: withImage
               ? MainAxisAlignment.spaceBetween
-              : MainAxisAlignment.start,
+              : MainAxisAlignment.center,
           crossAxisAlignment:
               withImage ? CrossAxisAlignment.end : CrossAxisAlignment.center,
           children: [

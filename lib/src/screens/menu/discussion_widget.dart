@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
+import 'package:vedanta_frontend/src/screens/create_discussion.dart';
 import 'package:vedanta_frontend/src/screens/detail_discussion_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -76,8 +77,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
       if (mounted) {
         setState(() {
           _discussions.addAll(response['discussions']);
-          _hasMoreData = response['discussions'].length ==
-              10;
+          _hasMoreData = response['discussions'].length == 10;
         });
       }
     } else {
@@ -249,26 +249,13 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             // Create new discussion
             ElevatedButton(
               onPressed: () async {
-                final response = await discussionProvider.createDiscussion(
-                    'New Discussion', 'Content of new discussion');
-                if (response['error']) {
-                  scaffoldMessenger.showSnackBar(SnackBar(
-                    content: Text(response['message']),
-                    backgroundColor: Colors.red,
-                  ));
-                } else {
-                  scaffoldMessenger.showSnackBar(const SnackBar(
-                    content: Text('Create discussion success!'),
-                    backgroundColor: Colors.green,
-                  ));
-
-                  // Refresh the list of discussions
-                  setState(() {
-                    _discussions.clear();
-                    _currentPage = 1;
-                    _loadDiscussions();
-                  });
-                }
+                // navigate to create discussion screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateDiscussionScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 padding:
