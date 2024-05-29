@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
-import 'package:vedanta_frontend/src/screens/create_discussion.dart';
-import 'package:vedanta_frontend/src/screens/detail_discussion_screen.dart';
-import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
+import 'package:vedanta_frontend/src/screens/discussion_create.dart';
+import 'package:vedanta_frontend/src/screens/discussion_detail_screen.dart';
+import 'package:vedanta_frontend/src/screens/discussion_search_screen.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
 

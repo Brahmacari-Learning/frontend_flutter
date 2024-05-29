@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
-import 'package:vedanta_frontend/src/screens/detail_profile_screen.dart';
+import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
 import 'package:vedanta_frontend/src/screens/kelas_screen.dart';
 
 class ProfileWidget extends StatefulWidget {

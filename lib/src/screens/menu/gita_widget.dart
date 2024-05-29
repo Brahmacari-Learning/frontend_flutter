@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
-import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
-import 'package:vedanta_frontend/src/screens/search_sloka_screen.dart';
+import 'package:vedanta_frontend/src/screens/sloka_detail_screen.dart';
+import 'package:vedanta_frontend/src/screens/sloka_search_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
