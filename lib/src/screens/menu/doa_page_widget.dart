@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
+import 'package:vedanta_frontend/src/screens/all_alarm_sreen.dart';
 import 'package:vedanta_frontend/src/screens/detail_doa_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_doa_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
@@ -115,6 +116,12 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                 buttonText: 'Jadwalkan Doa',
                 onPress: () {
                   if (!context.mounted) return;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllAlarmScreen(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(height: 20),

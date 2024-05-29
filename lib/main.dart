@@ -1,4 +1,6 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
@@ -14,7 +16,10 @@ import 'src/screens/login_screen.dart';
 import 'src/screens/home_screen.dart';
 import 'src/providers/auth_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await Alarm.init();
   runApp(const MainApp());
 }
 

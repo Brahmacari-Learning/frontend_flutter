@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.3.4 <4.0.0"
 
 dependencies:
+  alarm: ^3.1.4
   audio_service: ^0.18.13
   flutter:
     sdk: flutter
