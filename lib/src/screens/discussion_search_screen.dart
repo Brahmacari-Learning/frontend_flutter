@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vedanta_frontend/src/screens/detail_discussion_screen.dart';
+import 'package:vedanta_frontend/src/screens/discussion_detail_screen.dart';
 
 class SearchDiscussionScreen extends StatefulWidget {
   final List<dynamic> discussions;

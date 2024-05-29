@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vedanta_frontend/src/screens/detail_sloka_screen.dart';
+import 'package:vedanta_frontend/src/screens/sloka_detail_screen.dart';
 
 class SearchSlokaScreen extends StatefulWidget {
   final List<dynamic> slokas;

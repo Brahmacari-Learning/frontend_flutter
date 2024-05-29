@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vedanta_frontend/src/screens/detail_doa_screen.dart';
+import 'package:vedanta_frontend/src/screens/doa_detail_screen.dart';
 
 class SearchDoaScreen extends StatefulWidget {
   final List<dynamic> doas;
@@ -47,7 +47,7 @@ class _SearchDoaScreenState extends State<SearchDoaScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailDoaScreen(
+                              builder: (context) => DoaDetailScreen(
                                 idDoa: widget.doas[index]['id'],
                               ),
                             ),

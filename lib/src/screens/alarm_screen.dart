@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AllAlarmScreen extends StatefulWidget {
-  const AllAlarmScreen({super.key});
+class AlarmScreen extends StatefulWidget {
+  const AlarmScreen({super.key});
 
   @override
-  State<AllAlarmScreen> createState() => _AllAlarmScreenState();
+  State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AllAlarmScreenState extends State<AllAlarmScreen> {
+class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
