@@ -79,7 +79,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
               InputRoundedWithIcon(
                 controller: _controller,
                 icon: Icons.search,
-                label: 'Search...',
+                label: 'Cari doa sehari-hari...',
                 onEnter: (value) async {
                   final response =
                       await doaProvider.searchDoa(_controller.text.trim());
