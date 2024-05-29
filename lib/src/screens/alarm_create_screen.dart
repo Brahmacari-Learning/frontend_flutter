@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/screens/alarm_select_doa_screen.dart';
 
 class AlarmCreateScreen extends StatefulWidget {
@@ -14,10 +15,12 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
   int hour = 0;
   int minute = 0;
   List<bool> isSelected = [false, false, false, false, false, false, false];
-  dynamic selectedDoa;
+  Map<String, dynamic> selectedDoa = {};
 
   @override
   Widget build(BuildContext context) {
+    final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -147,9 +150,7 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        selectedDoa != null
-                            ? selectedDoa['title']
-                            : 'Pilih Doa',
+                        selectedDoa['title'] ?? 'Pilih Doa',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -163,29 +164,27 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
               // Save Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (selectedDoa == null) {
+                    if (selectedDoa['title'] == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Pilih Doa terlebih dahulu'),
                         ),
                       );
-                      return;
+                    } else {
+                      await alarmProvider.createAlarm(
+                        hour,
+                        minute,
+                        convertUlangiDoa(isSelected),
+                        selectedDoa['id'],
+                      );
+                      Navigator.pop(context);
                     }
-
-                    // await Provider.of<AlarmProvider>(context, listen: false)
-                    //     .setAlarm(
-                    //         hour: hour,
-                    //         minute: minute,
-                    //         doa: selectedDoa['title'],
-                    //         id: selectedDoa['id']);
-                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
@@ -238,5 +237,15 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
         });
       },
     );
+  }
+
+  int convertUlangiDoa(List<bool> ulangiDoa) {
+    int ulangi = 0;
+    for (int i = 0; i < ulangiDoa.length; i++) {
+      if (ulangiDoa[i]) {
+        ulangi = ulangi | (1 << i);
+      }
+    }
+    return ulangi;
   }
 }

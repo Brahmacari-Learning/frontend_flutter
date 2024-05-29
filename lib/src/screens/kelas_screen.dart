@@ -125,13 +125,10 @@ class _KelasScreenState extends State<KelasScreen> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // join class
                                     classProvider
                                         .joinClass(_codeController.text);
-
                                     // refresh page
                                     setState(() {});
-
                                     Navigator.pop(context);
                                   },
                                   style: ElevatedButton.styleFrom(

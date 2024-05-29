@@ -30,7 +30,9 @@ class ApiService {
 
   // Example of a POST request
   Future<Map<String, dynamic>> postData(
-      String endpoint, Map<String, dynamic> data) async {
+    String endpoint,
+    Map<String, dynamic> data,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
