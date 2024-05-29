@@ -174,85 +174,91 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                               _loadDiscussions();
                             });
                           },
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        constraints: BoxConstraints(
-                                          maxWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.73,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          constraints: BoxConstraints(
+                                            maxWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.73,
+                                          ),
+                                          child: Text(
+                                            discussion['title'],
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
                                         ),
-                                        child: Text(
-                                          discussion['title'],
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
+                                        Text(discussion['creator']['name']),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${discussion['repliesCount']} Jawaban",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Color(0xFFB95A92),
+                                        fontWeight: FontWeight.w400,
                                       ),
-                                      Text(discussion['creator']['name']),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${discussion['repliesCount']} Jawaban",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFFB95A92),
-                                      fontWeight: FontWeight.w400,
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: LikeIconWithCount(
-                                      isLiked: discussion['isLiked'],
-                                      likesCount: discussion['likesCount'],
+                                    IconButton(
+                                      icon: LikeIconWithCount(
+                                        isLiked: discussion['isLiked'],
+                                        likesCount: discussion['likesCount'],
+                                      ),
+                                      onPressed: () async {
+                                        final response =
+                                            await discussionProvider
+                                                .likeDiscussion(
+                                                    discussion['id'],
+                                                    !discussion['isLiked']);
+                                        if (response['error']) {
+                                          scaffoldMessenger.showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text(response['message']),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        } else {
+                                          scaffoldMessenger.showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Success!'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                          setState(() {
+                                            discussion['isLiked'] =
+                                                !discussion['isLiked'];
+                                          });
+                                        }
+                                      },
                                     ),
-                                    onPressed: () async {
-                                      final response = await discussionProvider
-                                          .likeDiscussion(discussion['id'],
-                                              !discussion['isLiked']);
-                                      if (response['error']) {
-                                        scaffoldMessenger.showSnackBar(
-                                          SnackBar(
-                                            content: Text(response['message']),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      } else {
-                                        scaffoldMessenger.showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Success!'),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-                                        setState(() {
-                                          discussion['isLiked'] =
-                                              !discussion['isLiked'];
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                thickness: 1,
-                                indent: 0,
-                                endIndent: 0,
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                  indent: 0,
+                                  endIndent: 0,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
