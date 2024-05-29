@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key});
@@ -17,7 +18,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           title: const Text(
             'Alarm Doa',
             style: TextStyle(
-              color: Colors.purple,
+              color: Colors.black,
             ),
           ),
           backgroundColor: Colors.white,
@@ -55,7 +56,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navigate to AlarmCreate
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AlarmCreateScreen(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
