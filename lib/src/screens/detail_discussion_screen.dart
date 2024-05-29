@@ -61,7 +61,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         _questionDiscussion(data),
                         const SizedBox(height: 20),
                         // Statistik diskusi (jawaban & like)
-                        _questionStats(data, discussionProvider),
+                        _questionStats(
+                            data, discussionProvider, scaffoldMessenger),
                         const Divider(
                           thickness: 1,
                           indent: 0,
@@ -79,14 +80,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                               _komentarController.text.trim(),
                             );
                             if (response['error'] == true) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              scaffoldMessenger.showSnackBar(
                                 SnackBar(
                                   content: Text(response['message']),
                                   backgroundColor: Colors.purple,
                                 ),
                               );
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              scaffoldMessenger.showSnackBar(
                                 const SnackBar(
                                   content: Text('Reply created'),
                                   backgroundColor: Colors.green,
@@ -100,7 +101,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         ),
                         const SizedBox(height: 20),
                         // Replies with nested replies
-                        _listReply(data, discussionProvider),
+                        _listReply(data, discussionProvider, context,
+                            scaffoldMessenger),
                       ],
                     );
                   }
@@ -113,7 +115,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     );
   }
 
-  ListView _listReply(data, DiscussionProvider discussionProvider) {
+  ListView _listReply(data, DiscussionProvider discussionProvider,
+      BuildContext context, ScaffoldMessengerState scaffoldMessenger) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -193,14 +196,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           !reply['isLiked'],
                         );
                         if (response['error']) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          scaffoldMessenger.showSnackBar(
                             SnackBar(
                               content: Text(response['message']),
                               backgroundColor: Colors.purple,
                             ),
                           );
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          scaffoldMessenger.showSnackBar(
                             const SnackBar(
                               content: Text('Reply liked'),
                               backgroundColor: Colors.green,
@@ -302,7 +305,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     );
   }
 
-  Row _questionStats(data, DiscussionProvider discussionProvider) {
+  Row _questionStats(data, DiscussionProvider discussionProvider,
+      ScaffoldMessengerState scaffoldMessenger) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -322,14 +326,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
               !data['isLiked'],
             );
             if (response['error']) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(
                   content: Text(response['message']),
                   backgroundColor: Colors.purple,
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(
                   content: Text('Discussion liked'),
                   backgroundColor: Colors.green,
