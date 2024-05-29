@@ -10,49 +10,52 @@ class DetailProfileScreen extends StatefulWidget {
 class _DetailProfileScreenState extends State<DetailProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    // provider user
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Privasi',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        scrolledUnderElevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 250,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      'lib/assets/images/detail_profil_background.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Stack(
-                children: [
-                  AppBar(
-                    title: const Text('Privasi'),
-                    backgroundColor: Colors.transparent,
-                    elevation: 0.0,
-                    scrolledUnderElevation: 0,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 60),
-                    child: const Center(
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage:
-                            AssetImage('lib/assets/images/user2.png'),
-                      ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 250,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'lib/assets/images/detail_profil_background.png'),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ],
-              ),
+                ),
+                const Positioned(
+                  top: 100,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage: AssetImage('lib/assets/images/user2.png'),
+                  ),
+                ),
+              ],
             ),
-            Container(
+            const SizedBox(height: 20),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 20),
                   TextFormField(
-                    // controller: _usernameController,
                     decoration: const InputDecoration(
                       labelText: 'Name',
+                      border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -61,10 +64,11 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
-                    // controller: _emailController,
                     decoration: const InputDecoration(
                       labelText: 'Email',
+                      border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -73,10 +77,11 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
-                    // controller: _passwordController,
                     decoration: const InputDecoration(
                       labelText: 'Password',
+                      border: OutlineInputBorder(),
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -86,10 +91,11 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
-                    // controller: _passwordController,
                     decoration: const InputDecoration(
                       labelText: 'New Password',
+                      border: OutlineInputBorder(),
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -99,35 +105,41 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20),
                   TextFormField(
-                    // controller: _confirmPasswordController,
                     decoration: const InputDecoration(
                       labelText: 'Confirm New Password',
+                      border: OutlineInputBorder(),
                     ),
                     obscureText: true,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Please confirm your New password';
+                        return 'Please confirm your new password';
                       }
-                      // if (value != _passwordController.text) {
-                      //   return 'Password does not match';
-                      // }
                       return null;
                     },
                   ),
                   const SizedBox(height: 40),
-                  ElevatedButtonTheme(
-                      data: Theme.of(context).elevatedButtonTheme,
-                      child: ElevatedButton(
-                          style: ElevatedButtonTheme.of(context).style,
-                          child: const Text(
-                            'Simpan',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          onPressed: () {}))
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Colors.purple,
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        'Simpan',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
