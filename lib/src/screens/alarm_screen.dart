@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/popups/presensi_popup.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
 
@@ -153,10 +154,16 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
             children: [
               ElevatedButton(
                 onPressed: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const AlarmCreateScreen(),
+                  //   ),
+                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const AlarmCreateScreen(),
+                      builder: (context) => const PresensiPopup(),
                     ),
                   );
                 },
