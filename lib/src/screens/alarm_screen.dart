@@ -101,89 +101,93 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: FutureBuilder<void>(
-            future: _futureAllAlarm,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                return ListView.builder(
-                  itemCount: _allAlarms.length,
-                  itemBuilder: (context, index) {
-                    final alarm = _allAlarms[index];
-                    return Card(
-                      color:
-                          alarm['active'] ? Colors.white : Colors.grey.shade300,
-                      child: ListTile(
-                        title: Text(
-                          alarm['jam'],
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600),
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<void>(
+              future: _futureAllAlarm,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return ListView.builder(
+                    itemCount: _allAlarms.length,
+                    itemBuilder: (context, index) {
+                      final alarm = _allAlarms[index];
+                      return Card(
+                        color: alarm['active']
+                            ? Colors.white
+                            : Colors.grey.shade300,
+                        child: ListTile(
+                          title: Text(
+                            alarm['jam'],
+                            style: const TextStyle(
+                                fontSize: 32, fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: Text(
+                            alarm['title'],
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w400),
+                          ),
+                          trailing: Switch(
+                            value: alarm['active'],
+                            onChanged: (value) {
+                              _toggleAlarm(index);
+                            },
+                            activeTrackColor: Colors.purple,
+                          ),
                         ),
-                        subtitle: Text(
-                          alarm['title'] ?? '-',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w400),
-                        ),
-                        trailing: Switch(
-                          value: alarm['active'],
-                          onChanged: (value) {
-                            _toggleAlarm(index);
-                          },
-                          activeTrackColor: Colors.purple,
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-            },
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AlarmCreateScreen(),
-                  ),
-                );
+                      );
+                    },
+                  );
+                }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.alarm,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Set Alarm',
-                    style: TextStyle(
-                      fontSize: 16,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AlarmCreateScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.alarm,
                       color: Colors.white,
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Set Alarm',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-      ],
+            ],
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }
