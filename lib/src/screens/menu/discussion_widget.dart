@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
+import 'package:vedanta_frontend/src/screens/create_discussion.dart';
 import 'package:vedanta_frontend/src/screens/detail_discussion_screen.dart';
 import 'package:vedanta_frontend/src/screens/search_discussion_screen.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -76,8 +77,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
       if (mounted) {
         setState(() {
           _discussions.addAll(response['discussions']);
-          _hasMoreData = response['discussions'].length ==
-              10;
+          _hasMoreData = response['discussions'].length == 10;
         });
       }
     } else {
@@ -122,7 +122,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     backgroundColor: Colors.green,
                   ));
                   // navigate to detail sloka screen
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SearchDiscussionScreen(
@@ -130,6 +130,12 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                       ),
                     ),
                   );
+                  setState(() {
+                    _isLoading = true;
+                    _currentPage = 1;
+                    _discussions.clear();
+                    _loadDiscussions();
+                  });
                 }
               },
             ),
@@ -153,94 +159,106 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         }
                         final discussion = _discussions[index];
                         return InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailDiscussionScreen(
                                     id: discussion['id']),
                               ),
                             );
+                            setState(() {
+                              _isLoading = true;
+                              _currentPage = 1;
+                              _discussions.clear();
+                              _loadDiscussions();
+                            });
                           },
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        constraints: BoxConstraints(
-                                          maxWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.73,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          constraints: BoxConstraints(
+                                            maxWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.73,
+                                          ),
+                                          child: Text(
+                                            discussion['title'],
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
                                         ),
-                                        child: Text(
-                                          discussion['title'],
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
+                                        Text(discussion['creator']['name']),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${discussion['repliesCount']} Jawaban",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Color(0xFFB95A92),
+                                        fontWeight: FontWeight.w400,
                                       ),
-                                      Text(discussion['creator']['name']),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${discussion['repliesCount']} Jawaban",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFFB95A92),
-                                      fontWeight: FontWeight.w400,
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: LikeIconWithCount(
-                                      isLiked: discussion['isLiked'],
-                                      likesCount: discussion['likesCount'],
+                                    IconButton(
+                                      icon: LikeIconWithCount(
+                                        isLiked: discussion['isLiked'],
+                                        likesCount: discussion['likesCount'],
+                                      ),
+                                      onPressed: () async {
+                                        final response =
+                                            await discussionProvider
+                                                .likeDiscussion(
+                                                    discussion['id'],
+                                                    !discussion['isLiked']);
+                                        if (response['error']) {
+                                          scaffoldMessenger.showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text(response['message']),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        } else {
+                                          scaffoldMessenger.showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Success!'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                          setState(() {
+                                            discussion['isLiked'] =
+                                                !discussion['isLiked'];
+                                          });
+                                        }
+                                      },
                                     ),
-                                    onPressed: () async {
-                                      final response = await discussionProvider
-                                          .likeDiscussion(discussion['id'],
-                                              !discussion['isLiked']);
-                                      if (response['error']) {
-                                        scaffoldMessenger.showSnackBar(
-                                          SnackBar(
-                                            content: Text(response['message']),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      } else {
-                                        scaffoldMessenger.showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Success!'),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-                                        setState(() {
-                                          discussion['isLiked'] =
-                                              !discussion['isLiked'];
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                thickness: 1,
-                                indent: 0,
-                                endIndent: 0,
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                  indent: 0,
+                                  endIndent: 0,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -249,26 +267,20 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             // Create new discussion
             ElevatedButton(
               onPressed: () async {
-                final response = await discussionProvider.createDiscussion(
-                    'New Discussion', 'Content of new discussion');
-                if (response['error']) {
-                  scaffoldMessenger.showSnackBar(SnackBar(
-                    content: Text(response['message']),
-                    backgroundColor: Colors.red,
-                  ));
-                } else {
-                  scaffoldMessenger.showSnackBar(const SnackBar(
-                    content: Text('Create discussion success!'),
-                    backgroundColor: Colors.green,
-                  ));
-
-                  // Refresh the list of discussions
-                  setState(() {
-                    _discussions.clear();
-                    _currentPage = 1;
-                    _loadDiscussions();
-                  });
-                }
+                // navigate to create discussion screen
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateDiscussionScreen(),
+                  ),
+                );
+                // refresh list of discussions
+                setState(() {
+                  _isLoading = true;
+                  _currentPage = 1;
+                  _discussions.clear();
+                  _loadDiscussions();
+                });
               },
               style: ElevatedButton.styleFrom(
                 padding:

@@ -18,6 +18,16 @@ class DetailDiscussionScreen extends StatefulWidget {
 class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
   final TextEditingController _komentarController = TextEditingController();
   final TextEditingController _controllerSearch = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
+  int? replyingId;
+
+  @override
+  void dispose() {
+    _komentarController.dispose();
+    _controllerSearch.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,31 +81,48 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         const SizedBox(height: 20),
                         InputRoundedWithIcon(
                           controller: _komentarController,
+                          focusNode: focusNode,
                           icon: Icons.send,
                           label: 'Tulis komentar',
                           onEnter: (value) async {
-                            final response =
-                                await discussionProvider.createReply(
-                              widget.id,
-                              _komentarController.text.trim(),
-                            );
-                            if (response['error'] == true) {
-                              scaffoldMessenger.showSnackBar(
-                                SnackBar(
-                                  content: Text(response['message']),
-                                  backgroundColor: Colors.purple,
-                                ),
+                            if (replyingId != null) {
+                              final response =
+                                  await discussionProvider.createReplyToReply(
+                                widget.id,
+                                replyingId!,
+                                _komentarController.text.trim(),
                               );
+                              if (response['error'] == true) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(response['message']),
+                                    backgroundColor: Colors.purple,
+                                  ),
+                                );
+                              } else {
+                                _komentarController.clear();
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                replyingId = null;
+                                setState(() {});
+                              }
                             } else {
-                              scaffoldMessenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text('Reply created'),
-                                  backgroundColor: Colors.green,
-                                ),
+                              final response =
+                                  await discussionProvider.createReply(
+                                widget.id,
+                                _komentarController.text.trim(),
                               );
-                              _komentarController.clear();
-                              // Refresh the list of discussions
-                              setState(() {});
+                              if (response['error'] == true) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(response['message']),
+                                    backgroundColor: Colors.purple,
+                                  ),
+                                );
+                              } else {
+                                _komentarController.clear();
+                                setState(() {});
+                              }
                             }
                           },
                         ),
@@ -158,7 +185,38 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         Row(
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                replyingId = reply['id'];
+                                focusNode.requestFocus();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2,
+                                          horizontal:
+                                              16.0), // Adjust padding as needed
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.close),
+                                            onPressed: () {
+                                              replyingId = null;
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                            },
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              'Membalas komentar ${reply['creator']['name']}',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    duration: const Duration(hours: 1),
+                                  ),
+                                );
+                              },
                               child: const Text(
                                 "Balas",
                                 style: TextStyle(
@@ -196,20 +254,13 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                           !reply['isLiked'],
                         );
                         if (response['error']) {
-                          scaffoldMessenger.showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(response['message']),
                               backgroundColor: Colors.purple,
                             ),
                           );
                         } else {
-                          scaffoldMessenger.showSnackBar(
-                            const SnackBar(
-                              content: Text('Reply liked'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                          // Refresh the list of discussions
                           setState(() {});
                         }
                       })
@@ -265,38 +316,19 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                       ),
                       Row(
                         children: [
-                          InkWell(
-                            onTap: () {},
-                            child: const Text(
-                              "Balas",
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
                           Text(
                             formatDate(nestedReply['createdAt']),
                             style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w400),
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: LikeIconWithCount(
-                    isLiked: nestedReply['isLiked'],
-                    likesCount: nestedReply['likesCount'],
-                  ),
-                )
               ],
             ),
           );
@@ -326,19 +358,13 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
               !data['isLiked'],
             );
             if (response['error']) {
-              scaffoldMessenger.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(response['message']),
                   backgroundColor: Colors.purple,
                 ),
               );
             } else {
-              scaffoldMessenger.showSnackBar(
-                const SnackBar(
-                  content: Text('Discussion liked'),
-                  backgroundColor: Colors.green,
-                ),
-              );
               setState(() {});
             }
           },
@@ -355,12 +381,8 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
           data['title'],
           style: const TextStyle(
             fontSize: 19,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
-        ),
-        Text(
-          data['body'],
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ],
     );
@@ -428,6 +450,14 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
       iconTheme: const IconThemeData(
         color: Colors.purple, // Warna pink untuk back button
       ),
+      // icon back
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pop(context);
+        },
+      ),
       title: InputRoundedWithIcon(
         controller: _controllerSearch,
         icon: Icons.search,
@@ -436,15 +466,11 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
           final response = await discussionProvider
               .searchDiscussion(_controllerSearch.text.trim());
           if (response['error']) {
-            scaffoldMessenger.showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(response['message']),
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.purple,
             ));
           } else {
-            scaffoldMessenger.showSnackBar(const SnackBar(
-              content: Text('Search success!'),
-              backgroundColor: Colors.green,
-            ));
             // navigate to detail sloka screen
             Navigator.push(
               context,

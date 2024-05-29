@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class GitaCardWidget extends StatefulWidget {
+class GitaCardWidget extends StatelessWidget {
   final String headerText;
   final String subHeaderText;
   final String text;
@@ -20,11 +20,6 @@ class GitaCardWidget extends StatefulWidget {
   });
 
   @override
-  State<GitaCardWidget> createState() => _GitaCardWidgetState();
-}
-
-class _GitaCardWidgetState extends State<GitaCardWidget> {
-  @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
@@ -34,20 +29,18 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              // 863ED5 to 994FF8
-              Color.fromARGB(255, 176, 116, 255),
-              Color(0xFF863ED5),
+              Color(0xFFDF98FA),
+              Color(0xFF9055FF),
             ],
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
-          mainAxisAlignment: widget.withImage
+          mainAxisAlignment: withImage
               ? MainAxisAlignment.spaceBetween
-              : MainAxisAlignment.start,
-          crossAxisAlignment: widget.withImage
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.center,
+              : MainAxisAlignment.center,
+          crossAxisAlignment:
+              withImage ? CrossAxisAlignment.end : CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Padding(
@@ -63,7 +56,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          widget.headerText,
+                          headerText,
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -74,7 +67,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.subHeaderText,
+                      subHeaderText,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -82,7 +75,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                       ),
                     ),
                     Text(
-                      widget.text,
+                      text,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -90,15 +83,15 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                     ),
                     const SizedBox(height: 10),
                     // button lanjutkan membaca
-                    if (widget.withButton)
+                    if (withButton)
                       TextButton(
-                        onPressed: widget.onPress,
+                        onPressed: onPress,
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 3)),
                         child: Text(
-                          widget.buttonText,
+                          buttonText,
                           style: const TextStyle(
                             color: Colors.purple,
                             fontSize: 12,
@@ -110,7 +103,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
               ),
             ),
             // Image
-            if (widget.withImage)
+            if (withImage)
               Image.asset(
                 'lib/assets/images/gita.png',
                 width: 100,

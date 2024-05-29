@@ -25,12 +25,10 @@ class DiscussionProvider with ChangeNotifier {
   }
 
   // Create discussion
-  Future<Map<String, dynamic>> createDiscussion(
-      String title, String body) async {
+  Future<Map<String, dynamic>> createDiscussion(String title) async {
     try {
       final response = await _apiService.postData('discussion/create', {
         'title': title,
-        'body': body,
       });
       return response;
     } catch (e) {
@@ -64,7 +62,7 @@ class DiscussionProvider with ChangeNotifier {
 
   // Create reply to reply
   Future<Map<String, dynamic>> createReplyToReply(
-      int discussionId, int replyId, reply) async {
+      int discussionId, int replyId, String reply) async {
     try {
       final response = await _apiService
           .postData('discussion/$discussionId/reply/$replyId/reply', {

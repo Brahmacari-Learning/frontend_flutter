@@ -10,7 +10,6 @@ class ClassProvider with ChangeNotifier {
       final response = await _apiService.fetchData('class');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -23,7 +22,6 @@ class ClassProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -34,7 +32,6 @@ class ClassProvider with ChangeNotifier {
       final response = await _apiService.fetchData('class/$id/members');
       return response;
     } catch (e) {
-      print(e);
       return {'error': true, 'message': 'An error occurred'};
     }
   }

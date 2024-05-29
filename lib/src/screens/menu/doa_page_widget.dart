@@ -79,7 +79,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
               InputRoundedWithIcon(
                 controller: _controller,
                 icon: Icons.search,
-                label: 'Search...',
+                label: 'Cari doa sehari-hari...',
                 onEnter: (value) async {
                   final response =
                       await doaProvider.searchDoa(_controller.text.trim());
@@ -115,16 +115,6 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                 buttonText: 'Jadwalkan Doa',
                 onPress: () {
                   if (!context.mounted) return;
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => DetailSlokaScreen(
-                  //       bab: snapshot.data!['bacaan']['babNumber'],
-                  //       sloka: snapshot.data!['bacaan']
-                  //           ['slokaNumber'],
-                  //     ),
-                  //   ),
-                  // );
                 },
               ),
               const SizedBox(height: 20),
