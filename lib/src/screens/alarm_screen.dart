@@ -73,7 +73,7 @@ class MandiriTabAlarm extends StatefulWidget {
 
 class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
   Future<void> _futureAllAlarm = Future.value();
-  List<Map<String, dynamic>> _allAlarms = [];
+  final List<Map<String, dynamic>> _allAlarms = [];
 
   @override
   void initState() {
@@ -82,7 +82,6 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
   }
 
   Future<void> _getAlarmList() async {
-    // Add your logic here
     final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
     final response = await alarmProvider.getAlarm();
 
@@ -94,19 +93,63 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
     });
   }
 
+  void _toggleAlarm(int index) {
+    setState(() {
+      _allAlarms[index]['active'] = !_allAlarms[index]['active'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: ListView(),
+          child: FutureBuilder<void>(
+            future: _futureAllAlarm,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return ListView.builder(
+                  itemCount: _allAlarms.length,
+                  itemBuilder: (context, index) {
+                    final alarm = _allAlarms[index];
+                    return Card(
+                      color:
+                          alarm['active'] ? Colors.white : Colors.grey.shade300,
+                      child: ListTile(
+                        title: Text(
+                          alarm['jam'],
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(
+                          alarm['title'] ?? '-',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                        trailing: Switch(
+                          value: alarm['active'],
+                          onChanged: (value) {
+                            _toggleAlarm(index);
+                          },
+                          activeTrackColor: Colors.purple,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               onPressed: () {
-                // Navigate to AlarmCreate
                 Navigator.push(
                   context,
                   MaterialPageRoute(
