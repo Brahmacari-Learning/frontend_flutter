@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/screens/detail_doa_screen.dart';
+import 'package:vedanta_frontend/src/screens/search_doa_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -85,7 +86,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                   if (response['error']) {
                     scaffoldMessenger.showSnackBar(SnackBar(
                       content: Text(response['message']),
-                      backgroundColor: const Color(0xFFB95A92),
+                      backgroundColor: Colors.purple,
                     ));
                   } else {
                     scaffoldMessenger.showSnackBar(const SnackBar(
@@ -94,14 +95,14 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                     ));
                     // navigate to detail sloka screen
                     if (!context.mounted) return;
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => SearchSlokaScreen(
-                    //       slokas: response['gitas'],
-                    //     ),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchDoaScreen(
+                          doas: response['doas'],
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
