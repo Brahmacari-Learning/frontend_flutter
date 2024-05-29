@@ -96,7 +96,7 @@ class _GitaCardWidgetState extends State<GitaCardWidget> {
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 3)),
+                                horizontal: 20, vertical: 3)),
                         child: Text(
                           widget.buttonText,
                           style: const TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/screens/menu/chat_bot_widget.dart';
+import 'package:vedanta_frontend/src/screens/menu/doa_page_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/event_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/discussion_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/gita_widget.dart';
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ChatBotWidget(),
     DiscussionWidget(),
     GitaWidget(),
-    Text('Notifications Page'),
+    DoaPageWidget(),
     EventWidget(),
     ProfileWidget(),
   ];

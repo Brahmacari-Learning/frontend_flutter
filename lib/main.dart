@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/app_theme.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
+import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
@@ -32,6 +33,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DiscussionProvider()),
         ChangeNotifierProvider(create: (context) => ClassProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => DoaProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
