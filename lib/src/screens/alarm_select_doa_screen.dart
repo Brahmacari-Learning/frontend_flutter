@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
@@ -13,7 +14,7 @@ class AlarmSelectDoaScreen extends StatefulWidget {
 class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
   final TextEditingController _controllerSearch = TextEditingController();
   final List<dynamic> _doaList = [];
-
+  Timer? _debounce;
   late Future<void> _futureDoa = Future.value();
 
   Future<void> _getDoaList(String query) async {
@@ -27,9 +28,19 @@ class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
     });
   }
 
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        _futureDoa = _getDoaList(_controllerSearch.text);
+      });
+    });
+  }
+
   @override
   void dispose() {
     _controllerSearch.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -48,7 +59,7 @@ class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
         toolbarHeight: 70,
         shadowColor: Colors.white,
         iconTheme: const IconThemeData(
-          color: Colors.purple, // Warna pink untuk back button
+          color: Colors.purple,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -60,16 +71,12 @@ class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
         title: InputRoundedWithIcon(
           controller: _controllerSearch,
           icon: Icons.search,
-          onChanged: (value) async {
-            setState(() {
-              _futureDoa = _getDoaList(_controllerSearch.text);
-            });
+          onChanged: (value) {
+            _onSearchChanged();
           },
           label: 'Cari doa...',
-          onEnter: (value) async {
-            setState(() {
-              _futureDoa = _getDoaList(_controllerSearch.text);
-            });
+          onEnter: (value) {
+            _onSearchChanged();
           },
         ),
       ),

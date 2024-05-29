@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -36,17 +38,64 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            _mandiriTab(),
-            _tugasTab(),
+            MandiriTabAlarm(),
+            TugasTabAlarm(),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _mandiriTab() {
+class TugasTabAlarm extends StatelessWidget {
+  const TugasTabAlarm({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Tab 1'),
+    );
+  }
+}
+
+class MandiriTabAlarm extends StatefulWidget {
+  const MandiriTabAlarm({
+    super.key,
+  });
+
+  @override
+  State<MandiriTabAlarm> createState() => _MandiriTabAlarmState();
+}
+
+class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
+  Future<void> _futureAllAlarm = Future.value();
+  List<Map<String, dynamic>> _allAlarms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _futureAllAlarm = _getAlarmList();
+  }
+
+  Future<void> _getAlarmList() async {
+    // Add your logic here
+    final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
+    final response = await alarmProvider.getAlarm();
+
+    setState(() {
+      _allAlarms.clear();
+      for (var i = 0; i < response['alarms'].length; i++) {
+        _allAlarms.add(response['alarms'][i]);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
@@ -92,12 +141,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
         ),
         const SizedBox(height: 20),
       ],
-    );
-  }
-
-  Widget _tugasTab() {
-    return const Center(
-      child: Text('Tab 1'),
     );
   }
 }

@@ -7,11 +7,11 @@ environment:
   sdk: ">=3.3.4 <4.0.0"
 
 dependencies:
-  alarm: ^3.1.4
   audio_service: ^0.18.13
   flutter:
     sdk: flutter
   flutter_keyboard_visibility: ^6.0.0
+  flutter_local_notifications: ^17.1.2
   flutter_markdown: ^0.7.1
   http: ^1.2.1
   intl: ^0.19.0

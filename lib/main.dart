@@ -1,6 +1,4 @@
-import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
@@ -19,8 +17,6 @@ import 'src/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await Alarm.init();
   runApp(const MainApp());
 }
 
@@ -46,7 +42,7 @@ class MainApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: 'Vedanta',
             theme: themeProvider.themeData,
             home: const SplashScreen(),
             routes: {
