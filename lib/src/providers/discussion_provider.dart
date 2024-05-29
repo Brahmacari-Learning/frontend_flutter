@@ -62,7 +62,7 @@ class DiscussionProvider with ChangeNotifier {
 
   // Create reply to reply
   Future<Map<String, dynamic>> createReplyToReply(
-      int discussionId, int replyId, reply) async {
+      int discussionId, int replyId, String reply) async {
     try {
       final response = await _apiService
           .postData('discussion/$discussionId/reply/$replyId/reply', {
