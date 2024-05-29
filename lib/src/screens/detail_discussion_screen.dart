@@ -18,6 +18,16 @@ class DetailDiscussionScreen extends StatefulWidget {
 class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
   final TextEditingController _komentarController = TextEditingController();
   final TextEditingController _controllerSearch = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
+  int? replyingId;
+
+  @override
+  void dispose() {
+    _komentarController.dispose();
+    _controllerSearch.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +81,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         const SizedBox(height: 20),
                         InputRoundedWithIcon(
                           controller: _komentarController,
+                          focusNode: focusNode,
                           icon: Icons.send,
                           label: 'Tulis komentar',
                           onEnter: (value) async {
@@ -158,7 +169,9 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                         Row(
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                focusNode.requestFocus();
+                              },
                               child: const Text(
                                 "Balas",
                                 style: TextStyle(
@@ -265,19 +278,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                       ),
                       Row(
                         children: [
-                          InkWell(
-                            onTap: () {},
-                            child: const Text(
-                              "Balas",
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
                           Text(
                             formatDate(nestedReply['createdAt']),
                             style: const TextStyle(
@@ -290,13 +290,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: LikeIconWithCount(
-                    isLiked: nestedReply['isLiked'],
-                    likesCount: nestedReply['likesCount'],
-                  ),
-                )
               ],
             ),
           );
