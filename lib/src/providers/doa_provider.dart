@@ -13,6 +13,16 @@ class DoaProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getDoaById(int id) async {
+    try {
+      final response = await _apiService.fetchData('doa/$id');
+      print(response);
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
   Future<Map<String, dynamic>> getLikedDoas() async {
     try {
       final response = await _apiService.fetchData('doa/doa-liked');

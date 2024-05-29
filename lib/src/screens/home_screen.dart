@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const appBarIndexes = [
       2,
       3,
+      4,
       5,
       6
     ]; // Add the indexes for which you want to show the AppBar
