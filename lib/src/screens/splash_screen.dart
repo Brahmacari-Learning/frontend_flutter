@@ -44,14 +44,15 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    print(token);
 
-    if (token != null) {
-      // Token exists, navigate to home screen
-      Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      // No token, navigate to login screen
-      Navigator.of(context).pushReplacementNamed('/login');
+    if (mounted) {
+      if (token != null) {
+        // Token exists, navigate to home screen
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        // No token, navigate to login screen
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
     }
   }
 
