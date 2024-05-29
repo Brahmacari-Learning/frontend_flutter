@@ -154,16 +154,10 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const AlarmCreateScreen(),
-                  //   ),
-                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const PresensiPopup(),
+                      builder: (context) => const AlarmCreateScreen(),
                     ),
                   );
                 },
