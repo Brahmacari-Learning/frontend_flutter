@@ -122,7 +122,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     backgroundColor: Colors.green,
                   ));
                   // navigate to detail sloka screen
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SearchDiscussionScreen(
@@ -130,6 +130,12 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                       ),
                     ),
                   );
+                  setState(() {
+                    _isLoading = true;
+                    _currentPage = 1;
+                    _discussions.clear();
+                    _loadDiscussions();
+                  });
                 }
               },
             ),
@@ -153,14 +159,20 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                         }
                         final discussion = _discussions[index];
                         return InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailDiscussionScreen(
                                     id: discussion['id']),
                               ),
                             );
+                            setState(() {
+                              _isLoading = true;
+                              _currentPage = 1;
+                              _discussions.clear();
+                              _loadDiscussions();
+                            });
                           },
                           child: Column(
                             children: [

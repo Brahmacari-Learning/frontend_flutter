@@ -358,10 +358,6 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        // Text(
-        //   data['body'],
-        //   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-        // ),
       ],
     );
   }

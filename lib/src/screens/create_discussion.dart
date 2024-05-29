@@ -88,7 +88,7 @@ class _CreateDiscussionScreenState extends State<CreateDiscussionScreen> {
                         alignment: Alignment.bottomRight,
                         child: IconButton(
                           onPressed: () async {
-                            Provider.of<DiscussionProvider>(context,
+                            await Provider.of<DiscussionProvider>(context,
                                     listen: false)
                                 .createDiscussion(titleController.text);
                             Navigator.pop(context);
