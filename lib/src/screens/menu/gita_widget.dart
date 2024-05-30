@@ -138,26 +138,29 @@ class _GitaWidgetState extends State<GitaWidget> {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
-                          return GitaCardWidget(
-                            headerText: 'Bacaan Terakhir',
-                            subHeaderText:
-                                "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
-                            text: snapshot.data!['bacaan']['babTitle'],
-                            buttonText: 'Lanjutkan Membaca',
-                            onPress: () {
-                              if (!context.mounted) return;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailSlokaScreen(
-                                    bab: snapshot.data!['bacaan']['babNumber'],
-                                    sloka: snapshot.data!['bacaan']
-                                        ['slokaNumber'],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                          return snapshot.data!['bacaan'] != null
+                              ? GitaCardWidget(
+                                  headerText: 'Bacaan Terakhir',
+                                  subHeaderText:
+                                      "BAB ${snapshot.data!['bacaan']['babNumber']} : SLOKA ${snapshot.data!['bacaan']['slokaNumber']}",
+                                  text: snapshot.data!['bacaan']['babTitle'],
+                                  buttonText: 'Lanjutkan Membaca',
+                                  onPress: () {
+                                    if (!context.mounted) return;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailSlokaScreen(
+                                          bab: snapshot.data!['bacaan']
+                                              ['babNumber'],
+                                          sloka: snapshot.data!['bacaan']
+                                              ['slokaNumber'],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : const SizedBox();
                         }
                       },
                     )
