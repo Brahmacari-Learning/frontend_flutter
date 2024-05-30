@@ -16,7 +16,7 @@ class AppTheme {
         ),
       ),
       brightness: Brightness.light,
-      primaryColor: Colors.purpleAccent,
+      primaryColor: Colors.purple,
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: const AppBarTheme(
         color: Colors.purple,
@@ -34,7 +34,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(Colors.purpleAccent),
+          backgroundColor: WidgetStateProperty.all(Colors.purple),
           textStyle:
               WidgetStateProperty.all(const TextStyle(color: Colors.white)),
           padding: WidgetStateProperty.all(

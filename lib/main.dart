@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
+import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
@@ -14,7 +16,25 @@ import 'src/screens/login_screen.dart';
 import 'src/screens/home_screen.dart';
 import 'src/providers/auth_provider.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse) {
+  if (notificationResponse.payload != null) {
+    print('notification payload: ${notificationResponse.payload}');
+  }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var initializedSettingsAndroid =
+      const AndroidInitializationSettings('vedanta_logo');
+  var initializationSettings =
+      InitializationSettings(android: initializedSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   runApp(const MainApp());
 }
 
@@ -34,12 +54,13 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ClassProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => DoaProvider()),
+        ChangeNotifierProvider(create: (context) => AlarmProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: 'Vedanta',
             theme: themeProvider.themeData,
             home: const SplashScreen(),
             routes: {

@@ -6,6 +6,7 @@ class InputRoundedWithIcon extends StatelessWidget {
   final String label;
   final dynamic Function(String text) onEnter;
   final FocusNode? focusNode;
+  final void Function(String)? onChanged;
 
   const InputRoundedWithIcon({
     super.key,
@@ -14,6 +15,7 @@ class InputRoundedWithIcon extends StatelessWidget {
     required this.label,
     required this.onEnter,
     this.focusNode,
+    this.onChanged,
   });
 
   @override
@@ -36,6 +38,7 @@ class InputRoundedWithIcon extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: const TextStyle(

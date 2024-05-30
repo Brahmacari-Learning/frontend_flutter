@@ -4,9 +4,9 @@ import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
 
-class DetailDoaScreen extends StatelessWidget {
+class DoaDetailScreen extends StatelessWidget {
   final int idDoa;
-  const DetailDoaScreen({super.key, required this.idDoa});
+  const DoaDetailScreen({super.key, required this.idDoa});
 
   @override
   Widget build(BuildContext context) {

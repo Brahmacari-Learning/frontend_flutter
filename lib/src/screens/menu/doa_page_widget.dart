@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
-import 'package:vedanta_frontend/src/screens/detail_doa_screen.dart';
-import 'package:vedanta_frontend/src/screens/search_doa_screen.dart';
+import 'package:vedanta_frontend/src/screens/alarm_screen.dart';
+import 'package:vedanta_frontend/src/screens/doa_detail_screen.dart';
+import 'package:vedanta_frontend/src/screens/doa_search_screen.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -115,6 +116,12 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                 buttonText: 'Jadwalkan Doa',
                 onPress: () {
                   if (!context.mounted) return;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AlarmScreen(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -201,7 +208,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailDoaScreen(
+                      builder: (context) => DoaDetailScreen(
                         idDoa: doaList[index]['id'],
                       ),
                     ),

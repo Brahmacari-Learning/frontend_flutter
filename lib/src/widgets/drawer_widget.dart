@@ -45,7 +45,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       );
                     } else {
                       List data = snapshot.data?['sessions'];
-                      print("dataSession: ${snapshot.data?['sessions']}");
                       if (data.isEmpty) {
                         return const Center(
                           child: Text('Belum ada sesi percakapan'),
