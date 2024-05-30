@@ -33,7 +33,7 @@ class DoaProvider with ChangeNotifier {
 
   Future<Map<String, dynamic>> searchDoa(String query) async {
     try {
-      final response = await _apiService.fetchData('doa/search?q="$query"');
+      final response = await _apiService.fetchData('doa/search?q=$query');
       return response;
     } catch (e) {
       return {'error': true, 'message': 'An error occurred'};

@@ -19,7 +19,17 @@ class _KelasScreenState extends State<KelasScreen> {
     final response = classProvider.getClasses();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kelas'),
+        title: const Text(
+          'Kelas',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.purple, // Warna ungu untuk back button
+        ),
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
@@ -34,13 +44,14 @@ class _KelasScreenState extends State<KelasScreen> {
             if (snapshot.hasError) {
               return const Text('An error occurred');
             }
+            final classes = snapshot.data!['classes'];
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!['classes'].length,
+                    itemCount: classes.length,
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
@@ -48,7 +59,7 @@ class _KelasScreenState extends State<KelasScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => KelasDetailScreen(
-                                id: snapshot.data!['classes'][index]['id'],
+                                id: classes[index]['id'],
                               ),
                             ),
                           );
@@ -77,15 +88,14 @@ class _KelasScreenState extends State<KelasScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  snapshot.data!['classes'][index]['className'],
+                                  classes[index]['className'],
                                   style: const TextStyle(
                                       fontSize: 30,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800),
                                 ),
                                 Text(
-                                  snapshot.data!['classes'][index]
-                                      ['teacherName'],
+                                  classes[index]['teacherName'],
                                   style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
@@ -134,7 +144,12 @@ class _KelasScreenState extends State<KelasScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.purple,
                                   ),
-                                  child: const Text('Masuk'),
+                                  child: const Text(
+                                    'Masuk',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ],
                             );
