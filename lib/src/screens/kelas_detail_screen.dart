@@ -47,17 +47,17 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
           ),
         ),
         body: TabBarView(children: [
-          TugasTab(id: widget.id),
-          ListSiswa(provider: classProvider, id: widget.id),
+          _TugasTab(id: widget.id),
+          _ListSiswa(provider: classProvider, id: widget.id),
         ]),
       ),
     );
   }
 }
 
-class TugasTab extends StatelessWidget {
+class _TugasTab extends StatelessWidget {
   final int id;
-  const TugasTab({super.key, required this.id});
+  const _TugasTab({required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +65,11 @@ class TugasTab extends StatelessWidget {
   }
 }
 
-class ListSiswa extends StatefulWidget {
+class _ListSiswa extends StatefulWidget {
   final ClassProvider provider;
   final int id;
 
-  const ListSiswa({
-    super.key,
+  const _ListSiswa({
     required this.provider,
     required this.id,
   });
@@ -79,7 +78,7 @@ class ListSiswa extends StatefulWidget {
   _ListSiswaState createState() => _ListSiswaState();
 }
 
-class _ListSiswaState extends State<ListSiswa> {
+class _ListSiswaState extends State<_ListSiswa> {
   Future<void> _refreshList() async {
     setState(() {});
   }
