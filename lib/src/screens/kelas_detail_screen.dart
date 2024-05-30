@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class KelasDetailScreen extends StatefulWidget {
   final int id;
@@ -15,31 +16,102 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
   Widget build(BuildContext context) {
     // provider class
     final classProvider = Provider.of<ClassProvider>(context);
-    final response = classProvider.classMember(widget.id);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kelas Detail'),
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Detail Kelas',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(
+            color: Colors.purple, // Warna pink untuk back button
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          bottom: const TabBar(
+            labelColor: Colors.purple,
+            unselectedLabelColor: Color.fromARGB(255, 96, 96, 96),
+            indicatorColor: Colors.purple,
+            tabs: [
+              Tab(text: "Tugas"),
+              Tab(text: "Anggota"),
+            ],
+          ),
+        ),
+        body: TabBarView(children: [
+          TugasTab(id: widget.id),
+          ListSiswa(provider: classProvider, id: widget.id),
+        ]),
       ),
-      body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: response,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                  alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height * 1,
-                  child: const CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return const Text('An error occurred');
-            }
-            return Container(
+    );
+  }
+}
+
+class TugasTab extends StatelessWidget {
+  final int id;
+  const TugasTab({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class ListSiswa extends StatefulWidget {
+  final ClassProvider provider;
+  final int id;
+
+  const ListSiswa({
+    super.key,
+    required this.provider,
+    required this.id,
+  });
+
+  @override
+  _ListSiswaState createState() => _ListSiswaState();
+}
+
+class _ListSiswaState extends State<ListSiswa> {
+  Future<void> _refreshList() async {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: widget.provider.classMember(widget.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height,
+            child: const CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return const Text('An error occurred');
+        }
+        var members = snapshot.data!['members'];
+        return RefreshIndicator(
+          onRefresh: _refreshList,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!['members'].length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: members.length,
                     itemBuilder: (context, index) {
                       return Container(
                         width: 330,
@@ -48,7 +120,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
                         margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.purple,
+                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
                               color: const Color.fromARGB(255, 0, 0, 0)
@@ -61,12 +133,20 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            Text(
-                              snapshot.data!['members'][index]['name'],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                AvatarWidget(
+                                    avatarUrl: members[index]['profilePicture'],
+                                    name: members[index]['name']),
+                                const SizedBox(width: 10),
+                                Text(
+                                  members[index]['name'],
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -75,10 +155,10 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
                   ),
                 ],
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
