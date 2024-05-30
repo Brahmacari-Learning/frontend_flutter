@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vedanta_frontend/src/screens/stage_screen.dart';
 
 class LevelWidget extends StatefulWidget {
   const LevelWidget({super.key});
@@ -108,7 +109,14 @@ class _LevelWidgetState extends State<LevelWidget> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const StageScreen(),
+                                  ),
+                                );
+                              },
                               child: const Text('START',
                                   style: TextStyle(
                                     letterSpacing: 3,
