@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/screens/stage_screen.dart';
 
@@ -13,7 +11,6 @@ class LevelWidget extends StatefulWidget {
 }
 
 class _LevelWidgetState extends State<LevelWidget> {
-  Map<String, dynamic> _userInfo = {};
   List<dynamic> stages = [];
 
   Future<void> _futureGetStage = Future.value();
@@ -21,8 +18,6 @@ class _LevelWidgetState extends State<LevelWidget> {
   Future<void> getStages() async {
     final provider = Provider.of<StageProvider>(context, listen: false);
     final stages = await provider.getStages();
-
-    print(stages['stage']);
 
     setState(() {
       this.stages = stages['stage'];
@@ -32,20 +27,7 @@ class _LevelWidgetState extends State<LevelWidget> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
     _futureGetStage = getStages();
-  }
-
-  Future<void> _getUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
-    if (token != null) {
-      Map<String, dynamic> payload = Jwt.parseJwt(token);
-      setState(() {
-        _userInfo = payload;
-      });
-    }
   }
 
   @override

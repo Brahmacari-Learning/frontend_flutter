@@ -22,4 +22,22 @@ class StageProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> getEntries(int idQuiz) async {
+    try {
+      final response = await _apiService.fetchData('quiz/$idQuiz');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> quizEntryInfo(int idQuiz, int idEntry) async {
+    try {
+      final response = await _apiService.fetchData('quiz/$idQuiz/$idEntry');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }
