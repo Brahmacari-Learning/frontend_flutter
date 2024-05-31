@@ -40,4 +40,13 @@ class StageProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> getMateri(int idStage) async {
+    try {
+      final response = await _apiService.fetchData('stage/$idStage/materi');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }

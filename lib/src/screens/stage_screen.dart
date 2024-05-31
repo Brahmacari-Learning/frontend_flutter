@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
+import 'package:vedanta_frontend/src/screens/stage_materi_screen.dart';
 
 class StageScreen extends StatefulWidget {
   final int idStage;
@@ -135,7 +136,16 @@ class _StageScreenState extends State<StageScreen> {
                   ),
                   HexagonalButton(
                     onPressed: () {
-                      print('Hexagonal button pressed');
+                      print(_stage);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StageMateriScreen(
+                            stageId: _stage['id'],
+                            videoId: _stage['materi']['videoLink'],
+                          ),
+                        ),
+                      );
                     },
                     color: const Color(0xFFDA94FA),
                     outlineColor: Colors.white,
