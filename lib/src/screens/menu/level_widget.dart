@@ -159,8 +159,10 @@ class _LevelWidgetState extends State<LevelWidget> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const StageScreen(),
+                                            builder: (context) => StageScreen(
+                                              idStage: stages[index]['id'],
+                                              title: stages[index]['title'],
+                                            ),
                                           ),
                                         );
                                       },
