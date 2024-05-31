@@ -8,6 +8,7 @@ import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
+import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
@@ -55,6 +56,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => DoaProvider()),
         ChangeNotifierProvider(create: (context) => AlarmProvider()),
+        ChangeNotifierProvider(create: (context) => StageProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
