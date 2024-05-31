@@ -74,111 +74,114 @@ class _LevelWidgetState extends State<LevelWidget> {
                       200, // Adjust the height as needed
                   child: TabBarView(
                     children: List<Widget>.generate(stages.length, (int index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            fit: BoxFit.fitWidth,
-                            'lib/assets/images/hero1.png',
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            height: 300,
-                          ),
-                          // Card Stage
-                          Card(
-                            color: Colors.purple,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    stages[index]['title'],
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${stages[index]['finished']}',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(
-                                        '/ ${stages[index]['quizCount']}',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(
-                                              255, 213, 213, 213),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  // progress bar
-                                  LinearProgressIndicator(
-                                    minHeight: 8,
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(4)),
-                                    value: stages[index]['finished'] == 0
-                                        ? 0
-                                        : stages[index]['finished'] /
-                                            stages[index]['quizCount'],
-                                    backgroundColor: Colors.deepPurple,
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                      Colors.purpleAccent,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    stages[index]['description'],
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const StageScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      stages[index]['finished'] > 0
-                                          ? 'LIHAT PROGRESS'
-                                          : 'MULAI',
+                      return Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 50),
+                            Image.network(
+                              stages[index]['image_path'],
+                              height: 200,
+                              fit: BoxFit.fitWidth,
+                            ),
+                            const SizedBox(height: 50),
+                            // Card Stage
+                            Card(
+                              color: Colors.purple,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      stages[index]['title'],
                                       style: const TextStyle(
-                                        letterSpacing: 3,
-                                        color: Colors.purple,
-                                        fontSize: 20,
+                                        fontSize: 24,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${stages[index]['finished']}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          '/ ${stages[index]['quizCount']}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 213, 213, 213),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // progress bar
+                                    LinearProgressIndicator(
+                                      minHeight: 8,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(4)),
+                                      value: stages[index]['finished'] == 0
+                                          ? 0
+                                          : double.parse(
+                                                  stages[index]['finished']) /
+                                              stages[index]['quizCount'],
+                                      backgroundColor: Colors.deepPurple,
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                        Colors.purpleAccent,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      stages[index]['description'],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 30),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const StageScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        stages[index]['finished'] > 0
+                                            ? 'LIHAT PROGRESS'
+                                            : 'AYO MAIN',
+                                        style: const TextStyle(
+                                          letterSpacing: 3,
+                                          color: Colors.purple,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          // Text('User ID: ${_userInfo['id']}'),
-                          // Text('Email: ${_userInfo['email']}'),
-                          // Add more fields as per your JWT payload structure
-                        ],
+                          ],
+                        ),
                       );
                     }),
                   ),
