@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/screens/discussion_search_screen.dart';
+import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
@@ -38,104 +39,106 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     // Detail discussion
-    return Scaffold(
-      appBar: _detailDiscussionAppBar(
-          discussionProvider, context, scaffoldMessenger),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              FutureBuilder(
-                future: discussionProvider.getDiscussion(widget.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.4,
+    return AuthWrapper(
+      child: Scaffold(
+        appBar: _detailDiscussionAppBar(
+            discussionProvider, context, scaffoldMessenger),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                FutureBuilder(
+                  future: discussionProvider.getDiscussion(widget.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.4,
+                          ),
+                          child: const CircularProgressIndicator(),
                         ),
-                        child: const CircularProgressIndicator(),
-                      ),
-                    );
-                  } else {
-                    final data = snapshot.data!['discussion'];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Profil, nama, waktu diskusi
-                        _headerUserInfo(data, context),
-                        const SizedBox(height: 10),
-                        // Judul dan deskripsi
-                        _questionDiscussion(data),
-                        const SizedBox(height: 20),
-                        // Statistik diskusi (jawaban & like)
-                        _questionStats(
-                            data, discussionProvider, scaffoldMessenger),
-                        const Divider(
-                          thickness: 1,
-                          indent: 0,
-                          endIndent: 0,
-                        ),
-                        const SizedBox(height: 20),
-                        InputRoundedWithIcon(
-                          controller: _komentarController,
-                          focusNode: focusNode,
-                          icon: Icons.send,
-                          label: 'Tulis komentar',
-                          onEnter: (value) async {
-                            if (replyingId != null) {
-                              final response =
-                                  await discussionProvider.createReplyToReply(
-                                widget.id,
-                                replyingId!,
-                                _komentarController.text.trim(),
-                              );
-                              if (response['error'] == true) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(response['message']),
-                                    backgroundColor: Colors.purple,
-                                  ),
+                      );
+                    } else {
+                      final data = snapshot.data!['discussion'];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Profil, nama, waktu diskusi
+                          _headerUserInfo(data, context),
+                          const SizedBox(height: 10),
+                          // Judul dan deskripsi
+                          _questionDiscussion(data),
+                          const SizedBox(height: 20),
+                          // Statistik diskusi (jawaban & like)
+                          _questionStats(
+                              data, discussionProvider, scaffoldMessenger),
+                          const Divider(
+                            thickness: 1,
+                            indent: 0,
+                            endIndent: 0,
+                          ),
+                          const SizedBox(height: 20),
+                          InputRoundedWithIcon(
+                            controller: _komentarController,
+                            focusNode: focusNode,
+                            icon: Icons.send,
+                            label: 'Tulis komentar',
+                            onEnter: (value) async {
+                              if (replyingId != null) {
+                                final response =
+                                    await discussionProvider.createReplyToReply(
+                                  widget.id,
+                                  replyingId!,
+                                  _komentarController.text.trim(),
                                 );
+                                if (response['error'] == true) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['message']),
+                                      backgroundColor: Colors.purple,
+                                    ),
+                                  );
+                                } else {
+                                  _komentarController.clear();
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  replyingId = null;
+                                  setState(() {});
+                                }
                               } else {
-                                _komentarController.clear();
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                                replyingId = null;
-                                setState(() {});
-                              }
-                            } else {
-                              final response =
-                                  await discussionProvider.createReply(
-                                widget.id,
-                                _komentarController.text.trim(),
-                              );
-                              if (response['error'] == true) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(response['message']),
-                                    backgroundColor: Colors.purple,
-                                  ),
+                                final response =
+                                    await discussionProvider.createReply(
+                                  widget.id,
+                                  _komentarController.text.trim(),
                                 );
-                              } else {
-                                _komentarController.clear();
-                                setState(() {});
+                                if (response['error'] == true) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['message']),
+                                      backgroundColor: Colors.purple,
+                                    ),
+                                  );
+                                } else {
+                                  _komentarController.clear();
+                                  setState(() {});
+                                }
                               }
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        // Replies with nested replies
-                        _listReply(data, discussionProvider, context,
-                            scaffoldMessenger),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ],
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          // Replies with nested replies
+                          _listReply(data, discussionProvider, context,
+                              scaffoldMessenger),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

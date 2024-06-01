@@ -14,6 +14,7 @@ import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
+import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'src/screens/login_screen.dart';
 import 'src/screens/home_screen.dart';
 import 'src/providers/auth_provider.dart';
@@ -76,7 +77,9 @@ class MainApp extends StatelessWidget {
             routes: {
               '/login': (context) => const LoginScreen(),
               '/register': (context) => const RegisterScreen(),
-              '/home': (context) => const HomeScreen(),
+              '/home': (context) => const AuthWrapper(
+                    child: HomeScreen(),
+                  ),
             },
           );
         },

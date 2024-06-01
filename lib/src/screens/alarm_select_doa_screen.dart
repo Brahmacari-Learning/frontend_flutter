@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
+import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 
 class AlarmSelectDoaScreen extends StatefulWidget {
@@ -52,69 +53,71 @@ class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        toolbarHeight: 70,
-        shadowColor: Colors.white,
-        iconTheme: const IconThemeData(
-          color: Colors.purple,
+    return AuthWrapper(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          toolbarHeight: 70,
+          shadowColor: Colors.white,
+          iconTheme: const IconThemeData(
+            color: Colors.purple,
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Navigator.pop(context);
+            },
+          ),
+          title: InputRoundedWithIcon(
+            controller: _controllerSearch,
+            icon: Icons.search,
+            onChanged: (value) {
+              _onSearchChanged();
+            },
+            label: 'Cari doa...',
+            onEnter: (value) {
+              _onSearchChanged();
+            },
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            Navigator.pop(context);
-          },
-        ),
-        title: InputRoundedWithIcon(
-          controller: _controllerSearch,
-          icon: Icons.search,
-          onChanged: (value) {
-            _onSearchChanged();
-          },
-          label: 'Cari doa...',
-          onEnter: (value) {
-            _onSearchChanged();
-          },
-        ),
-      ),
-      body: SafeArea(
-        child: FutureBuilder<void>(
-          future: _futureDoa,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else {
-              return _doaList.isEmpty
-                  ? const Center(child: Text('Tidak ada doa'))
-                  : ListView.builder(
-                      itemCount: _doaList.length,
-                      itemBuilder: (context, index) {
-                        final doa = _doaList[index];
-                        return ListTile(
-                          title: Text(
-                            doa['title'],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
+        body: SafeArea(
+          child: FutureBuilder<void>(
+            future: _futureDoa,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                return _doaList.isEmpty
+                    ? const Center(child: Text('Tidak ada doa'))
+                    : ListView.builder(
+                        itemCount: _doaList.length,
+                        itemBuilder: (context, index) {
+                          final doa = _doaList[index];
+                          return ListTile(
+                            title: Text(
+                              doa['title'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          onTap: () {
-                            Navigator.pop(context, doa);
-                          },
-                        );
-                      },
-                    );
-            }
-          },
+                            onTap: () {
+                              Navigator.pop(context, doa);
+                            },
+                          );
+                        },
+                      );
+              }
+            },
+          ),
         ),
       ),
     );

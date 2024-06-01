@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,11 @@ class ApiService {
       final decodedResponse = utf8.decode(response.bodyBytes);
       final jsonResponse = jsonDecode(decodedResponse);
       return jsonResponse;
+    } else if (response.statusCode == 401) {
+      // Remove the token from shared preferences if it's unauthorized
+      prefs.remove('token');
+
+      throw Exception('Unauthorized');
     } else {
       throw Exception('Failed to load data');
     }
@@ -48,6 +54,10 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      // Remove the token from shared preferences if it's unauthorized
+      prefs.remove('token');
+      throw Exception('Unauthorized');
     } else {
       throw Exception('Failed to post data');
     }
@@ -69,6 +79,9 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      prefs.remove('token');
+      throw Exception('Unauthorized');
     } else {
       throw Exception('Failed to delete data');
     }
