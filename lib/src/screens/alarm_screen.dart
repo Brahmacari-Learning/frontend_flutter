@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/popups/presensi_popup.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
+import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key});
@@ -14,36 +15,38 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Alarm Doa',
-            style: TextStyle(
-              color: Colors.black,
+    return AuthWrapper(
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Alarm Doa',
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+            iconTheme: const IconThemeData(
+              color: Colors.purple, // Warna pink untuk back button
+            ),
+            bottom: const TabBar(
+              labelColor: Colors.purple,
+              unselectedLabelColor: Color.fromARGB(255, 96, 96, 96),
+              indicatorColor: Colors.purple,
+              tabs: [
+                Tab(text: "Mandiri"),
+                Tab(text: "Tugas"),
+              ],
             ),
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: const IconThemeData(
-            color: Colors.purple, // Warna pink untuk back button
-          ),
-          bottom: const TabBar(
-            labelColor: Colors.purple,
-            unselectedLabelColor: Color.fromARGB(255, 96, 96, 96),
-            indicatorColor: Colors.purple,
-            tabs: [
-              Tab(text: "Mandiri"),
-              Tab(text: "Tugas"),
+          body: const TabBarView(
+            children: [
+              MandiriTabAlarm(),
+              TugasTabAlarm(),
             ],
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            MandiriTabAlarm(),
-            TugasTabAlarm(),
-          ],
         ),
       ),
     );

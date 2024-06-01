@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class KelasDetailScreen extends StatefulWidget {
@@ -17,39 +18,41 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
     // provider class
     final classProvider = Provider.of<ClassProvider>(context);
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Detail Kelas',
-            style: TextStyle(color: Colors.black),
+    return AuthWrapper(
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Detail Kelas',
+              style: TextStyle(color: Colors.black),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+            iconTheme: const IconThemeData(
+              color: Colors.purple, // Warna pink untuk back button
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            bottom: const TabBar(
+              labelColor: Colors.purple,
+              unselectedLabelColor: Color.fromARGB(255, 96, 96, 96),
+              indicatorColor: Colors.purple,
+              tabs: [
+                Tab(text: "Tugas"),
+                Tab(text: "Anggota"),
+              ],
+            ),
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: const IconThemeData(
-            color: Colors.purple, // Warna pink untuk back button
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          bottom: const TabBar(
-            labelColor: Colors.purple,
-            unselectedLabelColor: Color.fromARGB(255, 96, 96, 96),
-            indicatorColor: Colors.purple,
-            tabs: [
-              Tab(text: "Tugas"),
-              Tab(text: "Anggota"),
-            ],
-          ),
+          body: TabBarView(children: [
+            _TugasTab(id: widget.id),
+            _ListSiswa(provider: classProvider, id: widget.id),
+          ]),
         ),
-        body: TabBarView(children: [
-          _TugasTab(id: widget.id),
-          _ListSiswa(provider: classProvider, id: widget.id),
-        ]),
       ),
     );
   }
