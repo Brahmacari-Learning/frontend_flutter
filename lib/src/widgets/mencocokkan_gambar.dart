@@ -60,9 +60,9 @@ class _MencocokkanGambaruState extends State<MencocokkanGambaru> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    "Benda apakah di atas itu?",
-                    style: TextStyle(
+                  Text(
+                    model['title'],
+                    style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -70,19 +70,19 @@ class _MencocokkanGambaruState extends State<MencocokkanGambaru> {
                   const SizedBox(
                     height: 20,
                   ),
-                  buttonOptionFullWidth('Pancadatu', () {}),
+                  buttonOptionFullWidth(model['optionOne'], () {}),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth('Tridatu', () {}),
+                  buttonOptionFullWidth(model['optionTwo'], () {}),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth('Sangadatu', () {}),
+                  buttonOptionFullWidth(model['optionThree'], () {}),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth('Ekadatu', () {}),
+                  buttonOptionFullWidth(model['optionFour'], () {}),
                 ],
               ),
             ),

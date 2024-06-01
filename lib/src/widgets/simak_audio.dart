@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
 import 'button_option_full_width.dart';
 
-class PilihanGandaru extends StatefulWidget {
+class SimakAudio extends StatefulWidget {
   final Map<String, dynamic> entry;
   final Future<void> Function(String option, BuildContext context) answer;
-  const PilihanGandaru({
+  const SimakAudio({
     super.key,
     required this.entry,
     required this.answer,
   });
 
   @override
-  State<PilihanGandaru> createState() => _PilihanGandaruState();
+  State<SimakAudio> createState() => _SimakAudioState();
 }
 
-class _PilihanGandaruState extends State<PilihanGandaru> {
+class _SimakAudioState extends State<SimakAudio> {
   @override
   Widget build(BuildContext context) {
     final model = widget.entry['questionModel'];
@@ -45,13 +46,8 @@ class _PilihanGandaruState extends State<PilihanGandaru> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    model['title'],
-                    style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                  MusicPlayerWidget(
+                      url: "https://cdn.hmjtiundiksha.com/${model['audio']}"),
                   const SizedBox(
                     height: 20,
                   ),

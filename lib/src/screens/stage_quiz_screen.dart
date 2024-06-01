@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/widgets/isian_widget.dart';
 import 'package:vedanta_frontend/src/widgets/mencocokkan_gambar.dart';
+import 'package:vedanta_frontend/src/widgets/simak_audio.dart';
 
 import '../widgets/button_option_full_width.dart';
 import '../widgets/pilihan_gandaru.dart';
@@ -110,6 +111,8 @@ class _EntryQuizViewState extends State<EntryQuizView> {
         return MencocokkanGambaru(entry: widget.entry);
       case 'isian':
         return Isian(entry: widget.entry, answer: widget.answer);
+      case 'simakaudio':
+        return SimakAudio(entry: widget.entry, answer: widget.answer);
       default:
         return const Placeholder();
     }
