@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/screens/stage_materi_screen.dart';
+import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 
 class StageScreen extends StatefulWidget {
@@ -104,7 +105,16 @@ class _StageScreenState extends State<StageScreen> {
                       children: [
                         HexagonalButton(
                           onPressed: () {
-                            print('Hexagonal button pressed');
+                            if (_stage['finished'] == 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StageQuizScreen(
+                                    idQuiz: _stage['Quiz'][0]['id'],
+                                  ),
+                                ),
+                              );
+                            }
                           },
                           color: _stage['finished'] == 0
                               ? const Color(0xFFFF9051)
@@ -184,12 +194,21 @@ class _StageScreenState extends State<StageScreen> {
                     children: [
                       HexagonalButton(
                         onPressed: () {
-                          print('Hexagonal button pressed');
+                          if (_stage['finished'] == index + 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StageQuizScreen(
+                                  idQuiz: _stage['Quiz'][index]['id'],
+                                ),
+                              ),
+                            );
+                          }
                         },
                         color: _stage['finished'] < index + 1
                             ? const Color.fromARGB(255, 141, 110, 231)
                             : _stage['finished'] == index + 1
-                                ? const Color(0xFF10CCCC)
+                                ? const Color(0xFFFF9051)
                                 : const Color.fromARGB(255, 141, 110, 231),
                         outlineColor: Colors.white,
                         child: Center(
