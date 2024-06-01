@@ -122,8 +122,8 @@ class _LevelWidgetState extends State<LevelWidget> {
                                               Radius.circular(4)),
                                           value: stages[index]['finished'] == 0
                                               ? 0
-                                              : double.parse(stages[index]
-                                                      ['finished']) /
+                                              : double.parse(
+                                                      '${stages[index]['finished']}') /
                                                   stages[index]['quizCount'],
                                           backgroundColor: stages[index]
                                                   ['locked']
