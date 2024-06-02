@@ -12,6 +12,8 @@ class KerjaBagus extends StatefulWidget {
 class _KerjaBagusState extends State<KerjaBagus> {
   @override
   Widget build(BuildContext context) {
+    final info = widget.info;
+    final statsInfo = stats(info);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF9C7AFF),
@@ -23,9 +25,9 @@ class _KerjaBagusState extends State<KerjaBagus> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Kerja Bagus",
-              style: TextStyle(
+            Text(
+              statsInfo['text'],
+              style: const TextStyle(
                 fontSize: 32,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -36,15 +38,15 @@ class _KerjaBagusState extends State<KerjaBagus> {
               width: 200,
             ),
             Image.asset(
-              "lib/assets/images/2_star.png",
+              "lib/assets/images/${statsInfo['bintang']}_star.png",
               width: 150,
             ),
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              "Kamu dapat bintang 3!",
-              style: TextStyle(
+            Text(
+              "Kamu dapat bintang ${statsInfo['bintang']}!",
+              style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -56,16 +58,16 @@ class _KerjaBagusState extends State<KerjaBagus> {
             // ignore: prefer_const_constructors
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
-                  "• 13",
-                  style: TextStyle(
+                  "• ${statsInfo['correctCount']}",
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Color(0xFFFFE55A),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   " Benar ",
                   style: TextStyle(
                     fontSize: 18,
@@ -74,14 +76,14 @@ class _KerjaBagusState extends State<KerjaBagus> {
                   ),
                 ),
                 Text(
-                  "• 7",
-                  style: TextStyle(
+                  "• ${statsInfo['wrongCount']}",
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Color(0xFFFF9051),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   " Salah",
                   style: TextStyle(
                     fontSize: 18,
@@ -96,7 +98,9 @@ class _KerjaBagusState extends State<KerjaBagus> {
             ),
             ButtonOptionFullWidth(
               text: "Stage Berikutnya",
-              onClick: () {},
+              onClick: () {
+                Navigator.pop(context);
+              },
               color: const Color(0xFFFF9051),
             ),
             const SizedBox(
@@ -111,4 +115,33 @@ class _KerjaBagusState extends State<KerjaBagus> {
       ),
     );
   }
+}
+
+Map<String, dynamic> stats(Map<String, dynamic> info) {
+  Map<String, dynamic> result = {};
+  double rate = double.parse("${info['correctCount']}") / info['countQuiz'];
+  // contains text, star image, correct count, wrong count
+  if (rate < 0.5) {
+    result = {
+      "text": "Kamu harus lebih serius!",
+      "bintang": 1,
+      "correctCount": info['correctCount'],
+      "wrongCount": info['countQuiz'] - info['correctCount'],
+    };
+  } else if (rate < 0.7) {
+    result = {
+      "text": "Lumayan!",
+      "bintang": 2,
+      "correctCount": info['correctCount'],
+      "wrongCount": info['countQuiz'] - info['correctCount'],
+    };
+  } else {
+    result = {
+      "text": "Kerja Bagus!",
+      "bintang": 3,
+      "correctCount": info['correctCount'],
+      "wrongCount": info['countQuiz'] - info['correctCount'],
+    };
+  }
+  return result;
 }

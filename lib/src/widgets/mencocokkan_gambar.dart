@@ -80,7 +80,7 @@ class _MencocokkanGambaruState extends State<MencocokkanGambaru> {
   }
 
   Widget _buildOption(String image, String option,
-      Future<void> Function(String option, BuildContext context) answer) {
+      Future<void> Function(String opt, BuildContext context) answer) {
     return GestureDetector(
       onTap: () {
         answer(option, context);
