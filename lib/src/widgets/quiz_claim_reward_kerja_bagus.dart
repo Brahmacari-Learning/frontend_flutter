@@ -97,7 +97,7 @@ class _KerjaBagusState extends State<KerjaBagus> {
               height: 30,
             ),
             ButtonOptionFullWidth(
-              text: "Stage Berikutnya",
+              text: "Berikutnya",
               onClick: () {
                 Navigator.pop(context);
               },
