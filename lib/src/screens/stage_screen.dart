@@ -73,14 +73,23 @@ class _StageScreenState extends State<StageScreen> {
                       children: [
                         HexagonalButton(
                           onPressed: () {
-                            print('Hexagonal button pressed');
+                            // show popup
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                      'Raih hadiahmu! +${_stage['points_reward_finished']} poin jika selesai stage ini'),
+                                );
+                              },
+                            );
                           },
-                          color: const Color(0xFF10CCCC),
+                          color: const Color.fromARGB(255, 71, 117, 216),
                           outlineColor: Colors.white,
-                          child: Center(
-                            child: Image.asset(
-                              'lib/assets/images/gift.png',
-                              width: 30,
+                          child: const Center(
+                            child: Icon(
+                              Icons.question_mark,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -188,64 +197,112 @@ class _StageScreenState extends State<StageScreen> {
                 ),
                 const SizedBox(height: 40),
                 for (int index = 1; index < _stage['quizCount']; index++) ...[
-                  Stack(
-                    clipBehavior: Clip.none,
-                    alignment: Alignment.center,
-                    children: [
-                      HexagonalButton(
-                        onPressed: () {
-                          if (_stage['finished'] == index) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StageQuizScreen(
-                                  idQuiz: _stage['Quiz'][index]['id'],
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        color: _stage['finished'] < index
-                            ? const Color.fromARGB(255, 141, 110, 231)
-                            : _stage['finished'] == index
-                                ? const Color(0xFFFF9051)
-                                : const Color.fromARGB(255, 141, 110, 231),
-                        outlineColor: Colors.white,
-                        child: Center(
-                          child: _stage['finished'] >= index
-                              ? Text(
-                                  '${index + 1}',
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Icon(
+                  if (index + 1 == _stage['quizCount']) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 125,
+                        ),
+                        quizButtonVertical(index, context),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        // Claim hadiah
+                        Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.center,
+                          children: [
+                            HexagonalButton(
+                              onPressed: () {
+                                print('Hexagonal button pressed');
+                              },
+                              color: const Color.fromARGB(255, 92, 92, 92),
+                              outlineColor: Colors.white,
+                              child: const Center(
+                                child: Icon(
                                   Icons.lock,
-                                  size: 30,
                                   color: Colors.white,
                                 ),
+                              ),
+                            ),
+                            Positioned.fill(
+                              left: -40,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: CustomPaint(
+                                  size: const Size(40, 2),
+                                  painter: HorizontalLinePainter(),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Positioned.fill(
-                        top: -40,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: CustomPaint(
-                            size: const Size(2, 40),
-                            painter: HorizontalLinePainter(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ] else
+                    quizButtonVertical(index, context),
                 ],
               ],
             );
           },
         ),
       ),
+    );
+  }
+
+  Stack quizButtonVertical(int index, BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        HexagonalButton(
+          onPressed: () {
+            if (_stage['finished'] == index) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StageQuizScreen(
+                    idQuiz: _stage['Quiz'][index]['id'],
+                  ),
+                ),
+              );
+            }
+          },
+          color: _stage['finished'] < index
+              ? const Color.fromARGB(255, 141, 110, 231)
+              : _stage['finished'] == index
+                  ? const Color(0xFFFF9051)
+                  : const Color.fromARGB(255, 141, 110, 231),
+          outlineColor: Colors.white,
+          child: Center(
+            child: _stage['finished'] >= index
+                ? Text(
+                    '${index + 1}',
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(
+                    Icons.lock,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+          ),
+        ),
+        Positioned.fill(
+          top: -40,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: CustomPaint(
+              size: const Size(2, 40),
+              painter: HorizontalLinePainter(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
