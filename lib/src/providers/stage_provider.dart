@@ -23,7 +23,7 @@ class StageProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> getEntries(int idQuiz) async {
+  Future<Map<String, dynamic>> getNextEntry(int idQuiz) async {
     try {
       final response = await _apiService.fetchData('quiz/$idQuiz');
       return response;
@@ -44,6 +44,34 @@ class StageProvider with ChangeNotifier {
   Future<Map<String, dynamic>> getMateri(int idStage) async {
     try {
       final response = await _apiService.fetchData('stage/$idStage/materi');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> answerEntry(
+    int idQuiz,
+    int idEntry,
+    String answer,
+  ) async {
+    try {
+      final response = await _apiService.postData(
+        'quiz/$idQuiz/$idEntry/answer',
+        {
+          "answer": answer,
+        },
+      );
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> info(int idQuiz) async {
+    try {
+      final response = await _apiService.fetchData('quiz/$idQuiz');
+      print(response);
       return response;
     } catch (e) {
       return {'error': true, 'message': 'An error occurred'};
