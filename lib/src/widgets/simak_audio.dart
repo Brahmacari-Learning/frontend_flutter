@@ -49,7 +49,8 @@ class _SimakAudioState extends State<SimakAudio> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MusicPlayerWidget(
-                        url: "https://cdn.hmjtiundiksha.com/${model['audio']}"),
+                        url:
+                            "https://cdn.hmjtiundiksha.com/${model['audioUrl']}"),
                     const SizedBox(
                       height: 20,
                     ),

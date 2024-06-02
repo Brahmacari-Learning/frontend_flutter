@@ -23,7 +23,6 @@ class _StageScreenState extends State<StageScreen> {
     final stage = await provider.getStage(widget.idStage);
 
     setState(() {
-      print(stage);
       _stage = stage;
     });
   }
