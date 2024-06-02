@@ -34,6 +34,67 @@ class _StageScreenState extends State<StageScreen> {
     _futureGetStage = getStage();
   }
 
+  onClickQuiz(int id, int index) async {
+    final provider = Provider.of<StageProvider>(context, listen: false);
+
+    if (_stage['finished'] > index) {
+      final result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Peringatan', style: TextStyle(fontSize: 24)),
+            content: const Text(
+              'Anda yakin ingin mengulang menjawab quiz ini?',
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Ya'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('Tidak'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (!result!) {
+        return;
+      }
+
+      await provider.restartQuiz(id);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StageQuizScreen(
+            idQuiz: id,
+          ),
+        ),
+      );
+      setState(() {
+        _futureGetStage = getStage();
+      });
+    } else if (_stage['finished'] == index) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StageQuizScreen(
+            idQuiz: id,
+          ),
+        ),
+      );
+      setState(() {
+        _futureGetStage = getStage();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AuthWrapper(
@@ -113,17 +174,8 @@ class _StageScreenState extends State<StageScreen> {
                       alignment: Alignment.center,
                       children: [
                         HexagonalButton(
-                          onPressed: () {
-                            if (_stage['finished'] == 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StageQuizScreen(
-                                    idQuiz: _stage['Quiz'][0]['id'],
-                                  ),
-                                ),
-                              );
-                            }
+                          onPressed: () async {
+                            onClickQuiz(_stage['Quiz'][0]['id'], 0);
                           },
                           color: _stage['finished'] == 0
                               ? const Color(0xFFFF9051)
@@ -157,7 +209,6 @@ class _StageScreenState extends State<StageScreen> {
                     ),
                     HexagonalButton(
                       onPressed: () {
-                        print(_stage);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -258,17 +309,21 @@ class _StageScreenState extends State<StageScreen> {
       alignment: Alignment.center,
       children: [
         HexagonalButton(
-          onPressed: () {
-            if (_stage['finished'] == index) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StageQuizScreen(
-                    idQuiz: _stage['Quiz'][index]['id'],
-                  ),
-                ),
-              );
-            }
+          onPressed: () async {
+            // if (_stage['finished'] == index) {
+            //   await Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => StageQuizScreen(
+            //         idQuiz: _stage['Quiz'][index]['id'],
+            //       ),
+            //     ),
+            //   );
+            //   setState(() {
+            //     _futureGetStage = getStage();
+            //   });
+            // }
+            onClickQuiz(_stage['Quiz'][index]['id'], index);
           },
           color: _stage['finished'] < index
               ? const Color.fromARGB(255, 141, 110, 231)
