@@ -194,7 +194,7 @@ class _StageScreenState extends State<StageScreen> {
                     children: [
                       HexagonalButton(
                         onPressed: () {
-                          if (_stage['finished'] == index + 1) {
+                          if (_stage['finished'] == index) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -205,14 +205,14 @@ class _StageScreenState extends State<StageScreen> {
                             );
                           }
                         },
-                        color: _stage['finished'] < index + 1
+                        color: _stage['finished'] < index
                             ? const Color.fromARGB(255, 141, 110, 231)
-                            : _stage['finished'] == index + 1
+                            : _stage['finished'] == index
                                 ? const Color(0xFFFF9051)
                                 : const Color.fromARGB(255, 141, 110, 231),
                         outlineColor: Colors.white,
                         child: Center(
-                          child: _stage['finished'] >= index + 1
+                          child: _stage['finished'] >= index
                               ? Text(
                                   '${index + 1}',
                                   style: const TextStyle(
