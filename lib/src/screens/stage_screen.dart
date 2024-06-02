@@ -242,6 +242,7 @@ class _StageScreenState extends State<StageScreen> {
                     ),
                   ] else
                     quizButtonVertical(index, context),
+                  const SizedBox(height: 40),
                 ],
               ],
             );
