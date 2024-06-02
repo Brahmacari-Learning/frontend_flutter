@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/widgets/isian_widget.dart';
 import 'package:vedanta_frontend/src/widgets/mencocokkan_gambar.dart';
+import 'package:vedanta_frontend/src/widgets/quiz_claim_reward_kerja_bagus.dart';
 import 'package:vedanta_frontend/src/widgets/simak_audio.dart';
 
-import '../widgets/button_option_full_width.dart';
 import '../widgets/pilihan_gandaru.dart';
 
 class StageQuizScreen extends StatefulWidget {
@@ -82,6 +82,8 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
         }
         if (info['type'] == 'entry') {
           return EntryQuizView(entry: info['quizEntry'], answer: _answer);
+        } else if (info['type'] == 'COMPLETING') {
+          return KerjaBagus(info: info);
         } else {
           return const Center(
             child: Text('Tunggu dulu'),

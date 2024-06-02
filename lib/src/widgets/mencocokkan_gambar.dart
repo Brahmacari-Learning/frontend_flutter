@@ -70,19 +70,31 @@ class _MencocokkanGambaruState extends State<MencocokkanGambaru> {
                   const SizedBox(
                     height: 20,
                   ),
-                  buttonOptionFullWidth(model['optionOne'], () {}),
+                  ButtonOptionFullWidth(
+                    text: model['optionOne'],
+                    onClick: () {},
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionTwo'], () {}),
+                  ButtonOptionFullWidth(
+                    text: model['optionTwo'],
+                    onClick: () {},
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionThree'], () {}),
+                  ButtonOptionFullWidth(
+                    text: model['optionThree'],
+                    onClick: () {},
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionFour'], () {}),
+                  ButtonOptionFullWidth(
+                    text: model['optionFour'],
+                    onClick: () {},
+                  ),
                 ],
               ),
             ),

@@ -55,27 +55,39 @@ class _PilihanGandaruState extends State<PilihanGandaru> {
                   const SizedBox(
                     height: 20,
                   ),
-                  buttonOptionFullWidth(model['optionOne'], () {
-                    widget.answer('a', context);
-                  }),
+                  ButtonOptionFullWidth(
+                    text: model['optionOne'],
+                    onClick: () {
+                      widget.answer('a', context);
+                    },
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionTwo'], () {
-                    widget.answer('b', context);
-                  }),
+                  ButtonOptionFullWidth(
+                    text: model['optionTwo'],
+                    onClick: () {
+                      widget.answer('b', context);
+                    },
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionThree'], () {
-                    widget.answer('c', context);
-                  }),
+                  ButtonOptionFullWidth(
+                    text: model['optionThree'],
+                    onClick: () {
+                      widget.answer('c', context);
+                    },
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  buttonOptionFullWidth(model['optionFour'], () {
-                    widget.answer('d', context);
-                  }),
+                  ButtonOptionFullWidth(
+                    text: model['optionFour'],
+                    onClick: () {
+                      widget.answer('d', context);
+                    },
+                  ),
                 ],
               ),
             ),
