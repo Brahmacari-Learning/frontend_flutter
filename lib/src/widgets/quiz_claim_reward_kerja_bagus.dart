@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vedanta_frontend/src/screens/klasemen_screen.dart';
 import 'package:vedanta_frontend/src/widgets/button_option_full_width.dart';
 
 class KerjaBagus extends StatefulWidget {
@@ -108,7 +109,16 @@ class _KerjaBagusState extends State<KerjaBagus> {
             ),
             ButtonOptionFullWidth(
               text: "Lihat Klasemen",
-              onClick: () {},
+              onClick: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => KlasemenScreen(
+                      id: info['id'],
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
