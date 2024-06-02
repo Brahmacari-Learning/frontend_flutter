@@ -66,13 +66,19 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
       future: _futureQuiz,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const Scaffold(
+            backgroundColor: Color(0xFF9C7AFF),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
         if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
+          return Scaffold(
+            backgroundColor: const Color(0xFF9C7AFF),
+            body: Center(
+              child: Text('Error: ${snapshot.error}'),
+            ),
           );
         }
         if (info.isEmpty) {
@@ -110,7 +116,7 @@ class _EntryQuizViewState extends State<EntryQuizView> {
       case 'pilgan':
         return PilihanGandaru(entry: widget.entry, answer: widget.answer);
       case 'cocokgambar':
-        return MencocokkanGambaru(entry: widget.entry);
+        return MencocokkanGambaru(entry: widget.entry, answer: widget.answer);
       case 'isian':
         return Isian(entry: widget.entry, answer: widget.answer);
       case 'simakaudio':
