@@ -1,6 +1,7 @@
 // lib/src/providers/auth_provider.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import '../services/api_service.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -19,18 +20,24 @@ class AuthProvider with ChangeNotifier {
       // Handle the response, save tokens, etc.
       final token = response['token'];
 
-      if (rememberMe) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('email', email);
-        await prefs.setString('password', password);
-      }
-
+      // if (rememberMe) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', email);
+      await prefs.setString('password', password);
+
+      // }
       await prefs.setString('token', token);
+      final user = await UserProvider().getInfo();
+
+      await prefs.setString('name', user['user']['name']);
+      await prefs.setString(
+          'profilePicture', '${user['user']['profilePicture']}');
+
       _isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
+      print(e);
       _isLoading = false;
       notifyListeners();
       return false;

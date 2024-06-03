@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final int index;
-  const AppBarWidget(
-      {super.key, required this.scaffoldKey, required this.index});
+  final String name;
+  final String profilePicture;
+  const AppBarWidget({
+    super.key,
+    required this.scaffoldKey,
+    required this.index,
+    required this.name,
+    required this.profilePicture,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
@@ -13,25 +22,23 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     Widget userAvatar = Row(
       children: [
-        Image.asset(
-          fit: BoxFit.fill,
-          'lib/assets/images/user.png',
-          width: 30,
-          height: 30,
+        AvatarWidget(
+          avatarUrl: profilePicture == 'null' ? null : profilePicture,
+          name: name,
         ),
         const SizedBox(width: 10),
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'John Doe',
-              style: TextStyle(
+              name,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
             ),
-            Text(
+            const Text(
               "Siswa",
               style: TextStyle(
                 color: Colors.white,
