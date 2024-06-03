@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
