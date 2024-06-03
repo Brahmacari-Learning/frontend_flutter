@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
 import '../providers/auth_provider.dart';
@@ -28,6 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 100.0),
@@ -36,13 +42,25 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('Masuk ke akun',
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: const Text(
+                  'Masuk ke akun',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
+              const SizedBox(height: 10),
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('Halo, Selamat datang',
-                    style: Theme.of(context).textTheme.titleSmall),
+                child: Text(
+                  'Halo, Selamat datang',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
               ),
               const SizedBox(height: 50),
               Form(
@@ -54,8 +72,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
-                            labelText: 'Email',
-                            icon: Icon(Icons.alternate_email_rounded)),
+                          labelText: 'Email',
+                          icon: Icon(
+                            Icons.alternate_email_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your email';
@@ -67,8 +89,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: const InputDecoration(
-                            labelText: 'Password',
-                            icon: Icon(Icons.lock_outline_rounded)),
+                          labelText: 'Password',
+                          icon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         obscureText: true,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -81,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         children: [
                           Transform.scale(
-                            scale: 0.7,
+                            scale: 0.8,
                             child: Switch(
                               value: _rememberMe,
                               onChanged: (value) {
@@ -89,47 +115,65 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _rememberMe = value;
                                 });
                               },
-                              activeTrackColor: Colors.blue,
+                              activeTrackColor: Colors.purple,
                               inactiveThumbColor: Colors.white,
                             ),
                           ),
-                          const Text('Remember Me',
-                              style: TextStyle(fontSize: 12)),
+                          const Text(
+                            'Ingat Saya',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromARGB(255, 90, 90, 90),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
                       authProvider.isLoading
                           ? const CircularProgressIndicator()
-                          : ElevatedButtonTheme(
-                              data: Theme.of(context).elevatedButtonTheme,
-                              child: ElevatedButton(
-                                style: ElevatedButtonTheme.of(context).style,
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 182, 69, 202),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        bool success = await authProvider.login(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                          _rememberMe,
+                                        );
+                                        if (success) {
+                                          Navigator.of(context)
+                                              .pushReplacementNamed('/home');
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text('Login failed')),
+                                          );
+                                        }
+                                      }
+                                    },
                                   ),
                                 ),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    bool success = await authProvider.login(
-                                      _emailController.text,
-                                      _passwordController.text,
-                                      _rememberMe,
-                                    );
-                                    if (success) {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/home');
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Login failed')),
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
+                              ],
                             ),
                       const SizedBox(height: 20),
                       // Register text redirect
@@ -144,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Text(
                               'Daftar',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Colors.purple,
                               ),
                             ),
                           ),
