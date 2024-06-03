@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
 
 class KelasQuizResultScreen extends StatefulWidget {
   final int idQuiz;
@@ -385,10 +387,6 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
   }
 
   simakAudio(Map<String, dynamic> data, int index) {
-    return Container();
-  }
-
-  cocokGambar(Map<String, dynamic> data, int index) {
     final options = ['optionOne', 'optionTwo', 'optionThree', 'optionFour'];
     final opt = ['a', 'b', 'c', 'd'];
     return Padding(
@@ -402,7 +400,13 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
+            softWrap: true,
           ),
+          const SizedBox(height: 20),
+          MusicPlayerWidget(
+              url:
+                  'https://cdn.hmjtiundiksha.com/${data['model']['audioUrl']}'),
+          const SizedBox(height: 20),
           for (int i = 0; i < options.length; i++) ...[
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -413,7 +417,7 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
                       ? const Color.fromARGB(132, 165, 214, 167)
                       : data['model']['correct'] != data['answer'] &&
                               data['answer'] == opt[i]
-                          ? const Color.fromARGB(108, 236, 142, 135)
+                          ? const Color.fromARGB(110, 244, 67, 54)
                           : Colors.transparent,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -444,6 +448,110 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  cocokGambar(Map<String, dynamic> data, int index) {
+    final options = ['optionOne', 'optionTwo', 'optionThree', 'optionFour'];
+    final opt = ['a', 'b', 'c', 'd'];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${index + 1}. ${data['model']['title']}',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 4 / 3,
+            ),
+            itemCount: options.length,
+            itemBuilder: (context, i) {
+              return GestureDetector(
+                onTap: () {
+                  // Handle option selection
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: data['model']['correct'] == opt[i]
+                        ? const Color.fromARGB(132, 165, 214, 167)
+                        : data['model']['correct'] != data['answer'] &&
+                                data['answer'] == opt[i]
+                            ? const Color.fromARGB(108, 236, 142, 135)
+                            : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.network(
+                          'https://cdn.hmjtiundiksha.com/${data['model'][options[i]]}',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: Colors.red,
+                              size: 50,
+                            ),
+                          ),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      if (data['model']['correct'] == opt[i])
+                        const Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
+                        )
+                      else if (data['model']['correct'] != data['answer'] &&
+                          data['answer'] == opt[i])
+                        const Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
