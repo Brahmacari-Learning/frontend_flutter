@@ -166,9 +166,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           _passwordController.text,
                                         );
                                         if (success) {
+                                          // ignore: use_build_context_synchronously
                                           Navigator.of(context)
                                               .pushReplacementNamed('/home');
                                         } else {
+                                          // ignore: use_build_context_synchronously
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/screens/stage_materi_screen.dart';
@@ -33,10 +34,29 @@ class _StageScreenState extends State<StageScreen> {
     _futureGetStage = getStage();
   }
 
+  stateQuiz(int index) {
+    if (_stage['Quiz'][index]['completed']) {
+      return 'completed';
+    } else if (index == _stage['firstNotCompletedIndex']) {
+      return 'mustDo';
+    }
+    return 'locked';
+  }
+
+  generateColor(int index) {
+    final state = stateQuiz(index);
+    if (state == 'completed') {
+      return const Color.fromARGB(255, 81, 104, 81);
+    } else if (state == 'locked') {
+      return const Color.fromARGB(255, 39, 39, 39);
+    }
+    return const Color.fromARGB(255, 243, 159, 33);
+  }
+
   onClickQuiz(int id, int index) async {
     final provider = Provider.of<StageProvider>(context, listen: false);
-
-    if (_stage['finished'] > index) {
+    final state = stateQuiz(index);
+    if (state == 'completed') {
       final result = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -79,7 +99,7 @@ class _StageScreenState extends State<StageScreen> {
       setState(() {
         _futureGetStage = getStage();
       });
-    } else if (_stage['finished'] == index) {
+    } else if (state == 'mustDo') {
       await Navigator.push(
         context,
         MaterialPageRoute(
@@ -144,7 +164,7 @@ class _StageScreenState extends State<StageScreen> {
                               },
                             );
                           },
-                          color: const Color.fromARGB(255, 71, 117, 216),
+                          color: const Color.fromARGB(255, 218, 170, 13),
                           outlineColor: Colors.white,
                           child: const Center(
                             child: Icon(
@@ -176,9 +196,7 @@ class _StageScreenState extends State<StageScreen> {
                           onPressed: () async {
                             onClickQuiz(_stage['Quiz'][0]['id'], 0);
                           },
-                          color: _stage['finished'] == 0
-                              ? const Color(0xFFFF9051)
-                              : const Color(0xFF10CCCC),
+                          color: generateColor(0),
                           outlineColor: Colors.white,
                           child: const Center(
                             child: Text(
@@ -247,6 +265,7 @@ class _StageScreenState extends State<StageScreen> {
                 ),
                 const SizedBox(height: 40),
                 for (int index = 1; index < _stage['quizCount']; index++) ...[
+                  // LAST ROW (with claim hadiah)
                   if (index + 1 == _stage['quizCount']) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -259,35 +278,7 @@ class _StageScreenState extends State<StageScreen> {
                           width: 40,
                         ),
                         // Claim hadiah
-                        Stack(
-                          clipBehavior: Clip.none,
-                          alignment: Alignment.center,
-                          children: [
-                            HexagonalButton(
-                              onPressed: () {
-                                print('Hexagonal button pressed');
-                              },
-                              color: const Color.fromARGB(255, 92, 92, 92),
-                              outlineColor: Colors.white,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.lock,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Positioned.fill(
-                              left: -40,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: CustomPaint(
-                                  size: const Size(40, 2),
-                                  painter: HorizontalLinePainter(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        claimHadiah(),
                       ],
                     ),
                   ] else
@@ -302,48 +293,153 @@ class _StageScreenState extends State<StageScreen> {
     );
   }
 
+  Stack claimHadiah() {
+    final claimable = _stage['quizCount'] == _stage['finished'];
+    final notClaimed = !_stage['rewardClaimed'];
+    final claimed = !notClaimed;
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        HexagonalButton(
+          onPressed: () {
+            if (notClaimed && claimable) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    backgroundColor: Colors.white,
+                    title: const Text(
+                      'Klaim Hadiah mu!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                    content: const Text(
+                      'Selamat! Anda telah memenangkan hadiah. Klik klaim untuk menerima hadiah Anda.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text(
+                          'Batal',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Klaim',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          final stageProvider = context.read<StageProvider>();
+                          final response =
+                              await stageProvider.claimReward(_stage['id']);
+
+                          if (response['reward']) {
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Hadiah Anda telah diterima'),
+                              ),
+                            );
+                          } else {
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(response['message']),
+                                backgroundColor: Colors.purple,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+          color: notClaimed && claimable
+              ? const Color.fromARGB(255, 17, 223, 93)
+              : claimed
+                  ? Colors.purple
+                  : const Color.fromARGB(255, 71, 71, 71),
+          outlineColor: Colors.white,
+          child: Center(
+            child: notClaimed && !claimable
+                ? const Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                  )
+                : claimed
+                    ? Image.asset(
+                        'lib/assets/images/gift-claimed.png',
+                        width: 30,
+                      )
+                    : Image.asset(
+                        'lib/assets/images/gift.png',
+                        width: 30,
+                      ),
+          ),
+        ),
+        Positioned.fill(
+          left: -40,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: CustomPaint(
+              size: const Size(40, 2),
+              painter: HorizontalLinePainter(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Stack quizButtonVertical(int index, BuildContext context) {
+    final state = stateQuiz(index);
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
         HexagonalButton(
           onPressed: () async {
-            // if (_stage['finished'] == index) {
-            //   await Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => StageQuizScreen(
-            //         idQuiz: _stage['Quiz'][index]['id'],
-            //       ),
-            //     ),
-            //   );
-            //   setState(() {
-            //     _futureGetStage = getStage();
-            //   });
-            // }
             onClickQuiz(_stage['Quiz'][index]['id'], index);
           },
-          color: _stage['finished'] < index
-              ? const Color.fromARGB(255, 141, 110, 231)
-              : _stage['finished'] == index
-                  ? const Color(0xFFFF9051)
-                  : const Color.fromARGB(255, 141, 110, 231),
+          color: generateColor(index),
           outlineColor: Colors.white,
           child: Center(
-            child: _stage['finished'] >= index
-                ? Text(
+            child: state == 'locked'
+                ? const Icon(
+                    Icons.lock,
+                    size: 30,
+                    color: Colors.white,
+                  )
+                : Text(
                     '${index + 1}',
                     style: const TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),
-                  )
-                : const Icon(
-                    Icons.lock,
-                    size: 30,
-                    color: Colors.white,
                   ),
           ),
         ),
