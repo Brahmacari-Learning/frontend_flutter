@@ -12,6 +12,7 @@ class LevelWidget extends StatefulWidget {
 
 class _LevelWidgetState extends State<LevelWidget> {
   List<dynamic> stages = [];
+  int initialUnlockedIndex = 0;
 
   Future<void> _futureGetStage = Future.value();
 
@@ -21,6 +22,7 @@ class _LevelWidgetState extends State<LevelWidget> {
 
     setState(() {
       this.stages = stages['stage'];
+      initialUnlockedIndex = stages['lastUnlockedIndex'];
     });
   }
 
@@ -48,7 +50,7 @@ class _LevelWidgetState extends State<LevelWidget> {
           }
           return DefaultTabController(
             length: stages.length,
-            initialIndex: 0,
+            initialIndex: initialUnlockedIndex,
             child: Column(
               children: [
                 SizedBox(
@@ -165,7 +167,11 @@ class _LevelWidgetState extends State<LevelWidget> {
                                                   title: stages[index]['title'],
                                                 ),
                                               ),
-                                            );
+                                            ).then((e) {
+                                              setState(() {
+                                                _futureGetStage = getStages();
+                                              });
+                                            });
                                           },
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
@@ -192,7 +198,7 @@ class _LevelWidgetState extends State<LevelWidget> {
                                               ] else ...[
                                                 Text(
                                                   stages[index]['finished'] > 0
-                                                      ? 'LIHAT PROGRESS'
+                                                      ? 'LIHAT PROGRES'
                                                       : 'AYO MAIN',
                                                   style: const TextStyle(
                                                     letterSpacing: 3,

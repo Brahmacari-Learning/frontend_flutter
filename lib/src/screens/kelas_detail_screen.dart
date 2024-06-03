@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/kelas_quiz_result_screen.dart';
 import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
@@ -148,7 +149,18 @@ class _TugasTabState extends State<_TugasTab> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            KelasQuizResultScreen(
+                                          idKelas: widget.id,
+                                          idQuiz: tugas['quizzes'][i]['id'],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color.fromARGB(
                                         255, 209, 209, 209),

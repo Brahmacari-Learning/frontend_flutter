@@ -70,31 +70,32 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(
-                            user['profilePicture'] ?? "",
-                          ),
+                          backgroundImage:
+                              NetworkImage(user['profilePicture'] ?? ""),
                         ),
                         const SizedBox(width: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user['name'],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user['name'],
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              user['email'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                user['email'],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         IconButton(
                           icon: const Icon(Icons.edit),
@@ -112,42 +113,33 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Divider(
-                    thickness: 1,
-                    indent: 30,
-                    endIndent: 30,
-                  ),
+                  const Divider(thickness: 1, indent: 30, endIndent: 30),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Column(
+                        Column(
                           children: [
-                            Text(
+                            const Text(
                               '2+ hours',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
                               'Waktu Belajar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
-                        const SizedBox(width: 30),
                         Container(
                           width: 1,
                           height: 40,
                           color: Colors.grey,
                         ),
-                        const SizedBox(width: 30),
                         Column(
                           children: [
                             Text(
@@ -158,12 +150,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            const Text(
+                            Text(
                               'Lencana',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
@@ -174,15 +163,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFFDADADA),
-                        width: 1,
-                      ),
+                      border:
+                          Border.all(color: const Color(0xFFDADADA), width: 1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       children: [
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -205,8 +192,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               const Text(
                                 'Kelas',
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -227,8 +214,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             const Text(
                               'Privasi',
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -241,46 +228,50 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     padding: const EdgeInsets.all(20),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFFDADADA),
-                        width: 1,
-                      ),
+                      border:
+                          Border.all(color: const Color(0xFFDADADA), width: 1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Setting',
+                          'Pengaturan',
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 15),
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             themeProvider.toggleTheme();
                           },
                           child: const Text(
-                            'Switch to themes',
+                            'Ubah tema tampilan',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
                               color: Color(0xFF3E5FAF),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 15),
-                        InkWell(
+                        const SizedBox(height: 5),
+                        GestureDetector(
                           onTap: () {
                             showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: const Text("Keluar"),
+                                  title: const Text(
+                                    "Keluar",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
                                   content: const Text(
-                                      "Apakah Anda Ingin Keluar dari Akun ini"),
+                                      "Apakah Anda Yakin Ingin Keluar dari Akun ini?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () async {
@@ -290,10 +281,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                       },
                                       style: TextButton.styleFrom(
                                         backgroundColor:
-                                            const Color(0xFFEB4105),
+                                            Color.fromARGB(255, 157, 157, 157),
                                       ),
                                       child: const Text(
-                                        "Iya",
+                                        "Ya",
                                         style: TextStyle(
                                           color: Colors.white,
                                         ),
@@ -305,7 +296,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                       },
                                       style: TextButton.styleFrom(
                                         backgroundColor:
-                                            const Color(0xFF01B0B7),
+                                            Color.fromARGB(255, 147, 52, 230),
                                       ),
                                       child: const Text(
                                         "Tidak",
@@ -320,10 +311,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             );
                           },
                           child: const Text(
-                            'Logout Account',
+                            'Keluar',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
                               color: Color(0xFFFB6D64),
                             ),
                           ),

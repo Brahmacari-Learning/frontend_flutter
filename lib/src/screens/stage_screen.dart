@@ -543,7 +543,7 @@ class HexagonClipper extends CustomClipper<Path> {
     final path = Path();
     final width = size.width;
     final height = size.height;
-    final sideLength = width / 2;
+    // final sideLength = width / 2;
 
     path.moveTo(width * 0.5, 0);
     path.lineTo(width, height * 0.25);

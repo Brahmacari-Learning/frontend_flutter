@@ -44,4 +44,14 @@ class ClassProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> quizResult(int classId, int idQuiz) async {
+    try {
+      final response =
+          await _apiService.fetchData('class/$classId/tasks/quiz/$idQuiz');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }
