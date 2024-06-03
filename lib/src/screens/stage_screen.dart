@@ -278,7 +278,7 @@ class _StageScreenState extends State<StageScreen> {
                           width: 40,
                         ),
                         // Claim hadiah
-                        claimHadiah(),
+                        claimHadiah(context),
                       ],
                     ),
                   ] else
@@ -293,7 +293,7 @@ class _StageScreenState extends State<StageScreen> {
     );
   }
 
-  Stack claimHadiah() {
+  Stack claimHadiah(BuildContext context) {
     final claimable = _stage['quizCount'] == _stage['finished'];
     final notClaimed = !_stage['rewardClaimed'];
     final claimed = !notClaimed;
@@ -348,27 +348,39 @@ class _StageScreenState extends State<StageScreen> {
                           'Klaim',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () async {
-                          final stageProvider = context.read<StageProvider>();
-                          final response =
-                              await stageProvider.claimReward(_stage['id']);
-
-                          if (response['reward']) {
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Hadiah Anda telah diterima'),
-                              ),
-                            );
-                          } else {
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(response['message']),
-                                backgroundColor: Colors.purple,
-                              ),
-                            );
-                          }
+                        onPressed: () {
+                          final stageProvider = Provider.of<StageProvider>(
+                            context,
+                            listen: false,
+                          );
+                          stageProvider.claimReward(_stage['id']).then(
+                            (response) {
+                              if (response['reward'] != null) {
+                                if (mounted) {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Hadiah Anda telah diterima'),
+                                    ),
+                                  );
+                                  setState(() {
+                                    _futureGetStage = getStage();
+                                  });
+                                }
+                              } else {
+                                if (mounted) {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['message']),
+                                      backgroundColor: Colors.purple,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          );
                         },
                       ),
                     ],
