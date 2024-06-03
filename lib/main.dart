@@ -29,19 +29,23 @@ void onDidReceiveNotificationResponse(
   }
 }
 
+Future<void> initializeNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('vedanta_logo');
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var initializedSettingsAndroid =
-      const AndroidInitializationSettings('vedanta_logo');
-  var initializationSettings =
-      InitializationSettings(android: initializedSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+  await initializeNotifications();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.blueAccent,
+      statusBarColor: Color.fromARGB(255, 226, 24, 172),
     ),
   );
 
@@ -77,9 +81,7 @@ class MainApp extends StatelessWidget {
             routes: {
               '/login': (context) => const LoginScreen(),
               '/register': (context) => const RegisterScreen(),
-              '/home': (context) => const AuthWrapper(
-                    child: HomeScreen(),
-                  ),
+              '/home': (context) => const AuthWrapper(child: HomeScreen()),
             },
           );
         },

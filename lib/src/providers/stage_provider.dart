@@ -86,4 +86,14 @@ class StageProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> claimReward(int idStage) async {
+    try {
+      final response =
+          await _apiService.fetchData('stage/$idStage/claim-hadiah');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }

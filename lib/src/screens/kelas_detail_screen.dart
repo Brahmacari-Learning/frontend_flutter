@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
@@ -58,13 +59,175 @@ class _KelasDetailScreenState extends State<KelasDetailScreen> {
   }
 }
 
-class _TugasTab extends StatelessWidget {
+class _TugasTab extends StatefulWidget {
   final int id;
+
   const _TugasTab({required this.id});
 
   @override
+  State<_TugasTab> createState() => _TugasTabState();
+}
+
+class _TugasTabState extends State<_TugasTab> {
+  Future<void> _futureTugas = Future.value();
+  Map<String, dynamic> tugas = {};
+
+  Future<void> _getTugas() async {
+    final provider = Provider.of<ClassProvider>(context, listen: false);
+    final result = await provider.allTugas(widget.id);
+    setState(() {
+      tugas = result;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureTugas = _getTugas();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return FutureBuilder(
+      future: _futureTugas,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height,
+            child: const CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return const Text('An error occurred');
+        }
+
+        if (tugas.isEmpty) {
+          return const Center(
+            child: Text('Tugas belum found'),
+          );
+        }
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Daftar Quiz",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                for (var i = 0; i < tugas['quizzes'].length; i++) ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    width: double.infinity,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tugas['quizzes'][i]['title'],
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          if (tugas['quizzes'][i]['userQuizResult'].length >
+                              0) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 209, 209, 209),
+                                  ),
+                                  child: const Text(
+                                    "Lihat Hasil",
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ] else ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => StageQuizScreen(
+                                          idQuiz: tugas['quizzes'][i]['id'],
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {
+                                      _futureTugas = _getTugas();
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 209, 209, 209),
+                                  ),
+                                  child: const Text(
+                                    "Mulai",
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 27, 27, 27)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ]
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+                const Text(
+                  "Daftar Tugas Doa",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                for (var i = 0; i < tugas['allHomeworkDoa'].length; i++) ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    child: Text(
+                      tugas['allHomeworkDoa'][i]['doa']['title'],
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  )
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

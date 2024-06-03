@@ -39,13 +39,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('Buat akun',
-                    style: Theme.of(context).textTheme.titleMedium),
+                child: const Text(
+                  'Buat akun',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
+              const SizedBox(height: 10),
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('Halo, Selamat datang',
-                    style: Theme.of(context).textTheme.titleSmall),
+                child: Text(
+                  'Halo, Selamat datang',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
               ),
               const SizedBox(height: 50),
               Form(
@@ -57,8 +69,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
-                            labelText: 'Email',
-                            icon: Icon(Icons.alternate_email_rounded)),
+                          labelText: 'Email',
+                          icon: Icon(
+                            Icons.alternate_email_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your email';
@@ -69,8 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextFormField(
                         controller: _usernameController,
                         decoration: const InputDecoration(
-                            labelText: 'Username',
-                            icon: Icon(Icons.person_outline_rounded)),
+                          labelText: 'Username',
+                          icon: Icon(
+                            Icons.person_outline_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your username';
@@ -81,8 +101,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: const InputDecoration(
-                            labelText: 'Password',
-                            icon: Icon(Icons.lock_outline_rounded)),
+                          labelText: 'Password',
+                          icon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         obscureText: true,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -94,8 +118,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextFormField(
                         controller: _confirmPasswordController,
                         decoration: const InputDecoration(
-                            labelText: 'Confirm Password',
-                            icon: Icon(Icons.lock_outline_rounded)),
+                          labelText: 'Confirm Password',
+                          icon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: Color.fromARGB(255, 124, 8, 156),
+                          ),
+                        ),
                         obscureText: true,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -110,36 +138,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 20),
                       authProvider.isLoading
                           ? const CircularProgressIndicator()
-                          : ElevatedButtonTheme(
-                              data: Theme.of(context).elevatedButtonTheme,
-                              child: ElevatedButton(
-                                style: ElevatedButtonTheme.of(context).style,
-                                child: const Text(
-                                  'Daftar',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 182, 69, 202),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Daftar',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        bool success =
+                                            await authProvider.register(
+                                          _emailController.text,
+                                          _usernameController.text,
+                                          _passwordController.text,
+                                        );
+                                        if (success) {
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.of(context)
+                                              .pushReplacementNamed('/home');
+                                        } else {
+                                          // ignore: use_build_context_synchronously
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content:
+                                                    Text('Register failed')),
+                                          );
+                                        }
+                                      }
+                                    },
                                   ),
                                 ),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    bool success = await authProvider.register(
-                                      _emailController.text,
-                                      _usernameController.text,
-                                      _passwordController.text,
-                                    );
-                                    if (success) {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/home');
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Register failed')),
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
+                              ],
                             ),
                       const SizedBox(height: 20),
                       // Register text redirect
@@ -154,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: const Text(
                               'Masuk',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Colors.purple,
                               ),
                             ),
                           ),

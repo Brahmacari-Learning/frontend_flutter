@@ -23,6 +23,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final decodedResponse = utf8.decode(response.bodyBytes);
       final jsonResponse = jsonDecode(decodedResponse);
+      // print(jsonResponse);
       return jsonResponse;
     } else if (response.statusCode == 401) {
       // Remove the token from shared preferences if it's unauthorized
