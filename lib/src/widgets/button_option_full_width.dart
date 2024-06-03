@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ButtonOptionFullWidth extends StatelessWidget {
+class ButtonOptionFullWidth extends StatefulWidget {
   final String text;
   final VoidCallback onClick;
   final Color color;
@@ -12,9 +12,27 @@ class ButtonOptionFullWidth extends StatelessWidget {
   });
 
   @override
+  State<ButtonOptionFullWidth> createState() => _ButtonOptionFullWidthState();
+}
+
+class _ButtonOptionFullWidthState extends State<ButtonOptionFullWidth> {
+  late Color color;
+
+  @override
+  void initState() {
+    super.initState();
+    color = widget.color;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onClick,
+      onPressed: () {
+        setState(() {
+          color = const Color.fromARGB(122, 244, 211, 180);
+        });
+        widget.onClick();
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         shape: RoundedRectangleBorder(
@@ -29,11 +47,12 @@ class ButtonOptionFullWidth extends StatelessWidget {
         minimumSize: const Size(double.infinity, 70),
       ),
       child: Text(
-        text,
+        widget.text,
         style: const TextStyle(
           fontSize: 20,
           color: Colors.white,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }

@@ -161,7 +161,7 @@ class _StageMateriScreenState extends State<StageMateriScreen> {
                                     );
 
                                     final response = await chatProvider.quickChat(
-                                        'Berikan fakta menarik dari materi ${_materi['title']}. Dimana ${_materi['description']}');
+                                        'Berikan fakta menarik dari materi ${_materi['title']}. ${_materi['description']}');
                                     setState(() {
                                       faktaMenarik = response['text'];
                                       _faktaMenarikLoading = false;
@@ -184,7 +184,7 @@ class _StageMateriScreenState extends State<StageMateriScreen> {
                             ),
                             if (_faktaMenarikLoading) ...[
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // Avatar
                                   Shimmer.fromColors(
@@ -212,8 +212,8 @@ class _StageMateriScreenState extends State<StageMateriScreen> {
                                         decoration: const BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
                                             topRight: Radius.circular(20),
+                                            bottomLeft: Radius.circular(20),
                                             bottomRight: Radius.circular(20),
                                           ),
                                         ),
@@ -227,7 +227,7 @@ class _StageMateriScreenState extends State<StageMateriScreen> {
                             if (faktaMenarik.isNotEmpty &&
                                 !_faktaMenarikLoading) ...[
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.asset('lib/assets/images/ganabot.png'),
                                   const SizedBox(
@@ -238,8 +238,8 @@ class _StageMateriScreenState extends State<StageMateriScreen> {
                                       decoration: const BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10.0),
                                           topRight: Radius.circular(10.0),
+                                          bottomLeft: Radius.circular(10.0),
                                           bottomRight: Radius.circular(10.0),
                                         ),
                                       ),
