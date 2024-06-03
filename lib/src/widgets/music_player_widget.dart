@@ -21,7 +21,6 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
   void initState() {
     super.initState();
     _audioPlayerService = AudioPlayerService();
-    _audioPlayerService.play(widget.url);
 
     _audioPlayerService.positionStream.listen((position) {
       setState(() {
@@ -51,6 +50,14 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
     super.dispose();
   }
 
+  void _togglePlayPause() {
+    if (_isPlaying) {
+      _audioPlayerService.pause();
+    } else {
+      _audioPlayerService.play(widget.url);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,13 +76,7 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
           children: [
             IconButton(
               icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: () {
-                if (_isPlaying) {
-                  _audioPlayerService.pause();
-                } else {
-                  _audioPlayerService.resume();
-                }
-              },
+              onPressed: _togglePlayPause,
             ),
             IconButton(
               icon: const Icon(Icons.stop),
