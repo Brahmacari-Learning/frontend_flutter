@@ -60,7 +60,7 @@ class TugasTabAlarm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Tab 1'),
+      child: Text('Belum ada penjadwalan'),
     );
   }
 }
@@ -102,6 +102,37 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
     });
   }
 
+  void _showPopupMenu(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to edit screen or handle edit functionality
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Delete'),
+              onTap: () {
+                Navigator.pop(context);
+                // Handle delete functionality
+                setState(() {
+                  _allAlarms.removeAt(index);
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -121,27 +152,32 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
                     itemCount: _allAlarms.length,
                     itemBuilder: (context, index) {
                       final alarm = _allAlarms[index];
-                      return Card(
-                        color: alarm['active']
-                            ? Colors.white
-                            : Colors.grey.shade300,
-                        child: ListTile(
-                          title: Text(
-                            alarm['jam'],
-                            style: const TextStyle(
-                                fontSize: 32, fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            alarm['title'],
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w400),
-                          ),
-                          trailing: Switch(
-                            value: alarm['active'],
-                            onChanged: (value) {
-                              _toggleAlarm(index);
-                            },
-                            activeTrackColor: Colors.purple,
+                      return GestureDetector(
+                        onLongPress: () {
+                          _showPopupMenu(context, index);
+                        },
+                        child: Card(
+                          color: alarm['active']
+                              ? Colors.white
+                              : Colors.grey.shade300,
+                          child: ListTile(
+                            title: Text(
+                              alarm['jam'],
+                              style: const TextStyle(
+                                  fontSize: 32, fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text(
+                              alarm['title'],
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                            trailing: Switch(
+                              value: alarm['active'],
+                              onChanged: (value) {
+                                _toggleAlarm(index);
+                              },
+                              activeTrackColor: Colors.purple,
+                            ),
                           ),
                         ),
                       );

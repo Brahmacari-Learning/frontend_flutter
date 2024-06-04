@@ -33,4 +33,36 @@ class AlarmProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> createAlarmForTugas(
+    int jam,
+    int menit,
+    int ulangiDoa,
+    int doaId,
+    int tugasId,
+  ) async {
+    try {
+      final response = await _apiService.postData(
+        'alarms/create-for-tugas',
+        {
+          'jam': '$jam:$menit',
+          'ulangiDoa': ulangiDoa,
+          'doaId': doaId,
+          'tugasId': tugasId,
+        },
+      );
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteAlarm(int id) async {
+    try {
+      final response = await _apiService.deleteData('alarms/$id');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }

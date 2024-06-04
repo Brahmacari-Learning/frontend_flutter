@@ -58,7 +58,7 @@ class _EventWidgetState extends State<EventWidget> {
                   // Rahian
                   _MisiTab(user: user, context: context),
                   // Lencana
-                  _LencanaTab(),
+                  const _LencanaTab(),
                   //Tukar
                   _TukarTab(user: user),
                 ],
@@ -334,7 +334,7 @@ class _LencanaTabState extends State<_LencanaTab> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -342,10 +342,11 @@ class _LencanaTabState extends State<_LencanaTab> {
                         Opacity(
                           opacity: lencana[i]['has'] ? 1 : 0.5,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            width: 345,
+                            margin: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 10),
+                            // width: 345,
                             decoration: BoxDecoration(
                               color: lencana[i]['has']
                                   ? HexColor(lencana[i]['color'])

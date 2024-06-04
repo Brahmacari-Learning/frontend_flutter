@@ -54,4 +54,15 @@ class ClassProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> detailTugasDoa(int classId, int idTugas) async {
+    try {
+      final response = await _apiService.fetchData(
+        'class/$classId/tasks/doa/$idTugas',
+      );
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }
