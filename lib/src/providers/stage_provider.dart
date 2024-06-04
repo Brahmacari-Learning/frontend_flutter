@@ -71,7 +71,6 @@ class StageProvider with ChangeNotifier {
   Future<Map<String, dynamic>> info(int idQuiz) async {
     try {
       final response = await _apiService.fetchData('quiz/$idQuiz');
-      print(response);
       return response;
     } catch (e) {
       return {'error': true, 'message': 'An error occurred'};

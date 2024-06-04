@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
@@ -41,7 +40,6 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
           );
         }
         final result = snapshot.data!;
-        print(result);
         return Scaffold(
           appBar: AppBar(
             title: const Text(

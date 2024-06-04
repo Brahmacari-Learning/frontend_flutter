@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
 import 'package:vedanta_frontend/src/screens/kelas_screen.dart';
+import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -63,10 +64,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              NetworkImage(user['profilePicture'] ?? ""),
+                        AvatarWidget(
+                          avatarUrl: user['profilePicture'] != null
+                              ? 'https://cdn.hmjtiundiksha.com/${user['profilePicture']}'
+                              : null,
+                          name: user['name'],
                         ),
                         const SizedBox(width: 20),
                         Expanded(

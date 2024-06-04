@@ -1,7 +1,6 @@
 // lib/src/providers/auth_provider.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import '../services/api_service.dart';
 
 class AuthProvider with ChangeNotifier {
