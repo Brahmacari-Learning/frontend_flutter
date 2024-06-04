@@ -27,11 +27,14 @@ class AuthProvider with ChangeNotifier {
 
       // }
       await prefs.setString('token', token);
-      final user = await UserProvider().getInfo();
+      // final user = await UserProvider().getInfo();
 
-      await prefs.setString('name', user['user']['name']);
-      await prefs.setString(
-          'profilePicture', '${user['user']['profilePicture']}');
+      // await prefs.setString('name', user['user']['name']);
+      // await prefs.setString(
+      //     'profilePicture', '${user['user']['profilePicture']}');
+
+      // await prefs.setInt('points', user['user']['points']);
+      // await prefs.setInt('badges', user['user']['badges']);
 
       _isLoading = false;
       notifyListeners();

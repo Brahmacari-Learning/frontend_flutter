@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
-import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
 import 'package:vedanta_frontend/src/screens/kelas_screen.dart';
@@ -14,12 +13,9 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
-  late Future<Map<String, dynamic>> _futureUserInfo;
-
   @override
   void initState() {
     super.initState();
-    _futureUserInfo = _getUserInfo();
   }
 
   Future<Map<String, dynamic>> _getUserInfo() async {
@@ -31,12 +27,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
         child: FutureBuilder<Map<String, dynamic>>(
-          future: _futureUserInfo,
+          future: _getUserInfo(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -121,16 +116,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       children: [
                         Column(
                           children: [
-                            const Text(
-                              '2+ hours',
-                              style: TextStyle(
+                            Text(
+                              '${user['points']}',
+                              style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              'Waktu Belajar',
+                              'Poin',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
@@ -243,20 +238,20 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        GestureDetector(
-                          onTap: () {
-                            themeProvider.toggleTheme();
-                          },
-                          child: const Text(
-                            'Ubah tema tampilan',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF3E5FAF),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 5),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     themeProvider.toggleTheme();
+                        //   },
+                        //   child: const Text(
+                        //     'Ubah tema tampilan',
+                        //     style: TextStyle(
+                        //       fontSize: 18,
+                        //       fontWeight: FontWeight.w400,
+                        //       color: Color(0xFF3E5FAF),
+                        //     ),
+                        //   ),
+                        // ),
+                        // const SizedBox(height: 5),
                         GestureDetector(
                           onTap: () {
                             showDialog(
@@ -280,8 +275,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                             .pushReplacementNamed('/login');
                                       },
                                       style: TextButton.styleFrom(
-                                        backgroundColor:
-                                            Color.fromARGB(255, 157, 157, 157),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 157, 157, 157),
                                       ),
                                       child: const Text(
                                         "Ya",
@@ -295,8 +290,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         Navigator.of(context).pop();
                                       },
                                       style: TextButton.styleFrom(
-                                        backgroundColor:
-                                            Color.fromARGB(255, 147, 52, 230),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 147, 52, 230),
                                       ),
                                       child: const Text(
                                         "Tidak",

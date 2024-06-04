@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // final String _baseUrl = 'http://192.168.2.3:3000/api';
-  final String _baseUrl = 'https://vedanta-pro.vercel.app/api';
+  final String _baseUrl = 'http://192.168.2.3:3000/api';
+  // final String _baseUrl = 'https://vedanta-pro.vercel.app/api';
 
   // Example of a GET request
   Future<Map<String, dynamic>> fetchData(String endpoint) async {
@@ -23,7 +23,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final decodedResponse = utf8.decode(response.bodyBytes);
       final jsonResponse = jsonDecode(decodedResponse);
-      // print(jsonResponse);
+      print(jsonResponse);
       return jsonResponse;
     } else if (response.statusCode == 401) {
       // Remove the token from shared preferences if it's unauthorized

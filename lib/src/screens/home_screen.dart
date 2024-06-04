@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vedanta_frontend/src/screens/menu/chat_bot_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/doa_page_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/event_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/discussion_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/gita_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/level_widget.dart';
-import 'package:vedanta_frontend/src/widgets/app_bar_widget.dart';
-import 'package:vedanta_frontend/src/widgets/drawer_widget.dart';
 import 'package:vedanta_frontend/src/screens/menu/profile_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,26 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<void> _futureGetPrefs = Future.value();
-  String name = '';
-  String profilePicture = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    _futureGetPrefs = getPrefs();
-  }
-
-  Future<void> getPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      name = prefs.getString('name') ?? 'Anonymous';
-      profilePicture = prefs.getString('profilePicture') ?? 'Anonymous';
-    });
-  }
-
   static const List<Widget> _widgetOptions = <Widget>[
     LevelWidget(),
     ChatBotWidget(),
@@ -50,28 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     EventWidget(),
     ProfileWidget(),
   ];
-
-  bool shouldShowAppBar(int index) {
-    // Define the indexes that should show the AppBar
-    const appBarIndexes = [
-      2,
-      3,
-      4,
-      5,
-      6
-    ]; // Add the indexes for which you want to show the AppBar
-
-    return appBarIndexes.contains(index);
-  }
-
-  bool shouldShowDrawer(int index) {
-    // Define the indexes that should show the Drawer
-    const drawerIndexes = [
-      1,
-    ]; // Add the indexes for which you want to show the Drawer
-
-    return drawerIndexes.contains(index);
-  }
 
   void _onItemTapped(int index) {
     if (mounted) {
@@ -83,90 +38,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _futureGetPrefs,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              backgroundColor: Color(0xFF9C7AFF),
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          if (snapshot.hasError) {
-            return Scaffold(
-              backgroundColor: const Color(0xFF9C7AFF),
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          }
-          return Scaffold(
-            key: _scaffoldKey,
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/lamp.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/robot.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/qna.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/book.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/hand.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/gift.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('lib/assets/images/icons/user.png',
-                      width: 24, height: 24),
-                  label: '', // No label
-                ),
-              ],
-              selectedItemColor: Colors.purple[400],
-              unselectedItemColor: Colors.grey[400],
-              backgroundColor: Colors.white,
-              showSelectedLabels: true,
-              showUnselectedLabels: false,
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
-            ),
-            backgroundColor: Colors.purple[400],
-            // Check if there is chat bot widget
-            appBar: shouldShowAppBar(_selectedIndex)
-                ? null
-                : AppBarWidget(
-                    scaffoldKey: _scaffoldKey,
-                    index: _selectedIndex,
-                    name: name,
-                    profilePicture: profilePicture,
-                  ),
-            drawer:
-                shouldShowDrawer(_selectedIndex) ? const DrawerWidget() : null,
-            body: Center(
-              child: _widgetOptions.elementAt(_selectedIndex),
-            ),
-          );
-        });
+    return Scaffold(
+      key: _scaffoldKey,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/lamp.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/robot.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/qna.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/book.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/hand.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/gift.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('lib/assets/images/icons/user.png',
+                width: 24, height: 24),
+            label: '', // No label
+          ),
+        ],
+        selectedItemColor: Colors.purple[400],
+        unselectedItemColor: Colors.grey[400],
+        backgroundColor: Colors.white,
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      backgroundColor: Colors.purple[400],
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+    );
   }
 }

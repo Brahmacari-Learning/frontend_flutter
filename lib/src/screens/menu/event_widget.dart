@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/user_provider.dart';
 
 class EventWidget extends StatefulWidget {
   const EventWidget({super.key});
@@ -8,38 +10,60 @@ class EventWidget extends StatefulWidget {
 }
 
 class _EventWidgetState extends State<EventWidget> {
+  Future<Map<String, dynamic>> _getUserInfo() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await userProvider.getInfo();
+    return response['user'];
+  }
+
+  late Map<String, dynamic> user;
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.purple,
-          elevation: 0,
-          toolbarHeight: 0,
-          bottom: const TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: "Misi"),
-              Tab(text: "Lencana"),
-              Tab(text: "Tukar"),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            // Rahian
-            _misiTab(context),
-            // Lencana
-            _lencanaTab(),
-            //Tukar
-            _tukarTab(),
-          ],
-        ),
-      ),
-    );
+    return FutureBuilder(
+        future: _getUserInfo(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return const Text('An error occurred');
+          }
+
+          user = snapshot.data!;
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.purple,
+                elevation: 0,
+                toolbarHeight: 0,
+                bottom: const TabBar(
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Color.fromARGB(255, 211, 211, 211),
+                  indicatorColor: Colors.white,
+                  tabs: [
+                    Tab(text: "Misi"),
+                    Tab(text: "Lencana"),
+                    Tab(text: "Tukar"),
+                  ],
+                ),
+              ),
+              body: TabBarView(
+                children: [
+                  // Rahian
+                  _misiTab(context),
+                  // Lencana
+                  _lencanaTab(),
+                  //Tukar
+                  _tukarTab(),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   SingleChildScrollView _tukarTab() {
@@ -248,95 +272,121 @@ class _EventWidgetState extends State<EventWidget> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 30,
+            bottom: 10,
+          ),
           width: double.infinity,
           color: Colors.purple,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
             children: [
-              const Text(
-                "Rahianmu",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
+              Positioned(
+                right: -30,
+                top: 0,
+                child: Image.asset(
+                  'lib/assets/images/gift-open.png',
+                  width: 250,
                 ),
               ),
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    fit: BoxFit.fill,
-                    'lib/assets/images/star.png',
-                    width: 40,
-                    height: 40,
-                  ),
                   const Text(
-                    '25',
+                    "Rahianmu",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Image.asset(
-                    fit: BoxFit.fill,
-                    'lib/assets/images/medal.png',
-                    width: 40,
-                    height: 40,
+                  const SizedBox(
+                    height: 20,
                   ),
-                  const Text(
-                    '4',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text("Presensi Harian",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.start),
-                      Row(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.62,
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.purple,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text("1/20",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700)),
-                            ),
-                          ),
-                          Image.asset(
-                            fit: BoxFit.fill,
-                            'lib/assets/images/icons/time.png',
-                            width: 60,
-                            height: 60,
-                          ),
-                        ],
+                      Image.asset(
+                        fit: BoxFit.fill,
+                        'lib/assets/images/star.png',
+                        width: 40,
+                        height: 40,
+                      ),
+                      Text(
+                        '${user['points']}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Image.asset(
+                        fit: BoxFit.fill,
+                        'lib/assets/images/medal.png',
+                        width: 40,
+                        height: 40,
+                      ),
+                      Text(
+                        '${user['badges']}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              )
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Presensi Harian",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start),
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.62,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: Colors.purple,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Center(
+                                  child: Text("1/20",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              Image.asset(
+                                fit: BoxFit.fill,
+                                'lib/assets/images/icons/time.png',
+                                width: 60,
+                                height: 60,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
