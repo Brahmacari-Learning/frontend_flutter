@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/alarm_create_tugas_screen.dart';
+import 'package:vedanta_frontend/src/screens/kelas_detail_tugas_doa.dart';
 import 'package:vedanta_frontend/src/screens/kelas_quiz_result_screen.dart';
 import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
@@ -228,9 +230,68 @@ class _TugasTabState extends State<_TugasTab> {
                     ),
                     padding: const EdgeInsets.all(10),
                     width: double.infinity,
-                    child: Text(
-                      tugas['allHomeworkDoa'][i]['doa']['title'],
-                      style: const TextStyle(fontSize: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tugas['allHomeworkDoa'][i]['title'],
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (tugas['allHomeworkDoa'][i]['alarmDoa'] ==
+                                null) ...[
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AlarmCreateScreenTugas(
+                                          doaId: tugas['allHomeworkDoa'][i]
+                                              ['doaId'],
+                                          tugasId: tugas['allHomeworkDoa'][i]
+                                              ['id'],
+                                        ),
+                                      ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 209, 209, 209),
+                                ),
+                                child: const Text('Set Alarm',
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 27, 27, 27))),
+                              )
+                            ],
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => KelasDetailTugasDoa(
+                                      idTugas: tugas['allHomeworkDoa'][i]['id'],
+                                      idKelas: widget.id,
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 209, 209, 209),
+                              ),
+                              child: const Text('Lihat',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 27, 27, 27))),
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   )
                 ],

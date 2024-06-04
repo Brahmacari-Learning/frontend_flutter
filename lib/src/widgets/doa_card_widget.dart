@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 class DoaCardWidget extends StatelessWidget {
   final String headerText;
-  final String subHeaderText;
   const DoaCardWidget({
     super.key,
     this.headerText = '',
-    this.subHeaderText = 'Versi Bali',
   });
 
   @override
@@ -42,15 +40,6 @@ class DoaCardWidget extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 28,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      subHeaderText,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
