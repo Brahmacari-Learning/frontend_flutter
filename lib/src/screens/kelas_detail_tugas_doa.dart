@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/controllers/voice_notes_cubit/voice_notes_cubit.dart';
+import 'package:vedanta_frontend/src/model/voice_note_model.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/audio_recorder_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
+import 'package:vedanta_frontend/src/widgets/app_botom_sheet.dart';
 import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
 
@@ -101,6 +105,7 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    _AddRecordButton(),
                     const SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
@@ -205,6 +210,41 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _AddRecordButton extends StatelessWidget {
+  const _AddRecordButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.amber,
+      borderRadius: BorderRadius.circular(27),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        splashColor: Colors.white12,
+        onTap: () async {
+          final VoiceNoteModel? newVoiceNote =
+              await showAppBottomSheet(context, builder: (context) {
+            return const AudioRecorderView();
+          });
+
+          if (newVoiceNote != null && context.mounted) {
+            context.read<VoiceNotesProvider>().addToVoiceNotes(newVoiceNote);
+          }
+        },
+        child: const SizedBox(
+          width: 75,
+          height: 75,
+          child: Icon(
+            Icons.mic,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
       ),
     );
   }

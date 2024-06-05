@@ -217,39 +217,84 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: LikeIconWithCount(
-                                        isLiked: discussion['isLiked'],
-                                        likesCount: discussion['likesCount'],
-                                      ),
-                                      onPressed: () async {
-                                        final response =
-                                            await discussionProvider
-                                                .likeDiscussion(
-                                                    discussion['id'],
-                                                    !discussion['isLiked']);
-                                        if (response['error']) {
-                                          scaffoldMessenger.showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text(response['message']),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        } else {
-                                          scaffoldMessenger.showSnackBar(
-                                            const SnackBar(
-                                              content: Text('Success!'),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
-                                          setState(() {
-                                            discussion['isLiked'] =
-                                                !discussion['isLiked'];
-                                          });
-                                        }
-                                      },
-                                    ),
+                                    Row(
+                                      children: [
+                                        if (discussion['showDelete']) ...[
+                                          IconButton(
+                                            icon: const Icon(Icons.delete),
+                                            onPressed: () async {
+                                              final response =
+                                                  await discussionProvider
+                                                      .deleteDiscussion(
+                                                          discussion['id']);
+                                              if (response['error']) {
+                                                scaffoldMessenger.showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        response['message']),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              } else {
+                                                scaffoldMessenger.showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text('Success!'),
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ),
+                                                );
+                                                setState(() {
+                                                  _isLoading = true;
+                                                  _currentPage = 1;
+                                                  _discussions.clear();
+                                                  _loadDiscussions();
+                                                });
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                        IconButton(
+                                          icon: LikeIconWithCount(
+                                            isLiked: discussion['isLiked'],
+                                            likesCount:
+                                                discussion['likesCount'],
+                                          ),
+                                          onPressed: () async {
+                                            final response =
+                                                await discussionProvider
+                                                    .likeDiscussion(
+                                                        discussion['id'],
+                                                        !discussion['isLiked']);
+
+                                            if (response['error']) {
+                                              scaffoldMessenger.showSnackBar(
+                                                SnackBar(
+                                                  content:
+                                                      Text(response['message']),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            } else {
+                                              scaffoldMessenger.showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Success!'),
+                                                  backgroundColor: Colors.green,
+                                                ),
+                                              );
+                                              setState(() {
+                                                if (discussion['isLiked']) {
+                                                  discussion['likesCount']--;
+                                                } else {
+                                                  discussion['likesCount']++;
+                                                }
+                                                discussion['isLiked'] =
+                                                    !discussion['isLiked'];
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                                 const Divider(

@@ -13,11 +13,40 @@ class KelasScreen extends StatefulWidget {
 
 class _KelasScreenState extends State<KelasScreen> {
   final TextEditingController _codeController = TextEditingController();
+  late Future<void> response;
+  Map<String, dynamic> classes = {};
+
+  @override
+  void dispose() {
+    _codeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    response = getClasses();
+  }
+
+  Future<void> getClasses() async {
+    try {
+      final classProvider = Provider.of<ClassProvider>(context, listen: false);
+      final response = await classProvider.getClasses();
+      setState(() {
+        classes = response;
+      });
+    } catch (e) {
+      // Handle error here, e.g., log the error or show a message to the user.
+      setState(() {
+        classes = {'error': e.toString()};
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Provider class
     final classProvider = Provider.of<ClassProvider>(context);
-    final response = classProvider.getClasses();
     return AuthWrapper(
       child: Scaffold(
         appBar: AppBar(
@@ -44,16 +73,18 @@ class _KelasScreenState extends State<KelasScreen> {
                     child: const CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return const Text('An error occurred');
+                return const Center(child: Text('An error occurred'));
               }
-              final classes = snapshot.data!['classes'];
+              if (classes.isEmpty) {
+                return const Center(child: Text('No classes available'));
+              }
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: classes.length,
+                      itemCount: classes['classes'].length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
@@ -61,7 +92,7 @@ class _KelasScreenState extends State<KelasScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => KelasDetailScreen(
-                                  id: classes[index]['id'],
+                                  id: classes['classes'][index]['id'],
                                 ),
                               ),
                             );
@@ -90,14 +121,14 @@ class _KelasScreenState extends State<KelasScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    classes[index]['className'],
+                                    classes['classes'][index]['className'],
                                     style: const TextStyle(
                                         fontSize: 30,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800),
                                   ),
                                   Text(
-                                    classes[index]['teacherName'],
+                                    classes['classes'][index]['teacherName'],
                                     style: const TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
@@ -136,12 +167,25 @@ class _KelasScreenState extends State<KelasScreen> {
                                     child: const Text('Batal'),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {
-                                      classProvider
+                                    onPressed: () async {
+                                      final response = await classProvider
                                           .joinClass(_codeController.text);
-                                      // refresh page
-                                      setState(() {});
-                                      Navigator.pop(context);
+                                      // Handle response for joinClass
+                                      if (response['error'] == true) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(response['message']),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      } else {
+                                        // refresh page
+                                        setState(() {
+                                          this.response = getClasses();
+                                        });
+                                        Navigator.pop(context);
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.purple,

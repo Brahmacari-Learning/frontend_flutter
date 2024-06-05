@@ -196,27 +196,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: Image.asset(
-                                "lib/assets/images/icons/privasi.png",
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            const Text(
-                              'Privasi',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
