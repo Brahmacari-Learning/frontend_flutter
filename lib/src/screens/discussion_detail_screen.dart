@@ -231,6 +231,33 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             const SizedBox(
                               width: 10,
                             ),
+                            InkWell(
+                              onTap: () async {
+                                final response = await discussionProvider
+                                    .deleteDiscussionReply(
+                                        widget.id, reply['id']);
+                                if (response['error']) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['message']),
+                                      backgroundColor: Colors.purple,
+                                    ),
+                                  );
+                                } else {
+                                  setState(() {});
+                                }
+                              },
+                              child: const Text(
+                                "Hapus",
+                                style: TextStyle(
+                                  color: Color(0xFF666666),
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
                             Text(
                               formatDate(
                                 reply['createdAt'],

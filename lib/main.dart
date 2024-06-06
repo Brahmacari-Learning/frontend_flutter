@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/app_theme.dart';
+import 'package:vedanta_frontend/src/controllers/audio_recorder_controller.dart';
+import 'package:vedanta_frontend/src/helper/audio_recerder_file_helper.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
@@ -13,6 +15,7 @@ import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
+import 'package:vedanta_frontend/src/screens/audio_waves.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
@@ -72,7 +75,11 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AlarmProvider()),
         ChangeNotifierProvider(create: (context) => StageProvider()),
         ChangeNotifierProvider(create: (context) => HadiahProvider()),
+         ChangeNotifierProvider(
+      create: (context) => AudioRecorderController(AudioRecorderFileHelper(), (message) => print(message)),
+         ),
       ],
+
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
