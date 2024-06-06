@@ -4,7 +4,7 @@ import 'package:vedanta_frontend/src/widgets/play_pause_button.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   final String path;
-  const AudioPlayerScreen({Key? key, required this.path}) : super(key: key);
+  const AudioPlayerScreen({super.key, required this.path});
 
   @override
   State<AudioPlayerScreen> createState() => _AudioPlayerScreenState();
@@ -31,13 +31,13 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Audio Player'),
+        title: const Text('Audio Player'),
       ),
       body: FutureBuilder(
         future: loadAudio,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
                 child: Text('Error loading audio: ${snapshot.error}'));

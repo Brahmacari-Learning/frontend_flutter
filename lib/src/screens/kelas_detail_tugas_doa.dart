@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
-import 'package:vedanta_frontend/src/controllers/voice_notes_cubit/voice_notes_cubit.dart';
 import 'package:vedanta_frontend/src/model/voice_note_model.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/screens/audio_player_screen.dart';
 import 'package:vedanta_frontend/src/screens/audio_recorder_screen.dart';
+import 'package:vedanta_frontend/src/services/api_service.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/app_botom_sheet.dart';
 import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
@@ -115,222 +116,276 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Rekam doamu',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (_newVoiceNote != null)
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AudioPlayerScreen(
-                                path: _newVoiceNote!.path,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.purple,
-                                      borderRadius: BorderRadius.circular(1000),
-                                    ),
-                                    padding: const EdgeInsets.all(8),
-                                    child: const Icon(
-                                      Icons.mic,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _newVoiceNote!.name,
-                                    style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.purple,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _newVoiceNote = null;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
+                    // tugas sudah dikumpulkan
+                    if (result['usersHomework'].length > 0) ...[
+                      const Text(
+                        'Rekaman audio',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )
-                    else ...[
-                      const SizedBox(height: 16),
-                      _AddRecordButton(
-                        onVoiceNoteAdded: (voiceNote) {
-                          setState(() {
-                            _newVoiceNote = voiceNote;
-                          });
-                        },
-                      )
-                    ],
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Gambaran Aktivitas',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (_image != null)
-                      Stack(
-                        children: [
-                          Image.file(_image!),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IconButton(
-                              icon: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.grey[700],
+                      const SizedBox(height: 16),
+                      MusicPlayerWidget(
+                        url:
+                            'https://cdn.hmjtiundiksha.com/${result['usersHomework'][0]['fileRecorded']}',
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Dokumentasi',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Image.network(
+                        'https://cdn.hmjtiundiksha.com/${result['usersHomework'][0]['documentationImage']}',
+                      )
+                    ] else ...[
+                      // tugas belum dikumpulkan
+                      const Text(
+                        'Rekam doamu',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (_newVoiceNote != null)
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AudioPlayerScreen(
+                                  path: _newVoiceNote!.path,
                                 ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _image = null;
-                                });
-                              },
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                        ],
-                      )
-                    else ...[
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                padding: const EdgeInsets.all(24),
-                                child: Row(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
                                   children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          await _pickImage(ImageSource.gallery);
-                                          Navigator.pop(context);
-                                        },
-                                        icon: const Icon(
-                                          Icons.photo_library,
-                                          size: 24,
-                                          color: Colors.white,
-                                        ),
-                                        label: const Text(
-                                          'Galeri',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.purple,
+                                        borderRadius:
+                                            BorderRadius.circular(1000),
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      child: const Icon(
+                                        Icons.mic,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          await _pickImage(ImageSource.camera);
-                                          Navigator.pop(context);
-                                        },
-                                        icon: const Icon(
-                                          Icons.camera,
-                                          size: 24,
-                                          color: Colors.white,
-                                        ),
-                                        label: const Text('Kamera',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.purple,
-                                        ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _newVoiceNote!.name,
+                                      style: TextStyle(
+                                        color: Colors.grey.shade700,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
                                 ),
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.all(32),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'lib/assets/images/upload.png',
-                                width: 70,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Mengunggah Gambar',
-                                style: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontSize: 16,
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.purple,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _newVoiceNote = null;
+                                    });
+                                  },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                        )
+                      else ...[
+                        const SizedBox(height: 16),
+                        _AddRecordButton(
+                          onVoiceNoteAdded: (voiceNote) {
+                            setState(() {
+                              _newVoiceNote = voiceNote;
+                            });
+                          },
+                        )
+                      ],
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Gambaran Aktivitas',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )
-                    ],
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              'Simpan',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
+                      ),
+                      if (_image != null)
+                        Stack(
+                          children: [
+                            Image.file(_image!),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: IconButton(
+                                icon: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(1000),
+                                  ),
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _image = null;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            await _pickImage(
+                                                ImageSource.gallery);
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.photo_library,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                          label: const Text(
+                                            'Galeri',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            await _pickImage(
+                                                ImageSource.camera);
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.camera,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                          label: const Text('Kamera',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.purple,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(32),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'lib/assets/images/upload.png',
+                                  width: 70,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'Mengunggah Gambar',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade700,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_image == null || _newVoiceNote == null) {
+                                  return;
+                                }
+                                String path = await ApiService.uploadFile(
+                                  _image!,
+                                  'vedanta/tugas-doa/image',
+                                );
+                                String pathAudio =
+                                    await ApiService.uploadFilePath(
+                                  _newVoiceNote!.path,
+                                  'vedanta/tugas-doa/audio',
+                                );
+                                await classProvider.uploadTugasDoa(
+                                    widget.idKelas,
+                                    widget.idTugas,
+                                    pathAudio,
+                                    path);
+                                setState(() {});
+                              },
+                              child: const Text(
+                                'Simpan',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
+                    const SizedBox(
+                      height: 16,
+                    )
                   ],
                 ),
               ),

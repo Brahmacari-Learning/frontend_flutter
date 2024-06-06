@@ -15,7 +15,6 @@ import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
-import 'package:vedanta_frontend/src/screens/audio_waves.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';

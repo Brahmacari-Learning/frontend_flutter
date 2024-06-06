@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
@@ -59,6 +61,22 @@ class ClassProvider with ChangeNotifier {
     try {
       final response = await _apiService.fetchData(
         'class/$classId/tasks/doa/$idTugas',
+      );
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadTugasDoa(
+      int classId, int idTugas, String pathAudio, String pathImage) async {
+    try {
+      final response = await _apiService.postData(
+        'class/$classId/tasks/doa/$idTugas/send',
+        {
+          'audioPath': pathAudio,
+          'imagePath': pathImage,
+        },
       );
       return response;
     } catch (e) {

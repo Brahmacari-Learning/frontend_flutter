@@ -24,7 +24,7 @@ class AudioRecorderView extends StatelessWidget {
 }
 
 class _AudioRecorderViewBody extends StatefulWidget {
-  const _AudioRecorderViewBody({super.key});
+  const _AudioRecorderViewBody();
 
   @override
   State<_AudioRecorderViewBody> createState() => _AudioRecorderViewBodyState();
@@ -33,7 +33,6 @@ class _AudioRecorderViewBody extends StatefulWidget {
 class _AudioRecorderViewBodyState extends State<_AudioRecorderViewBody> {
   @override
   void dispose() {
-    context.read<AudioRecorderController>().dispose();
     super.dispose();
   }
 

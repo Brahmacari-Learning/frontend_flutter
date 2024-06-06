@@ -19,7 +19,7 @@ class AudioRecorderController extends ChangeNotifier {
   RecordState _recordState = RecordState.stop;
   double _amplitude = 0.0;
 
-   Stream<double> get amplitudeStream => _audioRecorder
+  Stream<double> get amplitudeStream => _audioRecorder
       .onAmplitudeChanged(const Duration(milliseconds: 160))
       .map((amp) => amp.current);
   Stream<RecordState> get recordStateStream => _audioRecorder.onStateChanged();
@@ -47,9 +47,13 @@ class AudioRecorderController extends ChangeNotifier {
     try {
       final filePath = path.join(
           (await _audioRecorderFileHelper.getRecordsDirectory).path,
-          "${DateTime.now().millisecondsSinceEpoch}.m4a");
+          "${DateTime.now().millisecondsSinceEpoch}.wav");
 
-      await _audioRecorder.start(const RecordConfig(), path: filePath);
+      await _audioRecorder.start(
+          const RecordConfig(
+            encoder: AudioEncoder.wav,
+          ),
+          path: filePath);
 
       _recordState = RecordState.record;
       _startTimer();
