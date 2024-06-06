@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/popups/presensi_popup.dart';
 import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/utils.dart';
@@ -184,31 +185,42 @@ class _MisiTab extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w600),
                               textAlign: TextAlign.start),
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.62,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: Colors.purple,
-                                  borderRadius: BorderRadius.circular(10),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PresensiPopup(),
                                 ),
-                                child: const Center(
-                                  child: Text("3/20",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700)),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.62,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.purple,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Center(
+                                    child: Text("3/20",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700)),
+                                  ),
                                 ),
-                              ),
-                              Image.asset(
-                                fit: BoxFit.fill,
-                                'lib/assets/images/icons/time.png',
-                                width: 60,
-                                height: 60,
-                              ),
-                            ],
+                                Image.asset(
+                                  fit: BoxFit.fill,
+                                  'lib/assets/images/icons/time.png',
+                                  width: 60,
+                                  height: 60,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
