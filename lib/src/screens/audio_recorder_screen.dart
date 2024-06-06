@@ -58,9 +58,9 @@ class _AudioRecorderViewBodyState extends State<_AudioRecorderViewBody> {
                   });
                 },
                 child: Text(
-                  "Save note",
+                  "Save",
                   style: TextStyle(
-                    color: Colors.amber,
+                    color: Colors.green,
                     fontSize: 18,
                   ),
                 ),
@@ -101,7 +101,7 @@ class _AudioRecorderViewBodyState extends State<_AudioRecorderViewBody> {
                   });
                 },
                 child: Text(
-                  "Dismiss",
+                  "Batal",
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,

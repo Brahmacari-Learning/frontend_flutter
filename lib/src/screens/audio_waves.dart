@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/controllers/audio_recorder_controller.dart';
-
 
 class AudioWavesView extends StatefulWidget {
   const AudioWavesView({super.key});
@@ -77,6 +75,7 @@ class _AudioWavesViewState extends State<AudioWavesView> {
                 },
                 child: DecoratedBox(
                   decoration: BoxDecoration(
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

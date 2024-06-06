@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/controllers/voice_notes_cubit/voice_notes_cubit.dart';
 import 'package:vedanta_frontend/src/model/voice_note_model.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
+import 'package:vedanta_frontend/src/screens/audio_player_screen.dart';
 import 'package:vedanta_frontend/src/screens/audio_recorder_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/app_botom_sheet.dart';
@@ -20,9 +23,23 @@ class KelasDetailTugasDoa extends StatefulWidget {
 }
 
 class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
+  VoiceNoteModel? _newVoiceNote;
+  File? _image;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // provider class
     final classProvider = Provider.of<ClassProvider>(context);
 
     return AuthWrapper(
@@ -54,7 +71,7 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
               backgroundColor: Colors.white,
               elevation: 0,
               iconTheme: const IconThemeData(
-                color: Colors.purple, // Warna pink untuk back button
+                color: Colors.purple,
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -75,8 +92,9 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                     const SizedBox(height: 16),
                     if (result['doa']['pelafalanFile'] != null)
                       MusicPlayerWidget(
-                          url:
-                              'https://cdn.hmjtiundiksha.com/${result['doa']['pelafalanFile']}')
+                        url:
+                            'https://cdn.hmjtiundiksha.com/${result['doa']['pelafalanFile']}',
+                      )
                     else
                       const CircularProgressIndicator(),
                     const SizedBox(height: 16),
@@ -105,49 +123,73 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _AddRecordButton(),
+                    _AddRecordButton(
+                      onVoiceNoteAdded: (voiceNote) {
+                        setState(() {
+                          _newVoiceNote = voiceNote;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 16),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                    if (_newVoiceNote != null)
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AudioPlayerScreen(
+                                path: _newVoiceNote!.path,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.purple,
+                                      borderRadius: BorderRadius.circular(1000),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: const Icon(
+                                      Icons.mic,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    _newVoiceNote!.name,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
                                   color: Colors.purple,
-                                  borderRadius: BorderRadius.circular(1000),
                                 ),
-                                padding: const EdgeInsets.all(8),
-                                child: const Icon(
-                                  Icons.mic,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                '00:00',
-                                style: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontSize: 16,
-                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _newVoiceNote = null;
+                                  });
+                                },
                               ),
                             ],
                           ),
-                          const Icon(
-                            Icons.delete,
-                            color: Colors.purple,
-                          )
-                        ],
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 16),
                     const Text(
                       'Gambaran Aktivitas',
@@ -161,25 +203,42 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(32),
                       child: Column(
                         children: [
-                          Image.asset(
-                            'lib/assets/images/upload.png',
-                            width: 70,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          _image != null
+                              ? Image.file(_image!)
+                              : Image.asset(
+                                  'lib/assets/images/upload.png',
+                                  width: 70,
+                                ),
+                          const SizedBox(height: 10),
                           Text(
                             'Mengunggah Gambar',
                             style: TextStyle(
-                              color: Colors.grey.shade700,
+                              color: Colors.white,
                               fontSize: 16,
                             ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () => _pickImage(ImageSource.camera),
+                                icon: const Icon(Icons.camera),
+                                label: const Text('Kamera'),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () =>
+                                    _pickImage(ImageSource.gallery),
+                                icon: const Icon(Icons.photo_library),
+                                label: const Text('Galeri'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -204,7 +263,6 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                       ],
                     ),
                   ],
-                  // full width button
                 ),
               ),
             ),
@@ -216,7 +274,9 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
 }
 
 class _AddRecordButton extends StatelessWidget {
-  const _AddRecordButton({super.key});
+  final Function(VoiceNoteModel) onVoiceNoteAdded;
+
+  const _AddRecordButton({super.key, required this.onVoiceNoteAdded});
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +293,7 @@ class _AddRecordButton extends StatelessWidget {
           });
 
           if (newVoiceNote != null && context.mounted) {
-            context.read<VoiceNotesProvider>().addToVoiceNotes(newVoiceNote);
+            onVoiceNoteAdded(newVoiceNote);
           }
         },
         child: const SizedBox(

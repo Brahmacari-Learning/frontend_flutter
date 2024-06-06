@@ -29,64 +29,81 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: loadAudio,
-      builder: (context, snapshot) {
-        return StreamBuilder(
-            stream: audioPlayerController.progressStream,
-            builder: (context, snapshot) {
-              final audioDuration = audioPlayerController.duration.toDouble();
-              double progress = (snapshot.data ?? 0).toDouble();
-              return Column(
-                children: [
-                  Slider(
-                    value: sliderTempValue ?? progress.clamp(0, audioDuration),
-                    min: 0,
-                    max: audioDuration,
-                    onChanged: (value) {
-                      setState(() {
-                        sliderTempValue = value;
-                      });
-                      audioPlayerController.seek(value.toInt());
-                    },
-                    onChangeStart: (value) {
-                      audioPlayerController.pause();
-                    },
-                    onChangeEnd: (value) {
-                      audioPlayerController.seek(value.toInt());
-                      sliderTempValue = null;
-                      audioPlayerController.play();
-                    },
-                  ),
-                  Text(_formatToDateTime(progress.toInt())),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  StreamBuilder(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Audio Player'),
+      ),
+      body: FutureBuilder(
+        future: loadAudio,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+                child: Text('Error loading audio: ${snapshot.error}'));
+          } else {
+            return StreamBuilder(
+              stream: audioPlayerController.progressStream,
+              builder: (context, snapshot) {
+                final audioDuration = audioPlayerController.duration.toDouble();
+                double progress = (snapshot.data ?? 0).toDouble();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Slider(
+                      value:
+                          sliderTempValue ?? progress.clamp(0, audioDuration),
+                      min: 0,
+                      max: audioDuration,
+                      onChanged: (value) {
+                        setState(() {
+                          sliderTempValue = value;
+                        });
+                        audioPlayerController.seek(value.toInt());
+                      },
+                      onChangeStart: (value) {
+                        audioPlayerController.pause();
+                      },
+                      onChangeEnd: (value) {
+                        audioPlayerController.seek(value.toInt());
+                        sliderTempValue = null;
+                        audioPlayerController.play();
+                      },
+                    ),
+                    Text(_formatToDateTime(progress.toInt())),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    StreamBuilder(
                       stream: audioPlayerController.playStatusStream,
                       builder: (context, snapshot) {
                         final bool isPlaying = snapshot.data ?? false;
                         return PlayPauseAudioButton(
-                            isPlaying: isPlaying,
-                            onTap: () {
-                              if (isPlaying) {
-                                audioPlayerController.pause();
-                              } else {
-                                audioPlayerController.play();
-                              }
-                            });
-                      })
-                ],
-              );
-            });
-      },
+                          isPlaying: isPlaying,
+                          onTap: () {
+                            if (isPlaying) {
+                              audioPlayerController.pause();
+                            } else {
+                              audioPlayerController.play();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 
   String _formatToDateTime(int durationInMill) {
-    final int minutes = durationInMill ~/ Duration.microsecondsPerMinute;
-    final int seconds = (durationInMill % Duration.microsecondsPerMinute) ~/
-        Duration.microsecondsPerSecond;
+    final int minutes = durationInMill ~/ Duration.millisecondsPerMinute;
+    final int seconds = (durationInMill % Duration.millisecondsPerMinute) ~/
+        Duration.millisecondsPerSecond;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
