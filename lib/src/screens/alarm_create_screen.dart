@@ -34,7 +34,7 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: const IconThemeData(
-            color: Colors.purple, // Warna ungu untuk back button
+            color: Colors.purple,
           ),
         ),
         body: SingleChildScrollView(
@@ -118,8 +118,7 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                       child: Text("Min"),
                     ),
                   ],
-                ), // Ulangi
-
+                ),
                 const SizedBox(height: 40),
                 const Text(
                   "Pilih Doa",
@@ -171,35 +170,50 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (selectedDoa['title'] == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Pilih Doa terlebih dahulu'),
-                          ),
-                        );
-                      } else {
-                        await alarmProvider.createAlarm(
-                          hour,
-                          minute,
-                          convertUlangiDoa(isSelected),
-                          selectedDoa['id'],
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
+                    onPressed: selectedDoa.isNotEmpty
+                        ? () async {
+                            var response = await alarmProvider.createAlarm(
+                              hour,
+                              minute,
+                              1,
+                              selectedDoa['id'],
+                            );
+
+                            if (response.containsKey('id')) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Alarm berhasil disimpan',
+                                    ),
+                                  ),
+                                );
+                              }
+                              Navigator.pop(context);
+                            } else {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Terjadi kesalahan saat menyimpan alarm',
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     child: const Text(
-                      'Jadwalkan',
+                      "Simpan",
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -212,43 +226,27 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
     );
   }
 
-  NumberPicker _numPicker(bool isHour) {
+  Widget _numPicker(bool isHour) {
     return NumberPicker(
       value: isHour ? hour : minute,
       minValue: 0,
       maxValue: isHour ? 23 : 59,
-      step: 1,
-      textStyle: const TextStyle(
-        color: Color.fromARGB(255, 134, 134, 134),
-        fontSize: 20,
-      ),
-      selectedTextStyle: const TextStyle(
-        color: Colors.purple,
-        fontSize: 48,
-        fontWeight: FontWeight.w700,
-      ),
-      itemWidth: 90,
-      itemHeight: 60,
-      haptics: true,
-      onChanged: (val) {
+      infiniteLoop: true,
+      zeroPad: true,
+      itemWidth: 80,
+      itemHeight: 100,
+      textStyle: const TextStyle(fontSize: 40, color: Colors.grey),
+      selectedTextStyle:
+          const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+      onChanged: (value) {
         setState(() {
           if (isHour) {
-            hour = val;
+            hour = value;
           } else {
-            minute = val;
+            minute = value;
           }
         });
       },
     );
-  }
-
-  int convertUlangiDoa(List<bool> ulangiDoa) {
-    int ulangi = 0;
-    for (int i = 0; i < ulangiDoa.length; i++) {
-      if (ulangiDoa[i]) {
-        ulangi = ulangi | (1 << i);
-      }
-    }
-    return ulangi;
   }
 }

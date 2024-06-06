@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/helper/notification_helper.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
@@ -187,7 +188,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               ),
                               const SizedBox(width: 14),
                               const Text(
-                                'Kelas',
+                                'Kelassss',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
