@@ -6,7 +6,7 @@ Future<T?> showAppBottomSheet<T>(BuildContext context,
     bool showCloseButton = false}) async {
   return await showModalBottomSheet<T?>(
     context: context,
-    backgroundColor: Colors.amber,
+    backgroundColor: Colors.white,
     isDismissible: false,
     enableDrag: false,
     shape: const RoundedRectangleBorder(

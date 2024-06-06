@@ -68,7 +68,8 @@ class DoaDetailScreen extends StatelessWidget {
                                 const Text(
                                   'Artinya:',
                                   style: TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 10),
                                 Text(

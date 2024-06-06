@@ -39,79 +39,71 @@ class _AudioRecorderViewBodyState extends State<_AudioRecorderViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Column(
-        children: [
-          const AudioWavesView(),
-          const SizedBox(height: 16),
-          const _TimerText(),
-          Row(
-            textDirection: TextDirection.rtl,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  context
-                      .read<AudioRecorderController>()
-                      .stop((voiceNoteModel) {
-                    Navigator.pop(context, voiceNoteModel);
-                  });
-                },
-                child: Text(
-                  "Save",
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 18,
-                  ),
+    return Column(
+      children: [
+        const AudioWavesView(),
+        const SizedBox(height: 16),
+        const _TimerText(),
+        Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.read<AudioRecorderController>().stop((voiceNoteModel) {
+                  Navigator.pop(context, voiceNoteModel);
+                });
+              },
+              child: const Text(
+                "Simpan",
+                style: TextStyle(
+                  color: Colors.purple,
+                  fontSize: 18,
                 ),
               ),
-              const Spacer(),
-              Consumer<AudioRecorderController>(
-                builder: (context, audioRecorderService, child) {
-                  return PlayPauseAudioButton(
-                    isPlaying:
-                        audioRecorderService.recordState == RecordState.record,
-                    onTap: () {
-                      if (audioRecorderService.recordState ==
-                          RecordState.pause) {
-                        audioRecorderService.resume();
-                      } else {
-                        audioRecorderService.pause();
-                      }
-                    },
-                  );
-                },
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  context
-                      .read<AudioRecorderController>()
-                      .stop((voiceNoteModel) {
-                    if (voiceNoteModel == null) {
-                      Navigator.pop(context);
+            ),
+            const Spacer(),
+            Consumer<AudioRecorderController>(
+              builder: (context, audioRecorderService, child) {
+                return PlayPauseAudioButton(
+                  isPlaying:
+                      audioRecorderService.recordState == RecordState.record,
+                  onTap: () {
+                    if (audioRecorderService.recordState == RecordState.pause) {
+                      audioRecorderService.resume();
                     } else {
-                      context
-                          .read<AudioRecorderController>()
-                          .delete(voiceNoteModel.path)
-                          .then((value) {
-                        Navigator.pop(context);
-                      });
+                      audioRecorderService.pause();
                     }
-                  });
-                },
-                child: Text(
-                  "Batal",
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                  ),
+                  },
+                );
+              },
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () {
+                context.read<AudioRecorderController>().stop((voiceNoteModel) {
+                  if (voiceNoteModel == null) {
+                    Navigator.pop(context);
+                  } else {
+                    context
+                        .read<AudioRecorderController>()
+                        .delete(voiceNoteModel.path)
+                        .then((value) {
+                      Navigator.pop(context);
+                    });
+                  }
+                });
+              },
+              child: const Text(
+                "Batal",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 18,
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -131,7 +123,7 @@ class _TimerText extends StatelessWidget {
 
           return Text(
             '${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')}',
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
             ),
           );

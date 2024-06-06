@@ -123,13 +123,6 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _AddRecordButton(
-                      onVoiceNoteAdded: (voiceNote) {
-                        setState(() {
-                          _newVoiceNote = voiceNote;
-                        });
-                      },
-                    ),
                     const SizedBox(height: 16),
                     if (_newVoiceNote != null)
                       GestureDetector(
@@ -189,7 +182,17 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                             ],
                           ),
                         ),
-                      ),
+                      )
+                    else ...[
+                      const SizedBox(height: 16),
+                      _AddRecordButton(
+                        onVoiceNoteAdded: (voiceNote) {
+                          setState(() {
+                            _newVoiceNote = voiceNote;
+                          });
+                        },
+                      )
+                    ],
                     const SizedBox(height: 16),
                     const Text(
                       'Gambaran Aktivitas',
@@ -200,49 +203,115 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
+                    if (_image != null)
+                      Stack(
                         children: [
-                          _image != null
-                              ? Image.file(_image!)
-                              : Image.asset(
-                                  'lib/assets/images/upload.png',
-                                  width: 70,
+                          Image.file(_image!),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: IconButton(
+                              icon: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(1000),
                                 ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Mengunggah Gambar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
+                                padding: const EdgeInsets.all(8),
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _image = null;
+                                });
+                              },
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        ],
+                      )
+                    else ...[
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                padding: const EdgeInsets.all(24),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          await _pickImage(ImageSource.gallery);
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.photo_library,
+                                          size: 24,
+                                          color: Colors.white,
+                                        ),
+                                        label: const Text(
+                                          'Galeri',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          await _pickImage(ImageSource.camera);
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.camera,
+                                          size: 24,
+                                          color: Colors.white,
+                                        ),
+                                        label: const Text('Kamera',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.purple,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.all(32),
+                          child: Column(
                             children: [
-                              ElevatedButton.icon(
-                                onPressed: () => _pickImage(ImageSource.camera),
-                                icon: const Icon(Icons.camera),
-                                label: const Text('Kamera'),
+                              Image.asset(
+                                'lib/assets/images/upload.png',
+                                width: 70,
                               ),
-                              ElevatedButton.icon(
-                                onPressed: () =>
-                                    _pickImage(ImageSource.gallery),
-                                icon: const Icon(Icons.photo_library),
-                                label: const Text('Galeri'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Mengunggah Gambar',
+                                style: TextStyle(
+                                  color: Colors.grey.shade700,
+                                  fontSize: 16,
+                                ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      )
+                    ],
                     const SizedBox(height: 16),
                     Row(
                       children: [
@@ -276,34 +345,53 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
 class _AddRecordButton extends StatelessWidget {
   final Function(VoiceNoteModel) onVoiceNoteAdded;
 
-  const _AddRecordButton({super.key, required this.onVoiceNoteAdded});
+  const _AddRecordButton({required this.onVoiceNoteAdded});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.amber,
-      borderRadius: BorderRadius.circular(27),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        splashColor: Colors.white12,
-        onTap: () async {
-          final VoiceNoteModel? newVoiceNote =
-              await showAppBottomSheet(context, builder: (context) {
-            return const AudioRecorderView();
-          });
-
-          if (newVoiceNote != null && context.mounted) {
-            onVoiceNoteAdded(newVoiceNote);
-          }
-        },
-        child: const SizedBox(
-          width: 75,
-          height: 75,
-          child: Icon(
-            Icons.mic,
-            color: Colors.white,
-            size: 28,
-          ),
+    return GestureDetector(
+      onTap: () async {
+        final VoiceNoteModel? newVoiceNote =
+            await showAppBottomSheet(context, builder: (context) {
+          return const AudioRecorderView();
+        });
+        if (newVoiceNote != null && context.mounted) {
+          onVoiceNoteAdded(newVoiceNote);
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(1000),
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.mic,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Rekam Suara',
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

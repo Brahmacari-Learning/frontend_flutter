@@ -75,7 +75,7 @@ class _AudioWavesViewState extends State<AudioWavesView> {
                 },
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.purple,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

@@ -30,6 +30,58 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
     super.dispose();
   }
 
+  Future<void> _confirmDelete(BuildContext context, int replyId) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final discussionProvider =
+        Provider.of<DiscussionProvider>(context, listen: false);
+
+    final bool? deleteConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Hapus',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          content: const Text('Apakah anda yakin ingin menghapus balasan?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Batal', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (deleteConfirmed == true) {
+      final response =
+          await discussionProvider.deleteDiscussionReply(widget.id, replyId);
+      if (response['error']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message']),
+            backgroundColor: Colors.purple,
+          ),
+        );
+      } else {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Berhasil!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        setState(() {});
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // provider
@@ -233,19 +285,7 @@ class _DetailDiscussionScreenState extends State<DetailDiscussionScreen> {
                             ),
                             InkWell(
                               onTap: () async {
-                                final response = await discussionProvider
-                                    .deleteDiscussionReply(
-                                        widget.id, reply['id']);
-                                if (response['error']) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(response['message']),
-                                      backgroundColor: Colors.purple,
-                                    ),
-                                  );
-                                } else {
-                                  setState(() {});
-                                }
+                                _confirmDelete(context, reply['id']);
                               },
                               child: const Text(
                                 "Hapus",

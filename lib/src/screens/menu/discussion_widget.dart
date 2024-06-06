@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/screens/discussion_create.dart';
@@ -91,13 +92,68 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
     }
   }
 
+  Future<void> _confirmDelete(BuildContext context, int discussionId) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final discussionProvider =
+        Provider.of<DiscussionProvider>(context, listen: false);
+
+    final bool? deleteConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Hapus',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          content: const Text('Apakah anda yakin ingin menghapus diskusi?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Batal', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (deleteConfirmed == true) {
+      final response = await discussionProvider.deleteDiscussion(discussionId);
+      if (response['error']) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text(response['message']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Success!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        setState(() {
+          _isLoading = true;
+          _currentPage = 1;
+          _discussions.clear();
+          _loadDiscussions();
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    // provider
     final discussionProvider =
         Provider.of<DiscussionProvider>(context, listen: false);
-    // Search form and list of discussions
+
     return SafeArea(
       child: Container(
         color: Colors.white,
@@ -121,7 +177,6 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                     content: Text('Search success!'),
                     backgroundColor: Colors.green,
                   ));
-                  // navigate to detail sloka screen
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -142,7 +197,6 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             const SizedBox(
               height: 20,
             ),
-            // List of discussions
             Expanded(
               child: _isLoading && _discussions.isEmpty
                   ? const Center(
@@ -221,35 +275,13 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                                       children: [
                                         if (discussion['showDelete']) ...[
                                           IconButton(
-                                            icon: const Icon(Icons.delete),
-                                            onPressed: () async {
-                                              final response =
-                                                  await discussionProvider
-                                                      .deleteDiscussion(
-                                                          discussion['id']);
-                                              if (response['error']) {
-                                                scaffoldMessenger.showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        response['message']),
-                                                    backgroundColor: Colors.red,
-                                                  ),
-                                                );
-                                              } else {
-                                                scaffoldMessenger.showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text('Success!'),
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                  ),
-                                                );
-                                                setState(() {
-                                                  _isLoading = true;
-                                                  _currentPage = 1;
-                                                  _discussions.clear();
-                                                  _loadDiscussions();
-                                                });
-                                              }
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.redAccent.shade700,
+                                            ),
+                                            onPressed: () {
+                                              _confirmDelete(
+                                                  context, discussion['id']);
                                             },
                                           ),
                                         ],
@@ -309,17 +341,14 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
                       },
                     ),
             ),
-            // Create new discussion
             ElevatedButton(
               onPressed: () async {
-                // navigate to create discussion screen
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const CreateDiscussionScreen(),
                   ),
                 );
-                // refresh list of discussions
                 setState(() {
                   _isLoading = true;
                   _currentPage = 1;
