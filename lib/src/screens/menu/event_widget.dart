@@ -240,7 +240,7 @@ class _MisiTab extends StatelessWidget {
               children: [
                 // SizedBox(height: 20),
                 const Text(
-                  "Misi Harian",
+                  "Misi",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                 ),
                 Column(
