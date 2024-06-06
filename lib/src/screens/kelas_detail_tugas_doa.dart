@@ -119,6 +119,33 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                     // tugas sudah dikumpulkan
                     if (result['usersHomework'].length > 0) ...[
                       const Text(
+                        'Penilaian Guru',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (result['usersHomework'][0]['grade'] != null)
+                        Text(
+                          '${result['usersHomework'][0]['grade']}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      else
+                        const Text(
+                          'Belum ada penilaian',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      const Text(
                         'Rekaman audio',
                         style: TextStyle(
                           fontSize: 16,
