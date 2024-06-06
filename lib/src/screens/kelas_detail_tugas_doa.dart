@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:just_audio/just_audio.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/model/voice_note_model.dart';
