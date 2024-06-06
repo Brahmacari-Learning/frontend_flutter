@@ -19,22 +19,11 @@ class AuthProvider with ChangeNotifier {
       // Handle the response, save tokens, etc.
       final token = response['token'];
 
-      // if (rememberMe) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('email', email);
       await prefs.setString('password', password);
 
-      // }
       await prefs.setString('token', token);
-      // final user = await UserProvider().getInfo();
-
-      // await prefs.setString('name', user['user']['name']);
-      // await prefs.setString(
-      //     'profilePicture', '${user['user']['profilePicture']}');
-
-      // await prefs.setInt('points', user['user']['points']);
-      // await prefs.setInt('badges', user['user']['badges']);
-
       _isLoading = false;
       notifyListeners();
       return true;

@@ -46,7 +46,7 @@ class DoaDetailScreen extends StatelessWidget {
                         const CircularProgressIndicator(),
                       const SizedBox(height: 20),
                       const Text(
-                        'Sloka:',
+                        'Doa:',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:just_audio/just_audio.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/model/voice_note_model.dart';
@@ -118,6 +117,33 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
                     const SizedBox(height: 16),
                     // tugas sudah dikumpulkan
                     if (result['usersHomework'].length > 0) ...[
+                      const Text(
+                        'Penilaian Guru',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (result['usersHomework'][0]['grade'] != null)
+                        Text(
+                          '${result['usersHomework'][0]['grade']}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      else
+                        const Text(
+                          'Belum ada penilaian',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      const SizedBox(height: 16),
                       const Text(
                         'Rekaman audio',
                         style: TextStyle(

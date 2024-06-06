@@ -95,4 +95,13 @@ class StageProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
+  Future<Map<String, dynamic>> klasemen() async {
+    try {
+      final response = await _apiService.fetchData('klasemen');
+      return response;
+    } catch (e) {
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
 }

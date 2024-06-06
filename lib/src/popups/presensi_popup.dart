@@ -30,9 +30,30 @@ class _PresensiPopupState extends State<PresensiPopup> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                'lib/assets/images/presensi_harian.png',
-                width: 300,
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Image.asset(
+                    'lib/assets/images/presensi_harian.png',
+                    width: 300,
+                  ),
+                  Positioned(
+                    top: 20,
+                    left: -20,
+                    child: Image.asset(
+                      'lib/assets/images/star.png',
+                      // width: 300,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 40,
+                    right: -20,
+                    child: Image.asset(
+                      'lib/assets/images/star.png',
+                      // width: 300,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               const Text(
@@ -45,7 +66,7 @@ class _PresensiPopupState extends State<PresensiPopup> {
               ),
               const SizedBox(height: 16),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(32.0),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -66,13 +87,13 @@ class _PresensiPopupState extends State<PresensiPopup> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DayHeader(day: 'Sen'),
-                          DayHeader(day: 'Sel'),
-                          DayHeader(day: 'Rab'),
-                          DayHeader(day: 'Kam'),
-                          DayHeader(day: 'Jum'),
-                          DayHeader(day: 'Sab'),
-                          DayHeader(day: 'Min'),
+                          DayHeader(day: 'Mn'),
+                          DayHeader(day: 'Sn'),
+                          DayHeader(day: 'Sl'),
+                          DayHeader(day: 'Rb', color: Colors.grey),
+                          DayHeader(day: 'Km', color: Colors.grey),
+                          DayHeader(day: 'Jm', color: Colors.grey),
+                          DayHeader(day: 'Sb', color: Colors.grey),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -88,9 +109,9 @@ class _PresensiPopupState extends State<PresensiPopup> {
                       const SizedBox(height: 8),
                       // Star count text
                       const Text(
-                        '+3 Points',
+                        '+3 Point',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
                         ),
@@ -105,9 +126,18 @@ class _PresensiPopupState extends State<PresensiPopup> {
               ),
               // Button claim
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const PresensiPopup();
+                      },
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 182, 69, 202),
+                  backgroundColor: const Color.fromARGB(255, 186, 60, 208),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10.0),
@@ -133,16 +163,17 @@ class _PresensiPopupState extends State<PresensiPopup> {
 
 class DayHeader extends StatelessWidget {
   final String day;
-  const DayHeader({required this.day, super.key});
+  final Color color;
+  const DayHeader({required this.day, super.key, this.color = Colors.orange});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       day,
-      style: const TextStyle(
-        fontSize: 16,
+      style: TextStyle(
+        fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: Colors.orange,
+        color: color,
       ),
     );
   }
@@ -155,8 +186,8 @@ class AttendanceIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'lib/assets/images/star.png',
-      width: 32,
-      height: 32,
+      width: 38,
+      height: 38,
     );
   }
 }
