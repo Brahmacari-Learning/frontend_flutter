@@ -19,6 +19,7 @@ class NotificationHelper {
     String title,
     String body,
     DateTime scheduledDateTime,
+    int idDoa,
   ) async {
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(
@@ -34,17 +35,26 @@ class NotificationHelper {
     }
 
     var androidDetails = const AndroidNotificationDetails(
-        'important_notification', 'My Channel',
-        importance: Importance.max, priority: Priority.max);
+      'important_notification',
+      'My Channel',
+      importance: Importance.max,
+      priority: Priority.max,
+    );
 
     var iosDetails = const DarwinNotificationDetails();
 
     var notificationDetails =
         NotificationDetails(android: androidDetails, iOS: iosDetails);
     await _notification.zonedSchedule(
-        0, title, body, scheduledDate, notificationDetails,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle);
+      0,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: idDoa.toString(),
+    );
   }
 }

@@ -8,7 +8,7 @@ class AvatarWidget extends StatelessWidget {
       {super.key,
       required this.avatarUrl,
       required this.name,
-      this.radius = 30});
+      this.radius = 18});
 
   @override
   Widget build(BuildContext context) {

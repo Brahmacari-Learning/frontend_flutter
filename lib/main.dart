@@ -16,13 +16,15 @@ import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
-import 'package:vedanta_frontend/src/screens/audio_waves.dart';
+import 'package:vedanta_frontend/src/screens/doa_detail_screen.dart';
 import 'package:vedanta_frontend/src/screens/register_screen.dart';
 import 'package:vedanta_frontend/src/screens/splash_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'src/screens/login_screen.dart';
 import 'src/screens/home_screen.dart';
 import 'src/providers/auth_provider.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -31,6 +33,8 @@ void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse) {
   if (notificationResponse.payload != null) {
     print('notification payload: ${notificationResponse.payload}');
+    navigatorKey.currentState
+        ?.pushNamed('/doa_detail', arguments: notificationResponse.payload);
   }
 }
 
@@ -85,6 +89,7 @@ class MainApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
             title: 'Vedanta',
             theme: themeProvider.themeData,
             home: const SplashScreen(),
@@ -92,10 +97,22 @@ class MainApp extends StatelessWidget {
               '/login': (context) => const LoginScreen(),
               '/register': (context) => const RegisterScreen(),
               '/home': (context) => const AuthWrapper(child: HomeScreen()),
+              '/doa_detail': (context) => const ExctractIDDoa(),
             },
           );
         },
       ),
     );
+  }
+}
+
+class ExctractIDDoa extends StatelessWidget {
+  const ExctractIDDoa({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final idDoa =
+        int.parse(ModalRoute.of(context)!.settings.arguments.toString());
+    return DoaDetailScreen(idDoa: idDoa);
   }
 }

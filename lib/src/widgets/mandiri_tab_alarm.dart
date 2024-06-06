@@ -48,11 +48,13 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
     });
 
     if (_allAlarms[index]['active']) {
+      print(_allAlarms[index]);
       // Use _parsedAlarmTimes[index] to get the parsed DateTime
       await NotificationHelper.scheduleNotification(
         _allAlarms[index]['title'],
         "Waktu untuk membaca doa ${_allAlarms[index]['title']}",
         _parsedAlarmTimes[index],
+        _allAlarms[index]['doaId'],
       );
     } else {
       // Optionally, you could cancel the scheduled notification if the alarm is turned off
