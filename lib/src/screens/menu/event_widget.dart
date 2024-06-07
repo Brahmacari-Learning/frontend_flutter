@@ -144,8 +144,6 @@ class _MisiTabState extends State<_MisiTab> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-
     return FutureBuilder<Map<String, dynamic>>(
       future: _futureMissions,
       builder: (context, snapshot) {
@@ -371,7 +369,7 @@ class _MisiTabState extends State<_MisiTab> {
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w400),
                                             overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
+                                            maxLines: 2,
                                           ),
                                         ),
                                         const SizedBox(height: 5),
@@ -442,7 +440,6 @@ class _LencanaTabState extends State<_LencanaTab> {
   void _showClaimDialog(
       BuildContext context, Map<String, dynamic> lencanaItem) {
     final lencanaProvider = Provider.of<HadiahProvider>(context, listen: false);
-    // final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     showDialog(
       context: context,
