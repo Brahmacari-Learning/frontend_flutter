@@ -243,18 +243,22 @@ class _TugasTabState extends State<_TugasTab> {
                             if (tugas['allHomeworkDoa'][i]['alarmDoa'] ==
                                 false) ...[
                               ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AlarmCreateScreenTugas(
-                                          doaId: tugas['allHomeworkDoa'][i]
-                                              ['doaId'],
-                                          tugasId: tugas['allHomeworkDoa'][i]
-                                              ['id'],
-                                        ),
-                                      ));
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AlarmCreateScreenTugas(
+                                        doaId: tugas['allHomeworkDoa'][i]
+                                            ['doaId'],
+                                        tugasId: tugas['allHomeworkDoa'][i]
+                                            ['id'],
+                                      ),
+                                    ),
+                                  );
+                                  setState(() {
+                                    _futureTugas = _getTugas();
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:

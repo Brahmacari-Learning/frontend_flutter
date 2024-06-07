@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/providers/mission_provider.dart';
 
 class PresensiPopup extends StatefulWidget {
-  const PresensiPopup({super.key});
+  final int activeStreak;
+  const PresensiPopup({super.key, required this.activeStreak});
 
   @override
   State<PresensiPopup> createState() => _PresensiPopupState();
 }
 
 class _PresensiPopupState extends State<PresensiPopup> {
+  final currentWeekDay = DateTime.now().weekday;
+  final weekStr = [
+    'Sn',
+    'Sl',
+    'Rb',
+    'Km',
+    'Jm',
+    'Sb',
+    'Mn',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final missionProvider =
+        Provider.of<MissionProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -83,17 +99,19 @@ class _PresensiPopupState extends State<PresensiPopup> {
                   ),
                   child: Column(
                     children: [
-                      // Table head hari (sen, sel, rb, kam, jum, sab, min), orange beberapa
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DayHeader(day: 'Mn'),
-                          DayHeader(day: 'Sn'),
-                          DayHeader(day: 'Sl'),
-                          DayHeader(day: 'Rb', color: Colors.grey),
-                          DayHeader(day: 'Km', color: Colors.grey),
-                          DayHeader(day: 'Jm', color: Colors.grey),
-                          DayHeader(day: 'Sb', color: Colors.grey),
+                          for (int i = 0; i < 7; i++)
+                            DayHeader(
+                              day: weekStr[i],
+                              color: i + 1 >=
+                                          currentWeekDay -
+                                              widget.activeStreak &&
+                                      i <= currentWeekDay - 1
+                                  ? Colors.orange
+                                  : Colors.grey,
+                            ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -126,15 +144,9 @@ class _PresensiPopupState extends State<PresensiPopup> {
               ),
               // Button claim
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const PresensiPopup();
-                      },
-                    ),
-                  );
+                onPressed: () async {
+                  await missionProvider.presensi();
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 186, 60, 208),

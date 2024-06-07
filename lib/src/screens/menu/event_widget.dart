@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/popups/presensi_popup.dart';
 import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
+import 'package:vedanta_frontend/src/providers/mission_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 
@@ -13,308 +14,410 @@ class EventWidget extends StatefulWidget {
 }
 
 class _EventWidgetState extends State<EventWidget> {
-  Future<Map<String, dynamic>> _getUserInfo() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final response = await userProvider.getInfo();
-    return response['user'];
+  late Future<void> _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = _initializeUser();
   }
 
-  late Map<String, dynamic> user;
+  Future<void> _initializeUser() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    await userProvider.getInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _getUserInfo(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Text('An error occurred');
-          }
+      future: _userFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return const Center(child: Text('An error occurred'));
+        }
 
-          user = snapshot.data!;
-          return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.purple,
-                elevation: 0,
-                toolbarHeight: 0,
-                bottom: const TabBar(
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Color.fromARGB(255, 211, 211, 211),
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(text: "Misi"),
-                    Tab(text: "Lencana"),
-                    Tab(text: "Tukar"),
-                  ],
-                ),
-              ),
-              body: TabBarView(
-                children: [
-                  // Rahian
-                  _MisiTab(user: user, context: context),
-                  // Lencana
-                  const _LencanaTab(),
-                  //Tukar
-                  _TukarTab(user: user),
+        final userProvider = Provider.of<UserProvider>(context);
+        final user = userProvider.user;
+
+        return DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.purple,
+              elevation: 0,
+              toolbarHeight: 0,
+              bottom: const TabBar(
+                labelColor: Colors.white,
+                unselectedLabelColor: Color.fromARGB(255, 211, 211, 211),
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: "Misi"),
+                  Tab(text: "Lencana"),
+                  Tab(text: "Tukar"),
                 ],
               ),
             ),
-          );
-        });
+            body: TabBarView(
+              children: [
+                _MisiTab(user: user),
+                const _LencanaTab(),
+                _TukarTab(user: user),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
-class _MisiTab extends StatelessWidget {
-  _MisiTab({
-    required this.user,
-    required this.context,
-  });
-
+class _MisiTab extends StatefulWidget {
   final Map<String, dynamic> user;
-  final BuildContext context;
 
-  List<Map<String, dynamic>> misi = [
-    {
-      "title": "Selesaikan 10 kuis",
-      "progress": 2,
-      "total": 10,
-    },
-    {
-      "title": "Absen 15 Hari",
-      "progress": 2,
-      "total": 15,
-    },
-    {
-      "title": "Baca 5 Doa",
-      "progress": 5,
-      "total": 5,
+  const _MisiTab({required this.user});
+
+  @override
+  State<_MisiTab> createState() => _MisiTabState();
+}
+
+class _MisiTabState extends State<_MisiTab> {
+  late Future<Map<String, dynamic>> _futureMissions;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureMissions = _getMissions();
+  }
+
+  void _showClaimDialog(BuildContext context, Map<String, dynamic> misiItem) {
+    final missionProvider =
+        Provider.of<MissionProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Klaim Misi'),
+          content: Text(
+              'Apakah Anda ingin mengklaim misi ${misiItem['displayName']}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await missionProvider.claimMission(misiItem['id']);
+                await userProvider.getInfo();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Klaim'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> _getMissions() async {
+    final missionProvider =
+        Provider.of<MissionProvider>(context, listen: false);
+    final response = await missionProvider.getMission();
+    if (response['error'] == true) {
+      throw Exception(response['message']);
     }
-  ];
+
+    final missions = List<Map<String, dynamic>>.from(response['mission']);
+    return {
+      'missions': missions,
+      'activeStreak': response['activeStreak'],
+      'presenseAvailable': response['presenseAvailable']
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 30,
-            bottom: 10,
-          ),
-          width: double.infinity,
-          color: Colors.purple,
-          child: Stack(
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Positioned(
-                right: -30,
-                top: 0,
-                child: Image.asset(
-                  'lib/assets/images/gift-open.png',
-                  width: 250,
-                ),
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _futureMissions,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return const Text('An error occurred');
+        }
+
+        Map<String, dynamic> missionsData = snapshot.data!;
+        List<Map<String, dynamic>> misi = missionsData['missions'];
+
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 30,
+                bottom: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              width: double.infinity,
+              color: Colors.purple,
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
                 children: [
-                  const Text(
-                    "Rahianmu",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                  Positioned(
+                    right: -30,
+                    top: 0,
+                    child: Image.asset(
+                      'lib/assets/images/gift-open.png',
+                      width: 250,
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        fit: BoxFit.fill,
-                        'lib/assets/images/star.png',
-                        width: 40,
-                        height: 40,
-                      ),
-                      Text(
-                        '${user['points']}',
-                        style: const TextStyle(
+                      const Text(
+                        "Rahianmu",
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        height: 20,
                       ),
-                      Image.asset(
-                        fit: BoxFit.fill,
-                        'lib/assets/images/medal.png',
-                        width: 40,
-                        height: 40,
-                      ),
-                      Text(
-                        '${user['badges']}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text("Presensi Harian",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.start),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const PresensiPopup(),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.62,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.purple,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Center(
-                                    child: Text("3/20",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700)),
-                                  ),
-                                ),
-                                Image.asset(
-                                  fit: BoxFit.fill,
-                                  'lib/assets/images/icons/time.png',
-                                  width: 60,
-                                  height: 60,
-                                ),
-                              ],
+                          Image.asset(
+                            fit: BoxFit.fill,
+                            'lib/assets/images/star.png',
+                            width: 40,
+                            height: 40,
+                          ),
+                          Text(
+                            '${widget.user['points']}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Image.asset(
+                            fit: BoxFit.fill,
+                            'lib/assets/images/medal.png',
+                            width: 40,
+                            height: 40,
+                          ),
+                          Text(
+                            '${widget.user['badges']}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-            child: Container(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // SizedBox(height: 20),
-                const Text(
-                  "Misi",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                ),
-                Column(
-                  children: [
-                    for (int i = 0; i < misi.length; i++)
                       Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 20),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFFDADADA),
-                            width: 2,
-                          ),
+                          color: const Color(0xFFFFFFFF),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              fit: BoxFit.fill,
-                              'lib/assets/images/icons/misi.png',
-                              width: 80,
-                              height: 80,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 170),
-                                  child: Text(
-                                    misi[i]['title'],
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Container(
-                                  height: 32,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          'lib/assets/images/indikator_misi.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 20),
-                                      child: Text(
-                                          "${misi[i]['progress']}/${misi[i]['total']}",
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              missionsData['presenseAvailable']
+                                  ? const Text("Presensi Harian",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.start)
+                                  : const Text("Sudah Presensi",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.start),
+                              GestureDetector(
+                                  onTap: () async {
+                                    if (!missionsData['presenseAvailable']) {
+                                      return;
+                                    }
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PresensiPopup(
+                                          activeStreak:
+                                              missionsData['activeStreak'],
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {
+                                      _futureMissions = _getMissions();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.62,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              missionsData['presenseAvailable']
+                                                  ? Colors.purple
+                                                  : Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "${missionsData['activeStreak']}/∞",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Image.asset(
+                                        'lib/assets/images/icons/time.png',
+                                        fit: BoxFit.fill,
+                                        width: 60,
+                                        height: 60,
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
                         ),
                       )
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        )),
-      ],
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Misi",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800),
+                      ),
+                      Column(
+                        children: [
+                          for (int i = 0; i < misi.length; i++)
+                            GestureDetector(
+                              onTap: () {
+                                if (misi[i]['progress'] ==
+                                    misi[i]['maxProgress']) {
+                                  _showClaimDialog(context, misi[i]);
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 20),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color(0xFFDADADA),
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      fit: BoxFit.fill,
+                                      'lib/assets/images/icons/misi.png',
+                                      width: 80,
+                                      height: 80,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 170),
+                                          child: Text(
+                                            misi[i]['displayName'],
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w400),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Container(
+                                          height: 32,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          decoration: const BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  'lib/assets/images/indikator_misi.png'),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 20),
+                                              child: Text(
+                                                "${misi[i]['progress']}/${misi[i]['maxProgress']}",
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

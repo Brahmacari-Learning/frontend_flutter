@@ -167,25 +167,19 @@ class _AlarmCreateScreenTugasState extends State<AlarmCreateScreenTugas> {
       value: isHour ? hour : minute,
       minValue: 0,
       maxValue: isHour ? 23 : 59,
-      step: 1,
-      textStyle: const TextStyle(
-        color: Color.fromARGB(255, 134, 134, 134),
-        fontSize: 20,
-      ),
-      selectedTextStyle: const TextStyle(
-        color: Colors.purple,
-        fontSize: 48,
-        fontWeight: FontWeight.w700,
-      ),
-      itemWidth: 90,
-      itemHeight: 60,
-      haptics: true,
-      onChanged: (val) {
+      infiniteLoop: true,
+      zeroPad: true,
+      itemWidth: 80,
+      itemHeight: 100,
+      textStyle: const TextStyle(fontSize: 40, color: Colors.grey),
+      selectedTextStyle:
+          const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+      onChanged: (value) {
         setState(() {
           if (isHour) {
-            hour = val;
+            hour = value;
           } else {
-            minute = val;
+            minute = value;
           }
         });
       },

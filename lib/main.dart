@@ -13,6 +13,7 @@ import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/providers/hadiah_provider.dart';
+import 'package:vedanta_frontend/src/providers/mission_provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/theme_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
@@ -36,20 +37,6 @@ void onDidReceiveNotificationResponse(
   }
   print('notification response');
 }
-
-// Future<void> initializeNotifications() async {
-//   const AndroidInitializationSettings initializationSettingsAndroid =
-//       AndroidInitializationSettings(
-//     'vedanta_logo',
-//   );
-//   const InitializationSettings initializationSettings = InitializationSettings(
-//     android: initializationSettingsAndroid,
-//   );
-//   await flutterLocalNotificationsPlugin.initialize(
-//     initializationSettings,
-//     onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
-//   );
-// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,6 +75,7 @@ class MainApp extends StatelessWidget {
           create: (context) => AudioRecorderController(
               AudioRecorderFileHelper(), (message) => print(message)),
         ),
+        ChangeNotifierProvider(create: (context) => MissionProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
