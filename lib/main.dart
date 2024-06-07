@@ -26,31 +26,35 @@ import 'src/providers/auth_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 void onDidReceiveNotificationResponse(
-    NotificationResponse notificationResponse) {
+  NotificationResponse notificationResponse,
+) {
   if (notificationResponse.payload != null) {
     print('notification payload: ${notificationResponse.payload}');
     navigatorKey.currentState
         ?.pushNamed('/doa_detail', arguments: notificationResponse.payload);
   }
+  print('notification response');
 }
 
-Future<void> initializeNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('vedanta_logo');
-  const InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-}
+// Future<void> initializeNotifications() async {
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings(
+//     'vedanta_logo',
+//   );
+//   const InitializationSettings initializationSettings = InitializationSettings(
+//     android: initializationSettingsAndroid,
+//   );
+//   await flutterLocalNotificationsPlugin.initialize(
+//     initializationSettings,
+//     onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+//   );
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationHelper.init();
-  await initializeNotifications();
+
+  await NotificationHelper.init(onDidReceiveNotificationResponse);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

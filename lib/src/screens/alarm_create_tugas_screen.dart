@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:vedanta_frontend/src/helper/alarm_helper.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 
@@ -189,15 +190,5 @@ class _AlarmCreateScreenTugasState extends State<AlarmCreateScreenTugas> {
         });
       },
     );
-  }
-
-  int convertUlangiDoa(List<bool> ulangiDoa) {
-    int ulangi = 0;
-    for (int i = 0; i < ulangiDoa.length; i++) {
-      if (ulangiDoa[i]) {
-        ulangi = ulangi | (1 << i);
-      }
-    }
-    return ulangi;
   }
 }

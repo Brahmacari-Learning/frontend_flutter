@@ -2,17 +2,44 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 
 class NotificationHelper {
   static final _notification = FlutterLocalNotificationsPlugin();
 
-  static init() async {
-    _notification.initialize(const InitializationSettings(
-        android: AndroidInitializationSettings('vedanta_logo'),
-        iOS: DarwinInitializationSettings()));
+  static init(
+    void Function(NotificationResponse) onDidReceiveNotificationResponse,
+  ) async {
+    const androidInitializationSettings =
+        AndroidInitializationSettings('vedanta_logo');
+    const iOSInitializationSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iOSInitializationSettings,
+    );
+
+    await _notification.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+
     tz.initializeTimeZones();
     final String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
+
+    await _checkAndRequestNotificationPermission();
+  }
+
+  static Future<void> _checkAndRequestNotificationPermission() async {
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (await Permission.notification.isDenied) {
+        await Permission.notification.request();
+      }
+    }
   }
 
   static scheduleNotification(
@@ -23,12 +50,13 @@ class NotificationHelper {
   ) async {
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(
-        tz.local,
-        scheduledDateTime.year,
-        scheduledDateTime.month,
-        scheduledDateTime.day,
-        scheduledDateTime.hour,
-        scheduledDateTime.minute);
+      tz.local,
+      scheduledDateTime.year,
+      scheduledDateTime.month,
+      scheduledDateTime.day,
+      scheduledDateTime.hour,
+      scheduledDateTime.minute,
+    );
 
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
@@ -39,6 +67,9 @@ class NotificationHelper {
       'My Channel',
       importance: Importance.max,
       priority: Priority.max,
+      actions: <AndroidNotificationAction>[
+        AndroidNotificationAction('lihat', 'Lihat', showsUserInterface: true)
+      ],
     );
 
     var iosDetails = const DarwinNotificationDetails();
@@ -54,6 +85,7 @@ class NotificationHelper {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
       payload: idDoa.toString(),
     );
   }

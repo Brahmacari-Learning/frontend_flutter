@@ -241,7 +241,7 @@ class _TugasTabState extends State<_TugasTab> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (tugas['allHomeworkDoa'][i]['alarmDoa'] ==
-                                null) ...[
+                                false) ...[
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(

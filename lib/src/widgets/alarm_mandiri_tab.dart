@@ -14,13 +14,18 @@ class MandiriTabAlarm extends StatefulWidget {
 class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
   Future<void> _futureAllAlarm = Future.value();
   final List<Map<String, dynamic>> _allAlarms = [];
-  List<DateTime> _parsedAlarmTimes = [];
+  final List<DateTime> _parsedAlarmTimes = [];
 
   @override
   void initState() {
     super.initState();
+    // _initializeNotification();
     _futureAllAlarm = _getAlarmList();
   }
+
+  // Future<void> _initializeNotification() async {
+  //   await NotificationHelper.init();
+  // }
 
   Future<void> _getAlarmList() async {
     final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
@@ -28,10 +33,9 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
 
     setState(() {
       _allAlarms.clear();
-      _parsedAlarmTimes.clear(); // Clear the list of parsed DateTime
+      _parsedAlarmTimes.clear();
       for (var alarm in response['alarms']) {
         _allAlarms.add(alarm);
-        // Parse the time string to DateTime
         final hour = int.parse(alarm['jam'].split(':')[0]);
         final minute = int.parse(alarm['jam'].split(':')[1]);
         final now = DateTime.now();
@@ -47,18 +51,24 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
       _allAlarms[index]['active'] = !_allAlarms[index]['active'];
     });
 
+    try {
+      final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
+      await alarmProvider.activeToggle(
+          _allAlarms[index]['id'], _allAlarms[index]['active']);
+    } catch (e) {
+      print('Error toggling alarm: $e');
+    }
+
+    // Schedule or cancel the notification based on the new status
     if (_allAlarms[index]['active']) {
       print(_allAlarms[index]);
-      // Use _parsedAlarmTimes[index] to get the parsed DateTime
       await NotificationHelper.scheduleNotification(
         _allAlarms[index]['title'],
         "Waktu untuk membaca doa ${_allAlarms[index]['title']}",
         _parsedAlarmTimes[index],
         _allAlarms[index]['doaId'],
       );
-    } else {
-      // Optionally, you could cancel the scheduled notification if the alarm is turned off
-    }
+    } else {}
   }
 
   void _showPopupMenu(BuildContext context, int index) {
@@ -68,23 +78,15 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
         return Wrap(
           children: <Widget>[
             ListTile(
-              leading: const Icon(Icons.edit),
-              title: const Text('Edit'),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to edit screen or handle edit functionality
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.delete),
-              title: const Text('Delete'),
-              onTap: () {
+              title: const Text('Hapus'),
+              onTap: () async {
                 Navigator.pop(context);
-                setState(() {
-                  _allAlarms.removeAt(index);
-                  _parsedAlarmTimes
-                      .removeAt(index); // Remove corresponding DateTime
-                });
+                final alarmProvider =
+                    Provider.of<AlarmProvider>(context, listen: false);
+                final alarmId = _allAlarms[index]['id'];
+                await alarmProvider.deleteAlarm(alarmId);
+                await _getAlarmList();
               },
             ),
           ],
@@ -108,41 +110,47 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
-                  return ListView.builder(
-                    itemCount: _allAlarms.length,
-                    itemBuilder: (context, index) {
-                      final alarm = _allAlarms[index];
-                      return GestureDetector(
-                        onLongPress: () {
-                          _showPopupMenu(context, index);
-                        },
-                        child: Card(
-                          color: alarm['active']
-                              ? Colors.white
-                              : Colors.grey.shade300,
-                          child: ListTile(
-                            title: Text(
-                              '${alarm['jam'].split(':')[0].padLeft(2, '0')}:${alarm['jam'].split(':')[1].padLeft(2, '0')}',
-                              style: const TextStyle(
-                                  fontSize: 32, fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text(
-                              alarm['title'],
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w400),
-                            ),
-                            trailing: Switch(
-                              value: alarm['active'],
-                              onChanged: (value) {
-                                _toggleAlarm(index);
-                              },
-                              activeTrackColor: Colors.purple,
+                  if (_allAlarms.isEmpty) {
+                    // Jika tidak ada doa yang ditambahkan, tampilkan pesan
+                    return const Center(
+                        child: Text('Belum ada penjadwalan doa'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: _allAlarms.length,
+                      itemBuilder: (context, index) {
+                        final alarm = _allAlarms[index];
+                        return GestureDetector(
+                          onLongPress: () {
+                            _showPopupMenu(context, index);
+                          },
+                          child: Card(
+                            color: alarm['active']
+                                ? Colors.white
+                                : Colors.grey.shade300,
+                            child: ListTile(
+                              title: Text(
+                                '${alarm['jam'].split(':')[0].padLeft(2, '0')}:${alarm['jam'].split(':')[1].padLeft(2, '0')}',
+                                style: const TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Text(
+                                alarm['title'],
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w400),
+                              ),
+                              trailing: Switch(
+                                value: alarm['active'],
+                                onChanged: (value) {
+                                  _toggleAlarm(index);
+                                },
+                                activeTrackColor: Colors.purple,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    );
+                  }
                 }
               },
             ),
@@ -151,13 +159,16 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const AlarmCreateScreen(),
                     ),
                   );
+                  setState(() {
+                    _futureAllAlarm = _getAlarmList();
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,

@@ -172,14 +172,23 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                   child: ElevatedButton(
                     onPressed: selectedDoa.isNotEmpty
                         ? () async {
-                            var response = await alarmProvider.createAlarm(
+                            final response = await alarmProvider.createAlarm(
                               hour,
                               minute,
                               1,
                               selectedDoa['id'],
                             );
-
-                            if (response.containsKey('id')) {
+                            if (response['error'] == true) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Terjadi kesalahan saat menyimpan alarm',
+                                    ),
+                                  ),
+                                );
+                              }
+                            } else {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -190,16 +199,6 @@ class _AlarmCreateScreenState extends State<AlarmCreateScreen> {
                                 );
                               }
                               Navigator.pop(context);
-                            } else {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Terjadi kesalahan saat menyimpan alarm',
-                                    ),
-                                  ),
-                                );
-                              }
                             }
                           }
                         : null,

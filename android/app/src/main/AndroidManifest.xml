@@ -6,11 +6,14 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
 
 
     <application
         android:label="Vedanta"
         android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@drawable/vedanta_logo">
         <activity
             android:name=".MainActivity"

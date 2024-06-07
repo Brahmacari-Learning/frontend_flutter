@@ -14,6 +14,16 @@ class AlarmProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getAlarmTugas() async {
+    try {
+      final response = await _apiService.fetchData('alarms/tugas');
+      return response;
+    } catch (e) {
+      print('Error in getAlarm: $e'); // Print the error
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
   Future<Map<String, dynamic>> createAlarm(
     int jam,
     int menit,
@@ -29,12 +39,7 @@ class AlarmProvider with ChangeNotifier {
           'doaId': doaId,
         },
       );
-      if (response.containsKey('id')) {
-        return response;
-      } else {
-        print('Error in response: $response');
-        return {'error': true, 'message': 'Invalid response structure'};
-      }
+      return response;
     } catch (e) {
       print('Error in createAlarm: $e'); // Log the error
       return {'error': true, 'message': 'An error occurred'};
@@ -70,10 +75,22 @@ class AlarmProvider with ChangeNotifier {
 
   Future<Map<String, dynamic>> deleteAlarm(int id) async {
     try {
-      final response = await _apiService.deleteData('alarms/$id');
+      final response = await _apiService.deleteData('alarms/$id/delete');
       return response;
     } catch (e) {
       print('Error in deleteAlarm: $e'); // Print the error
+      return {'error': true, 'message': 'An error occurred'};
+    }
+  }
+
+  Future<Map<String, dynamic>> activeToggle(int id, bool active) async {
+    try {
+      final response = await _apiService.postData('alarms/$id/active', {
+        'active': active,
+      });
+      return response;
+    } catch (e) {
+      print('Error in activeToggle: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }

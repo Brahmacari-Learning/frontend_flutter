@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vedanta_frontend/src/helper/notification_helper.dart';
 import 'package:vedanta_frontend/src/providers/auth_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
@@ -188,7 +187,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               ),
                               const SizedBox(width: 14),
                               const Text(
-                                'Kelassss',
+                                'Kelas',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
@@ -220,20 +219,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     themeProvider.toggleTheme();
-                        //   },
-                        //   child: const Text(
-                        //     'Ubah tema tampilan',
-                        //     style: TextStyle(
-                        //       fontSize: 18,
-                        //       fontWeight: FontWeight.w400,
-                        //       color: Color(0xFF3E5FAF),
-                        //     ),
-                        //   ),
-                        // ),
-                        // const SizedBox(height: 5),
                         GestureDetector(
                           onTap: () {
                             showDialog(

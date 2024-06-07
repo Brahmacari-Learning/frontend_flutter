@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vedanta_frontend/src/helper/notification_helper.dart';
-import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
+import 'package:vedanta_frontend/src/widgets/alarm_tugas_tab.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
-
-import 'package:vedanta_frontend/src/widgets/mandiri_tab_alarm.dart';
+import 'package:vedanta_frontend/src/widgets/alarm_mandiri_tab.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key});
@@ -50,17 +47,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TugasTabAlarm extends StatelessWidget {
-  const TugasTabAlarm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Belum ada penjadwalan'),
     );
   }
 }
