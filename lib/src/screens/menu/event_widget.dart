@@ -291,7 +291,7 @@ class _MisiTabState extends State<_MisiTab> {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            "${missionsData['activeStreak']}/∞",
+                                            "${missionsData['activeStreak']}X",
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 20,
@@ -430,21 +430,61 @@ class _LencanaTab extends StatefulWidget {
 }
 
 class _LencanaTabState extends State<_LencanaTab> {
-  // final List<Map<String, dynamic>> _lencana = [
+  late Future<void> _fetchLencanaFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<HadiahProvider>(context, listen: false);
+    _fetchLencanaFuture = provider.getLencana();
+  }
+
+  void _showClaimDialog(
+      BuildContext context, Map<String, dynamic> lencanaItem) {
+    final lencanaProvider = Provider.of<HadiahProvider>(context, listen: false);
+    // final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Klaim Lencana'),
+          content: Text(
+              'Apakah Anda ingin mengklaim lencana ${lencanaItem['name']}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await lencanaProvider.lencanaClaim(lencanaItem['id']);
+                // await userProvider.getInfo();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Klaim'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HadiahProvider>(context, listen: false);
-    return FutureBuilder(
-        future: provider.getLencana(),
+    final provider = Provider.of<HadiahProvider>(context);
+    return FutureBuilder<void>(
+        future: _fetchLencanaFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return const Center(child: Text('An error occurred'));
+            return Center(child: Text('An error occurred: ${snapshot.error}'));
           }
-          final lencana = snapshot.data!['badges'];
+          final lencana = provider.lencana['badges'];
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -454,106 +494,128 @@ class _LencanaTabState extends State<_LencanaTab> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (int i = 0; i < lencana.length; i++)
-                        Opacity(
-                          opacity: lencana[i]['has'] ? 1 : 0.5,
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                                top: 15, left: 20, right: 20),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            // width: 345,
-                            decoration: BoxDecoration(
-                              color: lencana[i]['has']
-                                  ? HexColor(lencana[i]['color'])
-                                  : Colors.grey,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  offset: const Offset(0, -2),
-                                  blurRadius: 7,
-                                  spreadRadius: 0,
-                                ),
-                              ],
-                            ),
-                            child: Stack(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(
-                                          3), // Border width
-                                      decoration: const BoxDecoration(
-                                        color:
-                                            Color(0xFFFF8504), // Border color
-                                        shape: BoxShape.circle,
+                        GestureDetector(
+                          onTap: () {
+                            if (lencana[i]['progress'] ==
+                                lencana[i]['maxProgress']) {
+                              _showClaimDialog(context, lencana[i]);
+                            }
+                          },
+                          child: Opacity(
+                            opacity: lencana[i]['has'] ? 1 : 0.5,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: lencana[i]['has']
+                                    ? HexColor(lencana[i]['color'])
+                                    : Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: const Offset(0, -2),
+                                    blurRadius: 7,
+                                    spreadRadius: 0,
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(
+                                            3), // Border width
+                                        decoration: const BoxDecoration(
+                                          color:
+                                              Color(0xFFFF8504), // Border color
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 35,
+                                          backgroundImage: NetworkImage(
+                                              'https://cdn.hmjtiundiksha.com/${lencana[i]['image']}'),
+                                        ),
                                       ),
-                                      child: CircleAvatar(
-                                        radius: 35,
-                                        backgroundImage: NetworkImage(
-                                            'https://cdn.hmjtiundiksha.com/${lencana[i]['image']}'),
+                                      const SizedBox(width: 15),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            constraints: const BoxConstraints(
+                                                maxWidth: 170),
+                                            child: Text(
+                                              lencana[i]['name'],
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Container(
+                                            constraints: const BoxConstraints(
+                                                maxWidth: 200),
+                                            child: Text(
+                                              lencana[i]['description'],
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                          if (!lencana[i]['has'])
+                                            Container(
+                                              constraints: const BoxConstraints(
+                                                  maxWidth: 200),
+                                              child: Text(
+                                                'Progress: ${lencana[i]['progress']} / ${lencana[i]['maxProgress']}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          constraints: const BoxConstraints(
-                                              maxWidth: 170),
-                                          child: Text(
-                                            lencana[i]['name'],
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
+                                    ],
+                                  ),
+                                  lencana[i]['has']
+                                      ? Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 50, left: 10),
+                                            child: Image.asset(
+                                              fit: BoxFit.fill,
+                                              'lib/assets/images/icons/star.png',
+                                              width: 22,
+                                              height: 22,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
-                                        ),
-                                        Container(
-                                          constraints: const BoxConstraints(
-                                              maxWidth: 200),
-                                          child: Text(
-                                            lencana[i]['description'],
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                lencana[i]['has']
-                                    ? Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                              bottom: 50, left: 10),
-                                          child: Image.asset(
-                                            fit: BoxFit.fill,
-                                            'lib/assets/images/icons/star.png',
-                                            width: 22,
-                                            height: 22,
-                                          ),
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ],
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -570,12 +632,47 @@ class _TukarTab extends StatefulWidget {
 }
 
 class _TukarTabState extends State<_TukarTab> {
+  late Future<void> _fetchHadiahFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<HadiahProvider>(context, listen: false);
+    _fetchHadiahFuture = provider.getHadiah();
+  }
+
+  void _showClaimDialog(BuildContext context, String giftName, int giftId) {
+    final provider = Provider.of<HadiahProvider>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Tukar Hadiah'),
+          content: Text('Apakah Anda yakin ingin menukar hadiah: $giftName?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await provider.giftClaim(giftId);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ya'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HadiahProvider>(context);
-
-    return FutureBuilder(
-        future: provider.getHadiah(),
+    return FutureBuilder<void>(
+        future: _fetchHadiahFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -587,123 +684,143 @@ class _TukarTabState extends State<_TukarTab> {
               child: Text('Error: ${snapshot.error}'),
             );
           }
-          final gifts = snapshot.data!['gifts'];
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (int i = 0; i < gifts.length; i++)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 47, 147, 223),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: const Offset(0, -2),
-                                blurRadius: 7,
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.all(3), // Border width
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFFF8504), // Border color
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: NetworkImage(
-                                          'https://cdn.hmjtiundiksha.com/${gifts[i]['thumbnail']}'),
-                                    ),
+          return Consumer<HadiahProvider>(
+            builder: (context, provider, child) {
+              final gifts = List<Map<String, dynamic>>.from(
+                  provider.hadiah['gifts'] ?? []);
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 15, left: 20, right: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < gifts.length; i++)
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 47, 147, 223),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: const Offset(0, -2),
+                                    blurRadius: 7,
+                                    spreadRadius: 0,
                                   ),
-                                  const SizedBox(width: 15),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     children: [
                                       Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 140),
-                                        child: Text(
-                                          "${gifts[i]['name']}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
+                                        padding: const EdgeInsets.all(
+                                            3), // Border width
+                                        decoration: const BoxDecoration(
+                                          color:
+                                              Color(0xFFFF8504), // Border color
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: NetworkImage(
+                                              'https://cdn.hmjtiundiksha.com/${gifts[i]['thumbnail']}'),
                                         ),
                                       ),
-                                      Row(
+                                      const SizedBox(width: 15),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Image.asset(
-                                            fit: BoxFit.fill,
-                                            'lib/assets/images/star.png',
-                                            width: 30,
-                                            height: 30,
-                                          ),
-                                          Text(
-                                            '${gifts[i]['prize']}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
+                                          Container(
+                                            constraints: const BoxConstraints(
+                                                maxWidth: 140),
+                                            child: Text(
+                                              "${gifts[i]['name']}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                fit: BoxFit.fill,
+                                                'lib/assets/images/star.png',
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                              Text(
+                                                '${gifts[i]['prize']}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15, horizontal: 20),
-                                  backgroundColor:
-                                      widget.user['points'] > gifts[i]['prize']
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      if (widget.user['points'] <
+                                          gifts[i]['prize']) {
+                                        return;
+                                      } else {
+                                        _showClaimDialog(context,
+                                            gifts[i]['name'], gifts[i]['id']);
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15, horizontal: 20),
+                                      backgroundColor: widget.user['points'] >=
+                                                  gifts[i]['prize'] &&
+                                              gifts[i]['status'] == null
                                           ? const Color(0xFFF1C40F)
                                           : const Color.fromARGB(
                                               255, 175, 198, 216),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Atur radius sudut di sini
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      gifts[i]['status'] == null
+                                          ? "Tukar"
+                                          : gifts[i]['status'] == "PENDING"
+                                              ? "Menunggu"
+                                              : "Berhasil",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Color(0xFFFFFFFF),
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  "Tukar",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFFFFFFFF),
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                            ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
           );
         });
   }
