@@ -39,6 +39,7 @@ class InputRoundedWithIcon extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
+              onSubmitted: onEnter,
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: const TextStyle(

@@ -65,7 +65,7 @@ class _TugasTabAlarmState extends State<TugasTabAlarm> {
       print(_allAlarms[index]);
       await NotificationHelper.scheduleNotification(
         _allAlarms[index]['title'],
-        "Waktu untuk membaca doa ${_allAlarms[index]['title']}",
+        "Waktu untuk mengerjakan tugas ${_allAlarms[index]['title']}",
         _parsedAlarmTimes[index],
         _allAlarms[index]['doaId'],
       );

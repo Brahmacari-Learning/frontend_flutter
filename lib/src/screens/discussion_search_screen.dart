@@ -16,7 +16,7 @@ class _SearchDiscussionScreenState extends State<SearchDiscussionScreen> {
     return AuthWrapper(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Search Discussion'),
+          title: const Text('Hasil Pencarian Diskusi'),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

@@ -117,6 +117,12 @@ class _MisiTabState extends State<_MisiTab> {
                 await missionProvider.claimMission(misiItem['id']);
                 await userProvider.getInfo();
                 Navigator.of(context).pop();
+                setState(() {
+                  _futureMissions = _getMissions();
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content:  Text('Misi ${misiItem['displayName']} berhasil di diklaim.')),
+                );
               },
               child: const Text('Klaim'),
             ),
@@ -242,7 +248,7 @@ class _MisiTabState extends State<_MisiTab> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               missionsData['presenseAvailable']
-                                  ? const Text("Presensi Harian",
+                                  ? const Text("Ayo Presensi",
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600),
@@ -460,6 +466,11 @@ class _LencanaTabState extends State<_LencanaTab> {
                 await lencanaProvider.lencanaClaim(lencanaItem['id']);
                 // await userProvider.getInfo();
                 Navigator.of(context).pop();
+                 ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'Misi ${lencanaItem['name']} berhasil di diklaim.')),
+                );
               },
               child: const Text('Klaim'),
             ),
@@ -651,6 +662,11 @@ class _TukarTabState extends State<_TukarTab> {
               onPressed: () async {
                 await provider.giftClaim(giftId);
                 Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'Misi $giftName berhasil di diklaim.')),
+                );
               },
               child: const Text('Ya'),
             ),

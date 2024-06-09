@@ -18,7 +18,7 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<Map<String, dynamic>> _chat = [];
-  bool _isLoading = false; // Tambahkan variabel _isLoading
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -37,10 +37,54 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
     }
   }
 
+  Future<void> _sendMessage() async {
+    String message = _controller.text.trim();
+    if (message.isEmpty) return;
+
+    // Clear the input field
+    _controller.clear();
+
+    // Add user's message to chat list and update state
+    setState(() {
+      _chat.add({
+        'message': message,
+        'isUser': true,
+        'error': false,
+      });
+      _isLoading = true; // Set _isLoading to true
+    });
+
+    _scrollToBottom();
+
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+
+    // Send message and get response
+    Map<String, dynamic> response = await chatProvider.quickChat(message);
+
+    // Add response to chat list and update state
+    setState(() {
+      _isLoading = false; // Set _isLoading to false
+      if (!response['error']) {
+        _chat.add({
+          'message': response['text'],
+          'isUser': false,
+          'error': false,
+        });
+      } else {
+        _chat.add({
+          'message': response['text'],
+          'isUser': false,
+          'error': true,
+        });
+      }
+    });
+
+    // Scroll to bottom
+    _scrollToBottom();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
           title: Row(
@@ -114,7 +158,6 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              // Avatar
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 margin: const EdgeInsets.only(left: 20),
@@ -153,7 +196,6 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                                   ),
                                 ),
                               ),
-                              // Gap
                             ],
                           ),
                         ),
@@ -197,6 +239,7 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                               controller: _controller,
                               onTap: () => _scrollToBottom(),
                               onChanged: (value) => _scrollToBottom(),
+                              onSubmitted: (value) => _sendMessage(),
                               decoration: const InputDecoration(
                                 hintText: 'Ketik pesan...',
                                 hintStyle: TextStyle(
@@ -212,48 +255,7 @@ class _ChatBotWidgetState extends State<ChatBotWidget> {
                           ),
                           const SizedBox(width: 10),
                           TextButton(
-                            onPressed: () async {
-                              String message = _controller.text;
-                              // Clear the input field
-                              _controller.clear();
-
-                              // Add user's message to chat list and update state
-                              setState(() {
-                                _chat.add({
-                                  'message': message,
-                                  'isUser': true,
-                                  'error': false,
-                                });
-                                _isLoading = true; // Set _isLoading ke true
-                              });
-
-                              _scrollToBottom();
-
-                              // Send message and get response
-                              Map<String, dynamic> response =
-                                  await chatProvider.quickChat(message);
-
-                              // Add response to chat list and update state
-                              setState(() {
-                                _isLoading = false; // Set _isLoading ke false
-                                if (!response['error']) {
-                                  _chat.add({
-                                    'message': response['text'],
-                                    'isUser': false,
-                                    'error': false,
-                                  });
-                                } else {
-                                  _chat.add({
-                                    'message': response['text'],
-                                    'isUser': false,
-                                    'error': true,
-                                  });
-                                }
-                              });
-
-                              // Scroll to bottom
-                              _scrollToBottom();
-                            },
+                            onPressed: () => _sendMessage(),
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),

@@ -16,7 +16,7 @@ class _SearchSlokaScreenState extends State<SearchSlokaScreen> {
     return AuthWrapper(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Search Sloka'),
+          title: const Text('Hasil Pencarian Sloka'),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

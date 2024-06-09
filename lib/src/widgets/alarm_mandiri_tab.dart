@@ -64,7 +64,7 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
       print(_allAlarms[index]);
       await NotificationHelper.scheduleNotification(
         _allAlarms[index]['title'],
-        "Waktu untuk membaca doa ${_allAlarms[index]['title']}",
+        "Waktu untuk membaca ${_allAlarms[index]['title']}",
         _parsedAlarmTimes[index],
         _allAlarms[index]['doaId'],
       );

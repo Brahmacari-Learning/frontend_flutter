@@ -91,7 +91,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                     ));
                   } else {
                     scaffoldMessenger.showSnackBar(const SnackBar(
-                      content: Text('Sloka found'),
+                      content: Text('Doa ditemukan!'),
                       backgroundColor: Colors.green,
                     ));
                     // navigate to detail sloka screen

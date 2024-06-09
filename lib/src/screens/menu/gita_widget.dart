@@ -96,7 +96,7 @@ class _GitaWidgetState extends State<GitaWidget> {
               InputRoundedWithIcon(
                 controller: _controller,
                 icon: Icons.search,
-                label: 'Search...',
+                label: 'Cari Sloka...',
                 onEnter: (value) async {
                   final response =
                       await gitaProvider.searchSlokas(_controller.text.trim());
@@ -107,7 +107,7 @@ class _GitaWidgetState extends State<GitaWidget> {
                     ));
                   } else {
                     scaffoldMessenger.showSnackBar(const SnackBar(
-                      content: Text('Sloka found'),
+                      content: Text('Sloka ditemukan!'),
                       backgroundColor: Colors.green,
                     ));
                     // navigate to detail sloka screen

@@ -38,15 +38,25 @@ class _KerjaBagusState extends State<KerjaBagus> {
               "lib/assets/images/kerja_bagus.png",
               width: 200,
             ),
-            Image.asset(
-              "lib/assets/images/${statsInfo['bintang']}_star.png",
-              width: 150,
+
+            Stack(
+              children: [
+                Image.asset(
+                  "lib/assets/images/${info['stars']}_star.png",
+                  width: 150,
+                ),
+                if (info['previousStars'] > 0)
+                  Image.asset(
+                    "lib/assets/images/${info['previousStars']}_star_claimed.png",
+                    width: 150,
+                  ),
+              ],
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              "Kamu dapat bintang ${statsInfo['bintang']}!",
+              "Kamu dapat bintang ${info['reward']}!",
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -131,24 +141,27 @@ Map<String, dynamic> stats(Map<String, dynamic> info) {
   Map<String, dynamic> result = {};
   double rate = double.parse("${info['correctCount']}") / info['countQuiz'];
   // contains text, star image, correct count, wrong count
-  if (rate < 0.5) {
+  if (rate == 0) {
     result = {
       "text": "Kamu harus lebih serius!",
-      "bintang": 1,
+      "correctCount": info['correctCount'],
+      "wrongCount": info['countQuiz'] - info['correctCount'],
+    };
+  } else if (rate < 0.5) {
+    result = {
+      "text": "Kamu harus lebih serius!",
       "correctCount": info['correctCount'],
       "wrongCount": info['countQuiz'] - info['correctCount'],
     };
   } else if (rate < 0.7) {
     result = {
       "text": "Lumayan!",
-      "bintang": 2,
       "correctCount": info['correctCount'],
       "wrongCount": info['countQuiz'] - info['correctCount'],
     };
   } else {
     result = {
       "text": "Kerja Bagus!",
-      "bintang": 3,
       "correctCount": info['correctCount'],
       "wrongCount": info['countQuiz'] - info['correctCount'],
     };

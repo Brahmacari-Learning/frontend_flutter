@@ -63,14 +63,14 @@ class NotificationHelper {
     }
 
     var androidDetails = const AndroidNotificationDetails(
-      'important_notification',
-      'My Channel',
-      importance: Importance.max,
-      priority: Priority.max,
-      actions: <AndroidNotificationAction>[
-        AndroidNotificationAction('lihat', 'Lihat', showsUserInterface: true)
-      ],
-    );
+        'important_notification', 'My Channel',
+        importance: Importance.max,
+        priority: Priority.max,
+        actions: <AndroidNotificationAction>[
+          AndroidNotificationAction('lihat', 'Lihat', showsUserInterface: true)
+        ],
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound('test_alarm'));
 
     var iosDetails = const DarwinNotificationDetails();
 

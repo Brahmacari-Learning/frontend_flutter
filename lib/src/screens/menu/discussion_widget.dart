@@ -163,7 +163,7 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
             InputRoundedWithIcon(
               controller: _controller,
               icon: Icons.search,
-              label: 'Cari diskusi...',
+              label: 'Cari Diskusi...',
               onEnter: (value) async {
                 final response = await discussionProvider
                     .searchDiscussion(_controller.text.trim());
