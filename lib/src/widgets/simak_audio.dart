@@ -54,6 +54,16 @@ class _SimakAudioState extends State<SimakAudio> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Text(
+                      model['title'],
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     ButtonOptionFullWidth(
                         text: model['optionOne'],
                         onClick: () {

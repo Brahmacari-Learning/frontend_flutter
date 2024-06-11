@@ -36,7 +36,7 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
   void _showCustomNotification(BuildContext context, bool correct, int point) {
     OverlayEntry overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: 50.0, // Position the notification at the top of the screen
+        top: 50.0, 
         left: 0,
         right: 0,
         child: CustomNotification(

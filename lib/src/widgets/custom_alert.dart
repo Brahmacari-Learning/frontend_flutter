@@ -95,7 +95,7 @@ class _CustomNotificationState extends State<CustomNotification>
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.none,
+                    decoration: TextDecoration.none, // Ensure no underline
                   ),
                   textAlign: TextAlign.center,
                 ),

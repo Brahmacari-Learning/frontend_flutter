@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String _baseUrl = 'http://172.16.17.130:3000/api';
-  // final String _baseUrl = 'https://vedanta-pro.vercel.app/api';
+  // final String _baseUrl = 'http://172.16.17.130:3000/api';
+  final String _baseUrl = 'https://vedanta-pro.vercel.app/api';
 
   // Example of a GET request
   Future<Map<String, dynamic>> fetchData(String endpoint) async {

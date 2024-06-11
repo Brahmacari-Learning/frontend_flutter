@@ -284,6 +284,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 120),
+                  Opacity(
+                    opacity: 0.5,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Image.asset(
+                        'lib/assets/images/support_by.png',
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                  )
                 ],
               ),
             );
