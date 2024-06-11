@@ -750,7 +750,7 @@ class _TukarTabState extends State<_TukarTab> {
   }
 
   void _showClaimDialog(
-      BuildContext context, String giftName, int giftId, String status) {
+      BuildContext context, String giftName, int giftId, dynamic status) {
     final provider = Provider.of<HadiahProvider>(context, listen: false);
     showDialog(
       context: context,
@@ -766,6 +766,7 @@ class _TukarTabState extends State<_TukarTab> {
                   Navigator.of(context).pop();
                   _showCustomNotification(
                       'Hadiah $giftName berhasil diklaim.', true);
+                  _showCustomNotification('Hadiah Berhasil Di Tukar', true);
                 } else {
                   Navigator.of(context).pop();
                   _showCustomNotification(
@@ -904,15 +905,14 @@ class _TukarTabState extends State<_TukarTab> {
                                             false,
                                           );
                                         } else {
-                                          String status = gifts[i]['status'];
-                                          if (status == null) {
+                                          if (gifts[i]['status'] == null) {
                                             _showClaimDialog(
                                                 context,
                                                 gifts[i]['name'],
                                                 gifts[i]['id'],
-                                                status
-                                                );
-                                          } else if (status == "PENDING") {
+                                                gifts[i]['status']);
+                                          } else if (gifts[i]['status'] ==
+                                              "PENDING") {
                                             _showCustomNotification(
                                               'Hadiah sedang dalam proses klaim. Mohon tunggu.',
                                               false,
@@ -928,11 +928,14 @@ class _TukarTabState extends State<_TukarTab> {
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 15, horizontal: 20),
-                                        backgroundColor:
-                                            widget.user['points'] >=
-                                                        gifts[i]['prize'] &&
-                                                    gifts[i]['status'] == null
-                                                ? const Color(0xFFF1C40F)
+                                        backgroundColor: widget
+                                                        .user['points'] >=
+                                                    gifts[i]['prize'] &&
+                                                gifts[i]['status'] == null
+                                            ? const Color(0xFFF1C40F)
+                                            : gifts[i]['status'] == 'SUCCESS'
+                                                ? const Color.fromARGB(
+                                                    255, 43, 191, 104)
                                                 : const Color.fromARGB(
                                                     255, 175, 198, 216),
                                         shape: RoundedRectangleBorder(

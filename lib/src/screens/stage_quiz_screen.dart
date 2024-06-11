@@ -36,7 +36,7 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
   void _showCustomNotification(BuildContext context, bool correct, int point) {
     OverlayEntry overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: 50.0, 
+        top: 50.0,
         left: 0,
         right: 0,
         child: CustomNotification(
@@ -116,7 +116,7 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
           return const Scaffold(
             backgroundColor: Color(0xFF9C7AFF),
             body: Center(
-              child: Text('Tunggu dulu'),
+              child: Text('Maaf, soal belum diinputkan'),
             ),
           );
         }
