@@ -20,12 +20,16 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
   final TextEditingController _controller = TextEditingController();
   final List<dynamic> _doaList = [];
   final List<dynamic> _favoriteDoaList = [];
+  final ScrollController _scrollController = ScrollController();
+  int _currentDoaPage = 1;
+  bool _isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     setState(() {
-      _futureDoaList = _getDoaList();
+      _futureDoaList = _getDoaList(page: 1);
       _futureLikedDoaList = _getLikedDoaList();
     });
   }
@@ -33,6 +37,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -51,16 +56,32 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
     });
   }
 
-  Future<void> _getDoaList() async {
+  Future<void> _getDoaList({required int page}) async {
+    if (_isLoadingMore) return;
+    setState(() {
+      _isLoadingMore = true;
+    });
+
     final DoaProvider doaProvider =
         Provider.of<DoaProvider>(context, listen: false);
-    final response = await doaProvider.getDoa();
+    final response = await doaProvider.getDoa(page: page);
     setState(() {
-      _doaList.clear();
+      if (page == 1) {
+        _doaList.clear();
+      }
       for (var i = 0; i < response['doas'].length; i++) {
         _doaList.add(response['doas'][i]);
       }
+      _isLoadingMore = false;
     });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _currentDoaPage++;
+      _getDoaList(page: _currentDoaPage);
+    }
   }
 
   @override
@@ -201,6 +222,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
           );
         } else {
           return ListView.builder(
+            controller: _scrollController,
             itemCount: doaList.length,
             itemBuilder: (context, index) {
               return ListTile(
@@ -259,7 +281,6 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                         ));
                       } else {
                         setState(() {
-                          // _futureSlokaList = _getSlokaList(_currentBab!);
                           doaList[index]['isLiked'] =
                               !doaList[index]['isLiked'];
                           _futureLikedDoaList = _getLikedDoaList();
@@ -278,7 +299,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                       } else {
                         setState(() {
                           _futureLikedDoaList = _getLikedDoaList();
-                          _futureDoaList = _getDoaList();
+                          _futureDoaList = _getDoaList(page: 1);
                         });
                       }
                     }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/screens/discussion_create.dart';
@@ -128,16 +127,9 @@ class _DiscussionWidgetState extends State<DiscussionWidget> {
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(response['message']),
-            backgroundColor: Colors.red,
           ),
         );
       } else {
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(
-            content: Text('Success!'),
-            backgroundColor: Colors.green,
-          ),
-        );
         setState(() {
           _isLoading = true;
           _currentPage = 1;
