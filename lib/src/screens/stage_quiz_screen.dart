@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
@@ -33,6 +35,18 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
     });
   }
 
+  String getCorrectMessageRandom() {
+    final Random random = Random();
+    final List<String> messages = [
+      'Kerja Bagus!',
+      'Hebat!',
+      'Benar Sekali!',
+      'Tepat Sekali!',
+      'Benar!',
+    ];
+    return messages[random.nextInt(messages.length)];
+  }
+
   void _showCustomNotification(BuildContext context, bool correct, int point) {
     OverlayEntry overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -40,8 +54,7 @@ class _StageQuizScreenState extends State<StageQuizScreen> {
         left: 0,
         right: 0,
         child: CustomNotification(
-          message:
-              correct ? 'Kerja Bagus! +$point Points' : ' Yah Salah! +0 Points',
+          message: correct ? getCorrectMessageRandom() : ' Yah Salah!',
           correct: correct,
         ),
       ),
