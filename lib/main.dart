@@ -31,11 +31,9 @@ void onDidReceiveNotificationResponse(
   NotificationResponse notificationResponse,
 ) {
   if (notificationResponse.payload != null) {
-    print('notification payload: ${notificationResponse.payload}');
     navigatorKey.currentState
         ?.pushNamed('/doa_detail', arguments: notificationResponse.payload);
   }
-  print('notification response');
 }
 
 void main() async {
@@ -72,8 +70,8 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => StageProvider()),
         ChangeNotifierProvider(create: (context) => HadiahProvider()),
         ChangeNotifierProvider(
-          create: (context) => AudioRecorderController(
-              AudioRecorderFileHelper(), (message) => print(message)),
+          create: (context) =>
+              AudioRecorderController(AudioRecorderFileHelper(), (message) {}),
         ),
         ChangeNotifierProvider(create: (context) => MissionProvider()),
       ],

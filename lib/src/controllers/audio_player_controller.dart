@@ -15,7 +15,7 @@ class AudioPlayerController {
       await _audioPlayer.load();
       _audioPlayer.play();
     } catch (e) {
-      print("Error loading audio: $e");
+      //
     }
   }
 

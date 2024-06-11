@@ -46,6 +46,7 @@ class DiscussionProvider with ChangeNotifier {
       return {'error': true, 'message': 'An error occurred'};
     }
   }
+
   // Create reply
   Future<Map<String, dynamic>> createReply(int discussionId, reply) async {
     try {
@@ -83,10 +84,11 @@ class DiscussionProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> deleteDiscussionReply(int id, int idReply) async {
+  Future<Map<String, dynamic>> deleteDiscussionReply(
+      int id, int idReply) async {
     try {
-      print('id: $id, idReply: $idReply');
-      final response = await _apiService.deleteData('discussion/$id/reply/$idReply/delete');
+      final response =
+          await _apiService.deleteData('discussion/$id/reply/$idReply/delete');
       return response;
     } catch (e) {
       return {'error': true, 'message': 'An error occurred'};

@@ -23,10 +23,6 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
     _futureAllAlarm = _getAlarmList();
   }
 
-  // Future<void> _initializeNotification() async {
-  //   await NotificationHelper.init();
-  // }
-
   Future<void> _getAlarmList() async {
     final alarmProvider = Provider.of<AlarmProvider>(context, listen: false);
     final response = await alarmProvider.getAlarm();
@@ -56,19 +52,21 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
       await alarmProvider.activeToggle(
           _allAlarms[index]['id'], _allAlarms[index]['active']);
     } catch (e) {
-      print('Error toggling alarm: $e');
+      //
     }
 
     // Schedule or cancel the notification based on the new status
     if (_allAlarms[index]['active']) {
-      print(_allAlarms[index]);
       await NotificationHelper.scheduleNotification(
         _allAlarms[index]['title'],
         "Waktu untuk membaca ${_allAlarms[index]['title']}",
         _parsedAlarmTimes[index],
         _allAlarms[index]['doaId'],
+        _allAlarms[index]['id'],
       );
-    } else {}
+    } else {
+      NotificationHelper.cancel(_allAlarms[index]['id']);
+    }
   }
 
   void _showPopupMenu(BuildContext context, int index) {

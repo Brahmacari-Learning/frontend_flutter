@@ -144,9 +144,10 @@ class _PresensiPopupState extends State<PresensiPopup> {
               ),
               // Button claim
               ElevatedButton(
-                onPressed: () async {
-                  await missionProvider.presensi();
-                  Navigator.pop(context);
+                onPressed: () {
+                  missionProvider.presensi().then((_) {
+                    Navigator.pop(context);
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 186, 60, 208),

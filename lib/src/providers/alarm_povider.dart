@@ -9,7 +9,6 @@ class AlarmProvider with ChangeNotifier {
       final response = await _apiService.fetchData('alarms');
       return response;
     } catch (e) {
-      print('Error in getAlarm: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -19,7 +18,6 @@ class AlarmProvider with ChangeNotifier {
       final response = await _apiService.fetchData('alarms/tugas');
       return response;
     } catch (e) {
-      print('Error in getAlarm: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -41,7 +39,6 @@ class AlarmProvider with ChangeNotifier {
       );
       return response;
     } catch (e) {
-      print('Error in createAlarm: $e'); // Log the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -63,12 +60,9 @@ class AlarmProvider with ChangeNotifier {
           'tugasId': tugasId,
         },
       );
-      if (response['error'] == true) {
-        print('Error in createAlarmForTugas response: ${response['message']}');
-      }
+      if (response['error'] == true) {}
       return response;
     } catch (e) {
-      print('Error in createAlarmForTugas: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -78,7 +72,6 @@ class AlarmProvider with ChangeNotifier {
       final response = await _apiService.deleteData('alarms/$id/delete');
       return response;
     } catch (e) {
-      print('Error in deleteAlarm: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -90,7 +83,6 @@ class AlarmProvider with ChangeNotifier {
       });
       return response;
     } catch (e) {
-      print('Error in activeToggle: $e'); // Print the error
       return {'error': true, 'message': 'An error occurred'};
     }
   }

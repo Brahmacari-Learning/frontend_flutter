@@ -100,35 +100,22 @@ class ApiService {
 
     request.files
         .add(await http.MultipartFile.fromPath('fileToUpload', file.path));
-
     request.fields.addAll({'destination': destination});
-
     request.headers.addAll({'Authorization': _authorizationToken});
 
     final response = await request.send();
-
-    print('File length before upload: ${await file.length()}');
-
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      print('Response received: $jsonResponse');
       if (jsonResponse['path'] == null) {
         throw Exception('Failed to upload file');
       }
       return jsonResponse['path'];
     } else {
-      print('Failed to upload file. Status code: ${response.statusCode}');
-      print('Response: ${await response.stream.bytesToString()}');
       throw Exception('Failed to upload file');
     }
   }
 
   static Future<String> uploadFile(File file, String destination) async {
-    print('Starting uploadFile');
-    print('File: ${file.path}');
-    print('File length before upload: ${await file.length()}');
-    print('Destination: $destination');
-
     final request = http.MultipartRequest('POST', Uri.parse(_baseUrlCDN));
 
     request.files
@@ -140,18 +127,13 @@ class ApiService {
 
     final response = await request.send();
 
-    print('File length before upload: ${await file.length()}');
-
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      print('Response received: $jsonResponse');
       if (jsonResponse['path'] == null) {
         throw Exception('Failed to upload file');
       }
       return jsonResponse['path'];
     } else {
-      print('Failed to upload file. Status code: ${response.statusCode}');
-      print('Response: ${await response.stream.bytesToString()}');
       throw Exception('Failed to upload file');
     }
   }

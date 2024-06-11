@@ -28,7 +28,6 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      print(e);
       _isLoading = false;
       notifyListeners();
       return false;

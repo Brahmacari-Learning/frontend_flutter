@@ -21,7 +21,6 @@ class HadiahProvider with ChangeNotifier {
       return response;
     } catch (e) {
       // Log error or handle it specifically if needed
-      print("Error fetching gift data: $e");
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -35,7 +34,6 @@ class HadiahProvider with ChangeNotifier {
       return response;
     } catch (e) {
       // Log error or handle it specifically if needed
-      print("Error fetching badge data: $e");
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -49,7 +47,6 @@ class HadiahProvider with ChangeNotifier {
       return response;
     } catch (e) {
       // Log error or handle it specifically if needed
-      print("Error claiming badge: $e");
       return {'error': true, 'message': 'An error occurred'};
     }
   }
@@ -58,10 +55,8 @@ class HadiahProvider with ChangeNotifier {
     try {
       final response = await _apiService.fetchData('gift/$id/tukar');
       await getHadiah();
-      print(response);
       return response;
     } catch (e) {
-      print("Error claiming gift: $e");
       return {'error': true, 'message': 'An error occurred'};
     }
   }

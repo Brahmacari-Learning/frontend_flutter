@@ -47,6 +47,7 @@ class NotificationHelper {
     String body,
     DateTime scheduledDateTime,
     int idDoa,
+    int idNotification,
   ) async {
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(
@@ -77,7 +78,7 @@ class NotificationHelper {
     var notificationDetails =
         NotificationDetails(android: androidDetails, iOS: iosDetails);
     await _notification.zonedSchedule(
-      0,
+      idNotification,
       title,
       body,
       scheduledDate,
@@ -88,5 +89,10 @@ class NotificationHelper {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: idDoa.toString(),
     );
+  }
+
+  // cancel notification
+  static cancel(int id) async {
+    await _notification.cancel(id);
   }
 }
