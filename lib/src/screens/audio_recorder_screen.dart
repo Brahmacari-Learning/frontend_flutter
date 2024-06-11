@@ -14,9 +14,7 @@ class AudioRecorderView extends StatelessWidget {
     return ChangeNotifierProvider<AudioRecorderController>(
       create: (context) => AudioRecorderController(
         AudioRecorderFileHelper(),
-        (message) {
-          print(message);
-        },
+        (message) {},
       )..start(),
       child: const _AudioRecorderViewBody(),
     );
@@ -108,7 +106,7 @@ class _AudioRecorderViewBodyState extends State<_AudioRecorderViewBody> {
 }
 
 class _TimerText extends StatelessWidget {
-  const _TimerText({super.key});
+  const _TimerText();
 
   @override
   Widget build(BuildContext context) {

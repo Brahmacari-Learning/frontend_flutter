@@ -5,12 +5,13 @@ class CustomNotification extends StatefulWidget {
   final bool correct;
 
   const CustomNotification({
-    Key? key,
+    super.key,
     required this.message,
     required this.correct,
-  }) : super(key: key);
+  });
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomNotificationState createState() => _CustomNotificationState();
 }
 

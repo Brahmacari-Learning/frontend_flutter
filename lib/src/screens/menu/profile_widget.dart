@@ -284,7 +284,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 120),
+                  const SizedBox(height: 55),
                   Opacity(
                     opacity: 0.5,
                     child: Container(

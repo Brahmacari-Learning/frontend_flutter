@@ -4,8 +4,7 @@ class PlayPauseAudioButton extends StatelessWidget {
   final bool isPlaying;
   final Function()? onTap;
   const PlayPauseAudioButton(
-      {Key? key, required this.isPlaying, required this.onTap})
-      : super(key: key);
+      {super.key, required this.isPlaying, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +19,11 @@ class PlayPauseAudioButton extends StatelessWidget {
           height: 54,
           padding: EdgeInsets.only(left: isPlaying ? 0 : 4),
           child: isPlaying
-              ? Icon(
+              ? const Icon(
                   Icons.pause,
                   size: 32,
                 )
-              : Icon(
+              : const Icon(
                   Icons.play_arrow,
                   size: 32,
                 ),
