@@ -56,7 +56,7 @@ class _KerjaBagusState extends State<KerjaBagus> {
               height: 20,
             ),
             Text(
-              "Kamu dapat bintang ${info['reward']}!",
+              "Kamu dapat ${info['reward']} bintang!",
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
