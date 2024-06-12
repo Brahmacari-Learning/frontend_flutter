@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/stage_screen.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class LevelWidget extends StatefulWidget {
   const LevelWidget({super.key});
@@ -46,9 +47,7 @@ class _LevelWidgetState extends State<LevelWidget> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
+          return const NoInternet();
         }
 
         final stagesData = snapshot.data![0];

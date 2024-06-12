@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/helper/notification_helper.dart';
 import 'package:vedanta_frontend/src/providers/alarm_povider.dart';
 import 'package:vedanta_frontend/src/screens/alarm_create_screen.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class MandiriTabAlarm extends StatefulWidget {
   const MandiriTabAlarm({super.key});
@@ -106,7 +107,7 @@ class _MandiriTabAlarmState extends State<MandiriTabAlarm> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return const NoInternet();
                 } else {
                   if (_allAlarms.isEmpty) {
                     // Jika tidak ada doa yang ditambahkan, tampilkan pesan

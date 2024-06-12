@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class AlarmSelectDoaScreen extends StatefulWidget {
   const AlarmSelectDoaScreen({super.key});
@@ -91,9 +92,7 @@ class _AlarmSelectDoaScreenState extends State<AlarmSelectDoaScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
+                return const NoInternet();
               } else {
                 return _doaList.isEmpty
                     ? const Center(child: Text('Tidak ada doa'))

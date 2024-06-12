@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/screens/stage_materi_screen.dart';
 import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class StageScreen extends StatefulWidget {
   final int idStage;
@@ -133,9 +134,7 @@ class _StageScreenState extends State<StageScreen> {
               );
             }
             if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
+              return const NoInternet();
             }
             return Column(
               children: [

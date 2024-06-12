@@ -5,6 +5,7 @@ import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/screens/profile_detail_screen.dart';
 import 'package:vedanta_frontend/src/screens/kelas_screen.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -42,7 +43,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               );
             }
             if (snapshot.hasError) {
-              return const Center(child: Text('An error occurred'));
+              return const NoInternet();
             }
             final user = snapshot.data!;
             return Center(

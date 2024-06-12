@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/discussion_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class CreateDiscussionScreen extends StatefulWidget {
   const CreateDiscussionScreen({super.key});
@@ -27,7 +28,7 @@ class _CreateDiscussionScreenState extends State<CreateDiscussionScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return const Center(child: Text('Error'));
+                return const NoInternet();
               }
               final name = snapshot.data!['user']['name'];
               return Center(

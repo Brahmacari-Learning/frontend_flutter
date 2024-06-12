@@ -8,6 +8,7 @@ import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class DoaPageWidget extends StatefulWidget {
   const DoaPageWidget({super.key});
@@ -154,7 +155,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      return const NoInternet();
                     } else {
                       return DefaultTabController(
                         length: 2,
@@ -217,9 +218,7 @@ class _DoaPageWidgetState extends State<DoaPageWidget> {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
+          return const NoInternet();
         } else {
           return ListView.builder(
             controller: _scrollController,

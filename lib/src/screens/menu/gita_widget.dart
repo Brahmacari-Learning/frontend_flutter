@@ -6,6 +6,7 @@ import 'package:vedanta_frontend/src/screens/sloka_search_screen.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/input_rounded_with_icon_widget.dart';
 import 'package:vedanta_frontend/src/widgets/like_icon_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 import 'package:vedanta_frontend/src/widgets/shimmer_widget.dart';
 
 class GitaWidget extends StatefulWidget {
@@ -135,8 +136,7 @@ class _GitaWidgetState extends State<GitaWidget> {
                               height: 180,
                               roundedRadius: 10);
                         } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
+                          return const NoInternet();
                         } else {
                           return snapshot.data!['bacaan'] != null
                               ? GitaCardWidget(
@@ -174,7 +174,7 @@ class _GitaWidgetState extends State<GitaWidget> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      return const NoInternet();
                     } else {
                       return DefaultTabController(
                         length: 2,
@@ -268,9 +268,7 @@ class _GitaWidgetState extends State<GitaWidget> {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
+          return const NoInternet();
         } else {
           return ListView.builder(
             itemCount: slokaList.length,

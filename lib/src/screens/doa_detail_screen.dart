@@ -4,6 +4,7 @@ import 'package:vedanta_frontend/src/providers/doa_provider.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class DoaDetailScreen extends StatelessWidget {
   final int idDoa;
@@ -24,9 +25,7 @@ class DoaDetailScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
+                return const NoInternet();
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(
                   child: Text('No data found.'),

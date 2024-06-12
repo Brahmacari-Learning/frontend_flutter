@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/screens/kelas_detail_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class KelasScreen extends StatefulWidget {
   const KelasScreen({super.key});
@@ -73,7 +74,7 @@ class _KelasScreenState extends State<KelasScreen> {
                     child: const CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return const Center(child: Text('An error occurred'));
+                return const NoInternet();
               }
               if (classes.isEmpty) {
                 return const Center(child: Text('No classes available'));

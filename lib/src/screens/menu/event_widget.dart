@@ -6,6 +6,7 @@ import 'package:vedanta_frontend/src/providers/mission_provider.dart';
 import 'package:vedanta_frontend/src/providers/user_provider.dart';
 import 'package:vedanta_frontend/src/utils.dart';
 import 'package:vedanta_frontend/src/widgets/custom_alert.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class EventWidget extends StatefulWidget {
   const EventWidget({super.key});
@@ -39,7 +40,7 @@ class _EventWidgetState extends State<EventWidget> {
           );
         }
         if (snapshot.hasError) {
-          return const Center(child: Text('An error occurred'));
+          return const NoInternet();
         }
 
         final userProvider = Provider.of<UserProvider>(context);
@@ -177,7 +178,7 @@ class _MisiTabState extends State<_MisiTab> {
               );
             }
             if (snapshot.hasError) {
-              return const Text('An error occurred');
+              return const NoInternet();
             }
 
             Map<String, dynamic> missionsData = snapshot.data!;
@@ -552,8 +553,7 @@ class _LencanaTabState extends State<_LencanaTab> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
-              return Center(
-                  child: Text('An error occurred: ${snapshot.error}'));
+              return const NoInternet();
             }
             final lencana = provider.lencana['badges'];
             return SingleChildScrollView(
@@ -800,9 +800,7 @@ class _TukarTabState extends State<_TukarTab> {
               );
             }
             if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
+              return const NoInternet();
             }
             return Consumer<HadiahProvider>(
               builder: (context, provider, child) {

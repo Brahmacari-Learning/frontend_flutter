@@ -7,6 +7,7 @@ import 'package:vedanta_frontend/src/screens/kelas_quiz_result_screen.dart';
 import 'package:vedanta_frontend/src/screens/stage_quiz_screen.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class KelasDetailScreen extends StatefulWidget {
   final int id;
@@ -102,7 +103,7 @@ class _TugasTabState extends State<_TugasTab> {
           );
         }
         if (snapshot.hasError) {
-          return const Text('An error occurred');
+          return const NoInternet();
         }
 
         if (tugas.isEmpty) {
@@ -339,7 +340,7 @@ class _ListSiswaState extends State<_ListSiswa> {
           );
         }
         if (snapshot.hasError) {
-          return const Text('An error occurred');
+          return const NoInternet();
         }
         var members = snapshot.data!['members'];
         return RefreshIndicator(

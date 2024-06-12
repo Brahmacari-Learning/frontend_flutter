@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/stage_provider.dart';
 import 'package:vedanta_frontend/src/widgets/avatar_widget.dart';
 import 'package:vedanta_frontend/src/widgets/button_option_full_width.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class KlasemenScreen extends StatefulWidget {
   final int id;
@@ -54,9 +55,7 @@ class _KlasemenContentState extends State<KlasemenContent> {
             );
           }
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            return const NoInternet();
           }
           final currentUserIndex = snapshot.data!['currentUserIndex'];
           final data = snapshot.data!['klasemen'];

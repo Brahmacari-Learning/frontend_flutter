@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/chat_provider.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -35,9 +36,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   );
                 } else {
                   if (snapshot.hasError) {
-                    return const Center(
-                      child: Text('Error'),
-                    );
+                    return const NoInternet();
                   } else {
                     if (snapshot.data?['sessions'] == null) {
                       return const Center(

@@ -11,6 +11,7 @@ import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/app_botom_sheet.dart';
 import 'package:vedanta_frontend/src/widgets/doa_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class KelasDetailTugasDoa extends StatefulWidget {
   final int idKelas;
@@ -55,9 +56,7 @@ class _KelasDetailTugasDoaState extends State<KelasDetailTugasDoa> {
           }
           if (snapshot.hasError) {
             return const Scaffold(
-              body: Center(
-                child: Text('An error occurred'),
-              ),
+              body: NoInternet(),
             );
           }
           final result = snapshot.data!;

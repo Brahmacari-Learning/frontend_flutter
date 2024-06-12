@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vedanta_frontend/src/providers/class_provider.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class KelasQuizResultScreen extends StatefulWidget {
   final int idQuiz;
@@ -34,9 +35,7 @@ class _KelasQuizResultScreenState extends State<KelasQuizResultScreen> {
         }
         if (snapshot.hasError) {
           return const Scaffold(
-            body: Center(
-              child: Text('An error occurred'),
-            ),
+            body: NoInternet(),
           );
         }
         final result = snapshot.data!;

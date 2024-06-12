@@ -5,6 +5,7 @@ import 'package:vedanta_frontend/src/providers/gita_provider.dart';
 import 'package:vedanta_frontend/src/services/auth_wraper.dart';
 import 'package:vedanta_frontend/src/widgets/gita_card_widget.dart';
 import 'package:vedanta_frontend/src/widgets/music_player_widget.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 
 class DetailSlokaScreen extends StatelessWidget {
   final int bab;
@@ -26,9 +27,7 @@ class DetailSlokaScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
+                return const NoInternet();
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(
                   child: Text('No data found.'),

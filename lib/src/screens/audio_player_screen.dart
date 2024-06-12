@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vedanta_frontend/src/controllers/audio_player_controller.dart';
+import 'package:vedanta_frontend/src/widgets/no_internet.dart';
 import 'package:vedanta_frontend/src/widgets/play_pause_button.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
@@ -39,8 +40,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(
-                child: Text('Error loading audio: ${snapshot.error}'));
+            return const NoInternet();
           } else {
             return StreamBuilder(
               stream: audioPlayerController.progressStream,
