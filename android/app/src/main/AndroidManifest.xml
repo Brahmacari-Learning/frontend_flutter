@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="Vedanta"
+        android:label="Sidhi"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@drawable/vedanta_logo">
